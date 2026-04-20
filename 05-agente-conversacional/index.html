@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta Agente Conversacional IA — Saludsa × Vibramente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #1a2744;
+      --navy-light: #243158;
+      --navy-dark: #111b33;
+      --gold: #c9a227;
+      --gold-light: #e0b83a;
+      --gold-pale: #f5e9c0;
+      --white: #ffffff;
+      --gray-light: #f4f6fb;
+      --gray-mid: #e8ecf4;
+      --gray-text: #6b7280;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--white);
+      color: var(--navy);
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(26,39,68,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,162,39,0.25);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .nav-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+    .nav-badge {
+      background: rgba(201,162,39,0.18);
+      border: 1px solid rgba(201,162,39,0.4);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, #1e3a6e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 40px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .hero-glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201,162,39,0.12) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      pointer-events: none;
+    }
+    .hero-glow-2 {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(30,58,110,0.6) 0%, transparent 70%);
+      bottom: -50px; left: -50px;
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1200px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,162,39,0.12);
+      border: 1px solid rgba(201,162,39,0.35);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 30px;
+      margin-bottom: 24px;
+    }
+    .hero-label::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.5); }
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 54px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .hero-title .gold { color: var(--gold-light); }
+    .hero-subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hero-meta-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+    .hero-meta-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .hero-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.15);
+      align-self: center;
+    }
+
+    /* ─── CHAT MOCKUP ─── */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .chat-mockup {
+      width: 340px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
+      overflow: hidden;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+    .chat-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .chat-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-header-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .chat-header-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+    .chat-channel-badges {
+      display: flex;
+      gap: 5px;
+    }
+    .channel-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+    }
+    .chat-body {
+      padding: 16px;
+      background: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 280px;
+    }
+    .msg {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      animation: msg-in 0.3s ease;
+    }
+    @keyframes msg-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .msg.bot { flex-direction: row; }
+    .msg.user { flex-direction: row-reverse; }
+    .msg-avatar {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .bubble {
+      max-width: 220px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .msg.bot .bubble {
+      background: var(--white);
+      color: var(--navy);
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .msg.user .bubble {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: var(--white);
+      border-bottom-right-radius: 4px;
+    }
+    .bubble-tag {
+      display: inline-block;
+      background: var(--gold-pale);
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .typing-dots {
+      display: flex;
+      gap: 4px;
+      background: var(--white);
+      padding: 10px 14px;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+    }
+    .typing-dots span {
+      width: 6px; height: 6px;
+      background: var(--gray-text);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+    .chat-input {
+      padding: 12px 16px;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid var(--gray-mid);
+    }
+    .chat-input-field {
+      flex: 1;
+      background: var(--gray-light);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: var(--navy);
+      font-family: 'Montserrat', sans-serif;
+      outline: none;
+    }
+    .chat-send {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    /* ─── STATS STRIP ─── */
+    .stats-strip {
+      background: var(--gold);
+      padding: 0;
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      divide-x: 1px solid rgba(255,255,255,0.3);
+    }
+    .stat-item {
+      padding: 28px 32px;
+      text-align: center;
+      border-right: 1px solid rgba(26,39,68,0.15);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      display: block;
+    }
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(26,39,68,0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    /* ─── SECTIONS ─── */
+    section {
+      padding: 96px 40px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .section-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 18px;
+    }
+    .section-subtitle {
+      font-size: 15px;
+      color: var(--gray-text);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    /* ─── RESUMEN EJECUTIVO ─── */
+    #resumen { background: var(--gray-light); }
+    .exec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 60px;
+    }
+    .exec-text p {
+      font-size: 15px;
+      color: #374151;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    .exec-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .exec-highlight {
+      background: var(--white);
+      border: 1px solid var(--gray-mid);
+      border-left: 4px solid var(--gold);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .exec-highlight-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .exec-highlight-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .exec-highlight-desc {
+      font-size: 13px;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+
+    /* ─── EL PROBLEMA ─── */
+    #problema { background: var(--navy-dark); }
+    #problema .section-title { color: var(--white); }
+    #problema .section-subtitle { color: rgba(255,255,255,0.55); }
+    #problema .section-eyebrow { color: var(--gold-light); }
+    #problema .section-eyebrow::before { background: var(--gold-light); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .problem-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .problem-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(201,162,39,0.3);
+    }
+    .problem-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    }
+    .problem-icon {
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+    .problem-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .problem-desc {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+    }
+    .problem-metric {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    /* ─── LA SOLUCIÓN ─── */
+    #solucion { background: var(--white); }
+    .solution-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+    .solution-header .section-subtitle {
+      margin: 0 auto;
+    }
+    .dual-component {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 48px;
+    }
+    .component-card {
+      border-radius: 24px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .component-card.a {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: var(--white);
+    }
+    .component-card.b {
+      background: linear-gradient(135deg, #0f2013 0%, #1a3520 100%);
+      color: var(--white);
+    }
+    .component-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 120px;
+      font-weight: 700;
+      position: absolute;
+      top: -20px;
+      right: -10px;
+      opacity: 0.06;
+      line-height: 1;
+      color: var(--white);
+    }
+    .component-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .component-card.a .component-badge {
+      background: rgba(201,162,39,0.2);
+      color: var(--gold-light);
+      border: 1px solid rgba(201,162,39,0.3);
+    }
+    .component-card.b .component-badge {
+      background: rgba(16,185,129,0.2);
+      color: #34d399;
+      border: 1px solid rgba(16,185,129,0.3);
+    }
+    .component-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .component-desc {
+      font-size: 14px;
+      opacity: 0.7;
+      line-height: 1.7;
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .component-features {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+    .feature-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .component-card.a .feature-check {
+      background: rgba(201,162,39,0.25);
+      color: var(--gold-light);
+    }
+    .component-card.b .feature-check {
+      background: rgba(16,185,129,0.25);
+      color: #34d399;
+    }
+    .dual-value-banner {
+      margin-top: 48px;
+      background: linear-gradient(135deg, var(--gold-pale), #fdf3d0);
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .dual-value-icon { font-size: 48px; flex-shrink: 0; }
+    .dual-value-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .dual-value-text p {
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.7;
+    }
+
+    /* ─── CASOS DE USO ─── */
+    #casos { background: var(--gray-light); }
+    .casos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-top: 60px;
+    }
+    .caso-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--gray-mid);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .caso-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(26,39,68,0.1);
+    }
+    .caso-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 72px;
+      font-weight: 700;
+      color: var(--gold);
+      opacity: 0.1;
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      line-height: 1;
+    }
+    .caso-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      background: var(--gold-pale);
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+    .caso-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .caso-desc {
+      font-size: 13.5px;
+      color: var(--gray-text);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .caso-before-after {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .ba-box {
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .ba-box.before {
+      background: #fff5f5;
+      border: 1px solid #fecaca;
+    }
+    .ba-box.after {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+    }
+    .ba-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .ba-box.before .ba-label { color: var(--danger); }
+    .ba-box.after .ba-label { color: var(--success); }
+    .ba-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    /* ─── ARQUITECTURA ─── */
+    #arquitectura { background: var(--navy); }
+    #arquitectura .section-title { color: var(--white); }
+    #arquitectura .section-subtitle { color: rgba(255,255,255,0.55); }
+    #arquitectura .section-eyebrow { color: var(--gold-light); }
+    #arquitectura .section-eyebrow::before { background: var(--gold-light); }
+    .arch-diagram {
+      margin-top: 60px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 48px;
+    }
+    .arch-layer {
+      margin-bottom: 32px;
+    }
+    .arch-layer-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .arch-layer-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+    .arch-nodes {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .arch-node {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .arch-node:hover {
+      border-color: rgba(201,162,39,0.4);
+      background: rgba(201,162,39,0.05);
+    }
+    .arch-node-icon { font-size: 18px; }
+    .arch-node.highlight {
+      border-color: rgba(201,162,39,0.5);
+      background: rgba(201,162,39,0.08);
+      color: var(--gold-light);
+    }
+    .arch-node.security {
+      border-color: rgba(16,185,129,0.4);
+      background: rgba(16,185,129,0.06);
+      color: #34d399;
+    }
+    .arch-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 32px;
+      margin: -8px 0;
+    }
+    .arch-arrow-line {
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(to bottom, rgba(201,162,39,0.4), rgba(201,162,39,0.1));
+    }
+
+    /* ─── ENTREGABLES ─── */
+    #entregables { background: var(--white); }
+    .entregables-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .entregable-card {
+      background: var(--gray-light);
+      border-radius: 16px;
+      padding: 28px;
+      border: 1px solid var(--gray-mid);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .entregable-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(26,39,68,0.08);
+    }
+    .entregable-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+    .entregable-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .entregable-desc {
+      font-size: 13px;
+      color: var(--gray-text);
+      line-height: 1.6;
+    }
+
+    /* ─── CRONOGRAMA ─── */
+    #cronograma { background: var(--gray-light); }
+    .timeline {
+      margin-top: 60px;
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), rgba(201,162,39,0.1));
+    }
+    .timeline-item {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .timeline-dot {
+      width: 58px;
+      height: 58px;
+      background: var(--navy);
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+      z-index: 1;
+      position: relative;
+      box-shadow: 0 0 0 6px var(--gray-light);
+    }
+    .timeline-content {
+      background: var(--white);
+      border: 1px solid var(--gray-mid);
+      border-radius: 16px;
+      padding: 24px 28px;
+      flex: 1;
+      margin-top: 8px;
+    }
+    .timeline-phase {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .timeline-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .timeline-desc {
+      font-size: 13.5px;
+      color: var(--gray-text);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .timeline-duration {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      background: var(--gold-pale);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* ─── MÉTRICAS ─── */
+    #metricas { background: var(--navy-dark); }
+    #metricas .section-title { color: var(--white); }
+    #metricas .section-subtitle { color: rgba(255,255,255,0.55); }
+    #metricas .section-eyebrow { color: var(--gold-light); }
+    #metricas .section-eyebrow::before { background: var(--gold-light); }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .metric-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+    .metric-card:hover {
+      border-color: rgba(201,162,39,0.35);
+    }
+    .metric-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+    .metric-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--gold-light);
+      display: block;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .metric-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 10px;
+    }
+    .metric-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+    }
+
+    /* ─── INVERSIÓN ─── */
+    #inversion { background: var(--white); }
+    .investment-container {
+      margin-top: 60px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .pricing-card {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-radius: 28px;
+      padding: 48px;
+      color: var(--white);
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-card::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(201,162,39,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pricing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(201,162,39,0.2);
+      border: 1px solid rgba(201,162,39,0.4);
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .pricing-main-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .pricing-amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .pricing-amount sup {
+      font-size: 28px;
+      vertical-align: super;
+    }
+    .pricing-period {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 36px;
+    }
+    .pricing-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 28px 0;
+    }
+    .pricing-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .pricing-line:last-child { border-bottom: none; }
+    .pricing-line-label {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.7);
+    }
+    .pricing-line-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .pricing-line-value.highlight { color: var(--gold-light); }
+    .pricing-line-value.green { color: #34d399; }
+    .pricing-monthly-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      margin-top: 8px;
+    }
+    .pricing-monthly-amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+    }
+    .pricing-monthly-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+    }
+    .pricing-cta {
+      margin-top: 32px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--navy-dark);
+      border: none;
+      border-radius: 14px;
+      padding: 16px 32px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .pricing-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+    .pricing-includes {
+      background: var(--gray-light);
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--gray-mid);
+    }
+    .pricing-includes h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 20px;
+    }
+    .include-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-mid);
+      font-size: 13.5px;
+      color: #374151;
+    }
+    .include-item:last-child { border-bottom: none; }
+    .include-check {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ─── ROI ─── */
+    #roi { background: var(--gray-light); }
+    .roi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 60px;
+    }
+    .roi-table {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--gray-mid);
+    }
+    .roi-table-header {
+      background: var(--navy);
+      padding: 16px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .roi-table-header span {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.5);
+    }
+    .roi-row {
+      padding: 16px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      border-bottom: 1px solid var(--gray-mid);
+      align-items: center;
+    }
+    .roi-row:last-child { border-bottom: none; }
+    .roi-row:nth-child(even) { background: var(--gray-light); }
+    .roi-metric { font-size: 13px; font-weight: 600; color: var(--navy); }
+    .roi-before { font-size: 13px; color: var(--danger); font-weight: 500; }
+    .roi-after { font-size: 13px; color: var(--success); font-weight: 700; }
+    .roi-summary-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .roi-summary-card {
+      background: var(--white);
+      border: 1px solid var(--gray-mid);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .roi-summary-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .roi-summary-icon.gold { background: var(--gold-pale); }
+    .roi-summary-icon.green { background: #f0fdf4; }
+    .roi-summary-icon.blue { background: #eff6ff; }
+    .roi-summary-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .roi-summary-label {
+      font-size: 13px;
+      color: var(--gray-text);
+    }
+
+    /* ─── PRÓXIMOS PASOS ─── */
+    #pasos { background: var(--navy-dark); }
+    #pasos .section-title { color: var(--white); }
+    #pasos .section-eyebrow { color: var(--gold-light); }
+    #pasos .section-eyebrow::before { background: var(--gold-light); }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 60px;
+    }
+    .step-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 28px;
+      text-align: center;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .step-card:hover {
+      border-color: rgba(201,162,39,0.4);
+      transform: translateY(-4px);
+    }
+    .step-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--gold);
+      opacity: 0.5;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .step-icon { font-size: 32px; margin-bottom: 14px; }
+    .step-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+    }
+    .step-timing {
+      margin-top: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--navy-dark);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 40px;
+      text-align: center;
+    }
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .footer-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 20px;
+    }
+    .footer-contact {
+      font-size: 14px;
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+    .footer-legal {
+      margin-top: 24px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.18);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      #hero { padding: 100px 24px 60px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+      .hero-visual { order: -1; }
+      .chat-mockup { width: 100%; max-width: 340px; }
+      section { padding: 64px 24px; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .exec-grid, .dual-component, .investment-container,
+      .roi-grid, .problem-grid, .metrics-grid,
+      .entregables-grid, .casos-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .arch-diagram { padding: 24px; }
+    }
+    @media (max-width: 500px) {
+      .stat-item { padding: 20px; }
+      .stat-number { font-size: 28px; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .caso-before-after { grid-template-columns: 1fr; }
+      .roi-table-header, .roi-row { grid-template-columns: 1fr 1fr; }
+      .roi-table-header span:last-child,
+      .roi-after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo">🤖</div>
+    <span class="nav-title">Vibramente × Saludsa</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#resumen">Resumen</a></li>
+    <li><a href="#solucion">Solución</a></li>
+    <li><a href="#casos">Casos de Uso</a></li>
+    <li><a href="#cronograma">Cronograma</a></li>
+    <li><a href="#inversion">Inversión</a></li>
+    <li><a href="#pasos">Pasos</a></li>
+  </ul>
+  <span class="nav-badge">Propuesta v1 — Abril 2026</span>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-content reveal-left">
+      <div class="hero-label">Propuesta Comercial Confidencial</div>
+      <h1 class="hero-title">
+        Agente Conversacional IA <span class="gold">+ Seguridad</span> para Saludsa
+      </h1>
+      <p class="hero-subtitle">
+        Un agente inteligente que atiende a sus afiliados 24/7 — y una plataforma que lo hace de forma segura. Doble valor. Una sola propuesta.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Preparado para</span>
+          <span class="hero-meta-value">Marco Puente, VP Saludsa</span>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Proveedor</span>
+          <span class="hero-meta-value">Vibramente</span>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-meta-item">
+          <span class="hero-meta-label">Versión</span>
+          <span class="hero-meta-value">v1 · Abril 2026</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual reveal-right">
+      <div class="chat-mockup">
+        <div class="chat-header">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name">Asistente Saludsa</div>
+            <div class="chat-header-status">
+              <div class="status-dot"></div>
+              En línea ahora
+            </div>
+          </div>
+          <div class="chat-channel-badges">
+            <span class="channel-badge">WA</span>
+            <span class="channel-badge">Web</span>
+          </div>
+        </div>
+        <div class="chat-body">
+          <div class="msg bot">
+            <div class="msg-avatar">🤖</div>
+            <div class="bubble">
+              <div class="bubble-tag">Saludsa IA</div>
+              ¡Hola! Soy el asistente virtual de Saludsa. ¿En qué puedo ayudarle hoy?
+            </div>
+          </div>
+          <div class="msg user">
+            <div class="bubble">Necesito autorización para una cirugía de rodilla 🦵</div>
+          </div>
+          <div class="msg bot">
+            <div class="msg-avatar">🤖</div>
+            <div class="bubble">
+              Con gusto le ayudo. ¿Me puede indicar su número de afiliado y el nombre del médico tratante?
+            </div>
+          </div>
+          <div class="msg user">
+            <div class="bubble">Afiliado: 045-2891 · Dr. Ramírez, traumatología</div>
+          </div>
+          <div class="typing-indicator">
+            <div class="msg-avatar" style="width:28px;height:28px;background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;">🤖</div>
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input class="chat-input-field" type="text" placeholder="Escriba su consulta..." readonly />
+          <button class="chat-send">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS STRIP ─── -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <span class="stat-number">80%</span>
+      <div class="stat-label">Consultas resueltas sin agente humano</div>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-number">24/7</span>
+      <div class="stat-label">Disponibilidad continua, sin costo adicional</div>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-number">48h→min</span>
+      <div class="stat-label">Tiempo de autorización médica</div>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-number">+40%</span>
+      <div class="stat-label">Satisfacción del cliente (NPS industria)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── RESUMEN EJECUTIVO ─── -->
+<section id="resumen">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Resumen Ejecutivo</div>
+      <h2 class="section-title">La oportunidad de transformar la experiencia del afiliado</h2>
+      <p class="section-subtitle">Una propuesta de valor en dos dimensiones que posiciona a Saludsa como líder tecnológico en el sector salud-seguros del Ecuador.</p>
+    </div>
+    <div class="exec-grid">
+      <div class="exec-text reveal-left">
+        <p>Saludsa atiende diariamente a miles de afiliados con consultas sobre coberturas, autorizaciones médicas y reembolsos. Hoy ese proceso depende de equipos humanos disponibles solo en horario de oficina, con tiempos de espera que generan fricción y afectan la experiencia del cliente.</p>
+        <p>Vibramente propone el desarrollo de un <strong>Agente Conversacional Inteligente</strong> que automatiza el 80% de estas interacciones, disponible 24/7 por WhatsApp, web y app móvil. Simultáneamente, incorporamos un <strong>módulo de seguridad empresarial</strong> en nuestra plataforma de agentes, garantizando que cada interacción cumple con los más altos estándares de protección de datos en el sector salud.</p>
+        <p>El resultado: <strong>doble valor</strong>. Un agente que trabaja por usted mientras duerme, y una infraestructura que protege a sus afiliados mientras opera.</p>
+      </div>
+      <div class="exec-highlights reveal-right">
+        <div class="exec-highlight">
+          <div class="exec-highlight-icon">🤖</div>
+          <div>
+            <div class="exec-highlight-title">Componente A — Agente Conversacional</div>
+            <div class="exec-highlight-desc">Agente IA multi-canal para atención de afiliados: autorizaciones, reembolsos, afiliación y soporte comercial. Integración nativa con sistemas core de Saludsa.</div>
+          </div>
+        </div>
+        <div class="exec-highlight">
+          <div class="exec-highlight-icon">🔐</div>
+          <div>
+            <div class="exec-highlight-title">Componente B — Seguridad en Plataforma</div>
+            <div class="exec-highlight-desc">Módulo de seguridad embebido en la infraestructura de Vibramente: sandboxing, auditoría, monitoreo de comportamiento y control granular de accesos. Sus agentes heredan esta protección.</div>
+          </div>
+        </div>
+        <div class="exec-highlight">
+          <div class="exec-highlight-icon">📈</div>
+          <div>
+            <div class="exec-highlight-title">ROI Comprobable</div>
+            <div class="exec-highlight-desc">Reducción de carga operativa en call center, eliminación de tiempos de espera y mejora medible de NPS. Retorno estimado en menos de 6 meses.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EL PROBLEMA ─── -->
+<section id="problema">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:0">
+      <div class="section-eyebrow">El Problema Actual</div>
+      <h2 class="section-title">Atención de calidad no debería depender del horario</h2>
+      <p class="section-subtitle" style="margin:0 auto;color:rgba(255,255,255,0.55)">El modelo actual de atención al afiliado presenta brechas críticas que impactan la satisfacción y la eficiencia operativa.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="problem-icon">⏰</div>
+        <div class="problem-title">Atención Limitada al Horario Laboral</div>
+        <div class="problem-desc">Los afiliados que necesitan autorización médica urgente fuera de horario de oficina quedan desatendidos, generando angustia y riesgo médico real.</div>
+        <div class="problem-metric">→ 65% de consultas urgentes llegan fuera de horario</div>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-icon">📞</div>
+        <div class="problem-title">Alta Carga Operativa en Call Center</div>
+        <div class="problem-desc">El 78% de las llamadas entrantes son consultas repetitivas sobre coberturas y estados de autorización — información que un agente IA puede responder en segundos.</div>
+        <div class="problem-metric">→ Costo operativo: 3–4x mayor que automatización IA</div>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-icon">🐌</div>
+        <div class="problem-title">Tiempos de Autorización Inaceptables</div>
+        <div class="problem-desc">El proceso actual de autorización médica puede tomar hasta 48 horas hábiles. En emergencias y cirugías planificadas, esto deteriora gravemente la experiencia del afiliado.</div>
+        <div class="problem-metric">→ Tiempo promedio actual: 24–48 horas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── LA SOLUCIÓN ─── -->
+<section id="solucion">
+  <div class="container">
+    <div class="solution-header reveal">
+      <div class="section-eyebrow">La Solución</div>
+      <h2 class="section-title">Un proyecto. Doble impacto.</h2>
+      <p class="section-subtitle">Vibramente entrega dos componentes integrados que se potencian mutuamente: el agente que atiende y la plataforma que lo protege.</p>
+    </div>
+    <div class="dual-component">
+      <div class="component-card a reveal-left">
+        <div class="component-letter">A</div>
+        <div class="component-badge">Componente A</div>
+        <h3 class="component-title">Agente Conversacional Saludsa</h3>
+        <p class="component-desc">Un asistente virtual inteligente que representa a Saludsa en todos sus canales digitales, disponible 24 horas, 7 días a la semana, 365 días al año.</p>
+        <div class="component-features">
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Atención de consultas de coberturas en tiempo real
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Procesamiento de solicitudes de autorización médica con IA
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Gestión inteligente del proceso de reembolsos
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Asistente de afiliación para nuevos prospectos
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Escalado transparente a agente humano
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Multi-canal: WhatsApp · Web · App Móvil
+          </div>
+        </div>
+      </div>
+      <div class="component-card b reveal-right">
+        <div class="component-letter">B</div>
+        <div class="component-badge">Componente B</div>
+        <h3 class="component-title">Seguridad en Plataforma de Agentes</h3>
+        <p class="component-desc">Mientras construimos el agente de Saludsa, incorporamos un módulo de seguridad empresarial en la infraestructura de Vibramente. Sus agentes lo heredan automáticamente.</p>
+        <div class="component-features">
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Sandboxing de ejecución de agentes IA
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Revisión de código automatizada (detección de vulnerabilidades)
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Logging y auditoría completa de todas las acciones
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Control granular de acceso a herramientas y APIs
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Monitoreo de comportamiento anómalo en tiempo real
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            Panel de seguridad y compliance para el equipo de Saludsa
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dual-value-banner reveal">
+      <div class="dual-value-icon">💡</div>
+      <div class="dual-value-text">
+        <h3>¿Por qué este modelo beneficia especialmente a Saludsa?</h3>
+        <p>Al construir el agente conversacional de Saludsa sobre la plataforma de Vibramente con módulo de seguridad activo, <strong>cada mejora de seguridad que hagamos en la plataforma se transfiere automáticamente a los agentes de Saludsa</strong>. No es solo un proyecto puntual: es una relación de mejora continua donde Saludsa siempre opera sobre infraestructura de vanguardia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CASOS DE USO ─── -->
+<section id="casos">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Casos de Uso</div>
+      <h2 class="section-title">Cuatro agentes que trabajan por Saludsa</h2>
+      <p class="section-subtitle">Casos de uso concretos, con impacto medible en la operación diaria de Saludsa.</p>
+    </div>
+    <div class="casos-grid">
+      <div class="caso-card reveal">
+        <div class="caso-number">01</div>
+        <div class="caso-tag">Autorizaciones Médicas</div>
+        <h3 class="caso-title">Bot de Autorizaciones 24/7</h3>
+        <p class="caso-desc">Procesa solicitudes de autorización médica automáticamente: valida cobertura, revisa diagnóstico, solicita documentos faltantes y emite autorización o escala a médico auditor en casos complejos.</p>
+        <div class="caso-before-after">
+          <div class="ba-box before">
+            <div class="ba-label">⚠ Antes</div>
+            <div class="ba-value">24–48 horas de espera</div>
+          </div>
+          <div class="ba-box after">
+            <div class="ba-label">✓ Con IA</div>
+            <div class="ba-value">Minutos, 24/7</div>
+          </div>
+        </div>
+      </div>
+      <div class="caso-card reveal">
+        <div class="caso-number">02</div>
+        <div class="caso-tag">Reembolsos</div>
+        <h3 class="caso-title">Agente de Gestión de Reembolsos</h3>
+        <p class="caso-desc">Acompaña al afiliado en todo el proceso: captura de documentos vía foto, validación automática de facturas, verificación de cobertura y seguimiento del estado del reembolso en tiempo real.</p>
+        <div class="caso-before-after">
+          <div class="ba-box before">
+            <div class="ba-label">⚠ Antes</div>
+            <div class="ba-value">Proceso manual, presencial</div>
+          </div>
+          <div class="ba-box after">
+            <div class="ba-label">✓ Con IA</div>
+            <div class="ba-value">Digital, en minutos</div>
+          </div>
+        </div>
+      </div>
+      <div class="caso-card reveal">
+        <div class="caso-number">03</div>
+        <div class="caso-tag">Afiliación</div>
+        <h3 class="caso-title">Asistente de Nuevos Afiliados</h3>
+        <p class="caso-desc">Guía al prospecto desde el primer contacto: presenta planes, explica coberturas, responde objeciones frecuentes, recolecta datos y conecta con el asesor comercial en el momento óptimo.</p>
+        <div class="caso-before-after">
+          <div class="ba-box before">
+            <div class="ba-label">⚠ Antes</div>
+            <div class="ba-value">Solo en horario comercial</div>
+          </div>
+          <div class="ba-box after">
+            <div class="ba-label">✓ Con IA</div>
+            <div class="ba-value">Leads calificados 24/7</div>
+          </div>
+        </div>
+      </div>
+      <div class="caso-card reveal">
+        <div class="caso-number">04</div>
+        <div class="caso-tag">Red Comercial</div>
+        <h3 class="caso-title">Copiloto del Asesor Comercial</h3>
+        <p class="caso-desc">Asistente en tiempo real para asesores de campo: responde preguntas técnicas sobre coberturas, genera cotizaciones al instante y sugiere el plan más adecuado según el perfil del cliente.</p>
+        <div class="caso-before-after">
+          <div class="ba-box before">
+            <div class="ba-label">⚠ Antes</div>
+            <div class="ba-value">Consultar manuales / HQ</div>
+          </div>
+          <div class="ba-box after">
+            <div class="ba-label">✓ Con IA</div>
+            <div class="ba-value">Respuesta instantánea</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ARQUITECTURA ─── -->
+<section id="arquitectura">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Arquitectura Técnica</div>
+      <h2 class="section-title">Diseñado para escalar con Saludsa</h2>
+      <p class="section-subtitle">Una arquitectura de capas con seguridad integrada en cada nivel del stack.</p>
+    </div>
+    <div class="arch-diagram reveal">
+
+      <div class="arch-layer">
+        <div class="arch-layer-label">Capa de Canales — Punto de Contacto con el Afiliado</div>
+        <div class="arch-nodes">
+          <div class="arch-node highlight">
+            <span class="arch-node-icon">💬</span>WhatsApp Business API
+          </div>
+          <div class="arch-node highlight">
+            <span class="arch-node-icon">🌐</span>Chat Web Embebido
+          </div>
+          <div class="arch-node highlight">
+            <span class="arch-node-icon">📱</span>App Móvil Saludsa
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><div class="arch-arrow-line"></div></div>
+
+      <div class="arch-layer">
+        <div class="arch-layer-label">Capa de Orquestación — Motor del Agente IA</div>
+        <div class="arch-nodes">
+          <div class="arch-node">
+            <span class="arch-node-icon">🧠</span>Agente Conversacional LLM
+          </div>
+          <div class="arch-node">
+            <span class="arch-node-icon">📋</span>Gestor de Contexto & Memoria
+          </div>
+          <div class="arch-node">
+            <span class="arch-node-icon">🔀</span>Router de Intenciones
+          </div>
+          <div class="arch-node">
+            <span class="arch-node-icon">👤</span>Escalado a Humano
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><div class="arch-arrow-line"></div></div>
+
+      <div class="arch-layer">
+        <div class="arch-layer-label">Capa de Seguridad — Módulo Vibramente (Componente B)</div>
+        <div class="arch-nodes">
+          <div class="arch-node security">
+            <span class="arch-node-icon">🔐</span>Sandboxing de Ejecución
+          </div>
+          <div class="arch-node security">
+            <span class="arch-node-icon">📝</span>Logging & Auditoría Completa
+          </div>
+          <div class="arch-node security">
+            <span class="arch-node-icon">🔍</span>Detección de Anomalías
+          </div>
+          <div class="arch-node security">
+            <span class="arch-node-icon">🛡️</span>Control de Acceso Granular
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-arrow"><div class="arch-arrow-line"></div></div>
+
+      <div class="arch-layer">
+        <div class="arch-layer-label">Capa de Integración — Sistemas Core Saludsa</div>
+        <div class="arch-nodes">
+          <div class="arch-node">
+            <span class="arch-node-icon">🏥</span>Core de Coberturas
+          </div>
+          <div class="arch-node">
+            <span class="arch-node-icon">📄</span>Sistema de Autorizaciones
+          </div>
+          <div class="arch-node">
+            <span class="arch-node-icon">💰</span>Gestión de Reembolsos
+          </div>
+          <div class="arch-node">
+            <span class="arch-node-icon">👥</span>CRM de Afiliados
+          </div>
+          <div class="arch-node">
+            <span class="arch-node-icon">🔗</span>APIs Externas (definir en Discovery)
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── ENTREGABLES ─── -->
+<section id="entregables">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Entregables</div>
+      <h2 class="section-title">Lo que Saludsa recibe</h2>
+      <p class="section-subtitle">Un paquete completo de implementación, soporte y documentación para garantizar la adopción exitosa.</p>
+    </div>
+    <div class="entregables-grid">
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">🤖</div>
+        <div class="entregable-title">Agente Conversacional Multi-Canal</div>
+        <div class="entregable-desc">Despliegue completo en WhatsApp Business, web embeddable y app móvil. Entrenado con los flujos y coberturas de Saludsa.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">🔐</div>
+        <div class="entregable-title">Módulo de Revisión de Código & Seguridad</div>
+        <div class="entregable-desc">Detección automatizada de vulnerabilidades en el código del agente, con reporte y corrección sugerida integrados en el pipeline.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">📊</div>
+        <div class="entregable-title">Panel de Monitoreo en Tiempo Real</div>
+        <div class="entregable-desc">Dashboard ejecutivo con métricas de conversaciones, tasa de resolución, tiempos de respuesta y alertas de seguridad.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">📝</div>
+        <div class="entregable-title">Sistema de Logging y Auditoría</div>
+        <div class="entregable-desc">Registro completo e inmutable de todas las interacciones del agente, listo para auditoría regulatoria y revisión interna.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">🔗</div>
+        <div class="entregable-title">Integración con APIs Core de Saludsa</div>
+        <div class="entregable-desc">Conectores a los sistemas de coberturas, autorizaciones, reembolsos y CRM definidos en la fase de Discovery.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">📚</div>
+        <div class="entregable-title">Documentación Técnica Completa</div>
+        <div class="entregable-desc">Manual de arquitectura, guías de integración, runbooks operativos y documentación de APIs para el equipo técnico de Saludsa.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">🎓</div>
+        <div class="entregable-title">Capacitación al Equipo (2 Sesiones)</div>
+        <div class="entregable-desc">Sesión técnica para el equipo IT de Saludsa y sesión funcional para líderes de negocio. Grabadas para consulta posterior.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">🛡️</div>
+        <div class="entregable-title">3 Meses de Soporte Incluido</div>
+        <div class="entregable-desc">Soporte técnico prioritario post go-live, monitoreo activo del agente y ajustes de comportamiento sin costo adicional.</div>
+      </div>
+      <div class="entregable-card reveal">
+        <div class="entregable-icon">📋</div>
+        <div class="entregable-title">SLA Definido y Firmado</div>
+        <div class="entregable-desc">Acuerdo de nivel de servicio con uptime garantizado, tiempos de respuesta ante incidentes y métricas de calidad del agente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CRONOGRAMA ─── -->
+<section id="cronograma">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Cronograma</div>
+      <h2 class="section-title">14 semanas de implementación</h2>
+      <p class="section-subtitle">Un plan estructurado en cuatro fases con hitos claros y entregables verificables al final de cada etapa.</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">🔍</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Fase 1</div>
+          <div class="timeline-title">Discovery & Arquitectura</div>
+          <div class="timeline-desc">Levantamiento detallado de casos de uso prioritarios, mapeo de APIs y sistemas core de Saludsa, diseño de arquitectura de integración y definición del scope técnico final.</div>
+          <span class="timeline-duration">📅 2 semanas</span>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">⚙️</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Fase 2</div>
+          <div class="timeline-title">Desarrollo del Agente Conversacional Core</div>
+          <div class="timeline-desc">Construcción del agente IA con los flujos de autorizaciones y coberturas. Integración con WhatsApp Business y web. Primera demo funcional al equipo de Saludsa en semana 5.</div>
+          <span class="timeline-duration">📅 6 semanas</span>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">🔐</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Fase 3</div>
+          <div class="timeline-title">Incorporación del Módulo de Seguridad</div>
+          <div class="timeline-desc">Desarrollo e integración del sandbox de ejecución, sistema de logging, monitoreo de anomalías y panel de seguridad. Pruebas de penetración y revisión de vulnerabilidades.</div>
+          <span class="timeline-duration">📅 4 semanas</span>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot">🚀</div>
+        <div class="timeline-content">
+          <div class="timeline-phase">Fase 4</div>
+          <div class="timeline-title">QA · Capacitación · Go-Live</div>
+          <div class="timeline-desc">Testing integral del agente con escenarios reales de Saludsa, ajustes finales de comportamiento, sesiones de capacitación al equipo y lanzamiento controlado en producción.</div>
+          <span class="timeline-duration">📅 2 semanas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MÉTRICAS DE ÉXITO ─── -->
+<section id="metricas">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-eyebrow">Métricas de Éxito</div>
+      <h2 class="section-title">Lo que medimos. Lo que garantizamos.</h2>
+      <p class="section-subtitle" style="margin:0 auto;color:rgba(255,255,255,0.55)">Indicadores concretos acordados antes del inicio del proyecto para validar el éxito de la implementación.</p>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card reveal">
+        <div class="metric-icon">⚡</div>
+        <span class="metric-value">99.5%</span>
+        <div class="metric-label">Uptime garantizado</div>
+        <div class="metric-desc">El agente opera de forma continua con monitoreo activo y alertas automáticas ante cualquier degradación del servicio.</div>
+      </div>
+      <div class="metric-card reveal">
+        <div class="metric-icon">🏆</div>
+        <span class="metric-value">80%</span>
+        <div class="metric-label">Tasa de resolución sin humano</div>
+        <div class="metric-desc">El 80% de las consultas debe resolverse de forma autónoma por el agente en los primeros 3 meses de operación.</div>
+      </div>
+      <div class="metric-card reveal">
+        <div class="metric-icon">⚡</div>
+        <span class="metric-value">&lt;2s</span>
+        <div class="metric-label">Tiempo de respuesta del agente</div>
+        <div class="metric-desc">Latencia máxima de 2 segundos para la primera respuesta del agente, incluyendo consulta a sistemas core de Saludsa.</div>
+      </div>
+      <div class="metric-card reveal">
+        <div class="metric-icon">😊</div>
+        <span class="metric-value">+35%</span>
+        <div class="metric-label">Mejora en satisfacción (NPS)</div>
+        <div class="metric-desc">Incremento objetivo en NPS de afiliados medido a los 3 meses de operación versus baseline actual de Saludsa.</div>
+      </div>
+      <div class="metric-card reveal">
+        <div class="metric-icon">🕐</div>
+        <span class="metric-value">-90%</span>
+        <div class="metric-label">Reducción tiempo de autorización</div>
+        <div class="metric-desc">Pasar del proceso actual de 24–48 horas a un tiempo promedio menor a 30 minutos para casos estándar.</div>
+      </div>
+      <div class="metric-card reveal">
+        <div class="metric-icon">🔐</div>
+        <span class="metric-value">0</span>
+        <div class="metric-label">Incidentes de seguridad críticos</div>
+        <div class="metric-desc">Meta de cero incidentes de seguridad críticos en los primeros 12 meses, respaldada por el módulo de monitoreo activo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── INVERSIÓN ─── -->
+<section id="inversion">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Inversión</div>
+      <h2 class="section-title">Precio claro. Valor excepcional.</h2>
+      <p class="section-subtitle">Un modelo de inversión simple y predecible, sin costos ocultos ni sorpresas.</p>
+    </div>
+    <div class="investment-container">
+      <div class="pricing-card reveal-left">
+        <div class="pricing-badge">✦ Propuesta Oficial</div>
+
+        <div class="pricing-main-label">Implementación &amp; Setup</div>
+        <div class="pricing-amount"><sup>$</sup>20,000</div>
+        <div class="pricing-period">USD · Pago único · Incluye todo el desarrollo y go-live</div>
+
+        <div class="pricing-divider"></div>
+
+        <div class="pricing-line">
+          <span class="pricing-line-label">Agente Conversacional Multi-Canal</span>
+          <span class="pricing-line-value highlight">Incluido</span>
+        </div>
+        <div class="pricing-line">
+          <span class="pricing-line-label">Módulo de Seguridad Empresarial</span>
+          <span class="pricing-line-value highlight">Incluido</span>
+        </div>
+        <div class="pricing-line">
+          <span class="pricing-line-label">Integraciones con sistemas core Saludsa</span>
+          <span class="pricing-line-value highlight">Incluido</span>
+        </div>
+        <div class="pricing-line">
+          <span class="pricing-line-label">Panel de monitoreo en tiempo real</span>
+          <span class="pricing-line-value highlight">Incluido</span>
+        </div>
+        <div class="pricing-line">
+          <span class="pricing-line-label">Capacitación al equipo (2 sesiones)</span>
+          <span class="pricing-line-value highlight">Incluido</span>
+        </div>
+        <div class="pricing-line">
+          <span class="pricing-line-label">3 meses de soporte post go-live</span>
+          <span class="pricing-line-value green">Incluido ✓</span>
+        </div>
+        <div class="pricing-line">
+          <span class="pricing-line-label">Documentación técnica completa</span>
+          <span class="pricing-line-value green">Incluido ✓</span>
+        </div>
+
+        <div class="pricing-divider"></div>
+
+        <div class="pricing-monthly-label">Soporte &amp; Mantenimiento Mensual</div>
+        <div class="pricing-monthly-amount">$1,500 <span style="font-size:18px;opacity:0.6">USD/mes</span></div>
+        <div class="pricing-monthly-desc">Desde el mes 4 · Actualizaciones · Monitoreo activo · Soporte prioritario</div>
+
+        <button class="pricing-cta">Aprobar Propuesta → Agendar Kick-off</button>
+      </div>
+
+      <div class="reveal-right" style="display:flex;flex-direction:column;gap:24px;">
+        <div class="pricing-includes">
+          <h4>¿Qué incluye el mantenimiento mensual?</h4>
+          <div class="include-item">
+            <div class="include-check">✓</div>
+            Monitoreo activo del agente 24/7
+          </div>
+          <div class="include-item">
+            <div class="include-check">✓</div>
+            Actualizaciones de modelos de IA y seguridad
+          </div>
+          <div class="include-item">
+            <div class="include-check">✓</div>
+            Soporte técnico prioritario (SLA 4h respuesta)
+          </div>
+          <div class="include-item">
+            <div class="include-check">✓</div>
+            Ajustes de comportamiento del agente
+          </div>
+          <div class="include-item">
+            <div class="include-check">✓</div>
+            Reportes mensuales de performance y seguridad
+          </div>
+          <div class="include-item">
+            <div class="include-check">✓</div>
+            Actualizaciones regulatorias de compliance
+          </div>
+        </div>
+
+        <div style="background:var(--gold-pale);border:2px solid var(--gold);border-radius:16px;padding:24px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Resumen de Inversión Año 1</div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(201,162,39,0.3);">
+            <span style="font-size:13px;color:var(--navy);">Setup + Implementación</span>
+            <span style="font-size:13px;font-weight:700;color:var(--navy);">$20,000</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(201,162,39,0.3);">
+            <span style="font-size:13px;color:var(--navy);">3 meses soporte (incluido)</span>
+            <span style="font-size:13px;font-weight:700;color:var(--success);">$0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(201,162,39,0.3);">
+            <span style="font-size:13px;color:var(--navy);">Mantenimiento meses 4–12 (9 meses)</span>
+            <span style="font-size:13px;font-weight:700;color:var(--navy);">$13,500</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0;margin-top:4px;">
+            <span style="font-size:14px;font-weight:700;color:var(--navy-dark);">Total efectivo Año 1</span>
+            <span style="font-size:18px;font-weight:800;color:var(--navy-dark);">$33,500</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ROI ─── -->
+<section id="roi">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Retorno de Inversión</div>
+      <h2 class="section-title">La inversión se paga sola</h2>
+      <p class="section-subtitle">Estimaciones conservadoras basadas en benchmarks del sector seguros en Latinoamérica.</p>
+    </div>
+    <div class="roi-grid">
+      <div class="reveal-left">
+        <div class="roi-table">
+          <div class="roi-table-header">
+            <span>Métrica</span>
+            <span>Sin IA</span>
+            <span>Con IA</span>
+          </div>
+          <div class="roi-row">
+            <div class="roi-metric">Tiempo autorización</div>
+            <div class="roi-before">24–48 horas</div>
+            <div class="roi-after">&lt;30 min</div>
+          </div>
+          <div class="roi-row">
+            <div class="roi-metric">Disponibilidad</div>
+            <div class="roi-before">8h / 5 días</div>
+            <div class="roi-after">24/7 / 365</div>
+          </div>
+          <div class="roi-row">
+            <div class="roi-metric">Costo por interacción</div>
+            <div class="roi-before">$8–15 USD</div>
+            <div class="roi-after">$0.10–0.30</div>
+          </div>
+          <div class="roi-row">
+            <div class="roi-metric">Capacidad simultánea</div>
+            <div class="roi-before">1 agente = 1 cliente</div>
+            <div class="roi-after">Ilimitada</div>
+          </div>
+          <div class="roi-row">
+            <div class="roi-metric">Satisfacción del cliente</div>
+            <div class="roi-before">NPS base</div>
+            <div class="roi-after">NPS +35%</div>
+          </div>
+          <div class="roi-row">
+            <div class="roi-metric">Errores en procesos</div>
+            <div class="roi-before">5–10% tasa error</div>
+            <div class="roi-after">&lt;1% con IA</div>
+          </div>
+        </div>
+      </div>
+      <div class="roi-summary-cards reveal-right">
+        <div class="roi-summary-card">
+          <div class="roi-summary-icon gold">💰</div>
+          <div>
+            <div class="roi-summary-value">~$6,000</div>
+            <div class="roi-summary-label">Ahorro mensual estimado en operación de call center (conservador)</div>
+          </div>
+        </div>
+        <div class="roi-summary-card">
+          <div class="roi-summary-icon green">📈</div>
+          <div>
+            <div class="roi-summary-value">&lt;6 meses</div>
+            <div class="roi-summary-label">Tiempo estimado de recuperación de la inversión inicial</div>
+          </div>
+        </div>
+        <div class="roi-summary-card">
+          <div class="roi-summary-icon blue">🔄</div>
+          <div>
+            <div class="roi-summary-value">Año 2+</div>
+            <div class="roi-summary-label">ROI neto positivo desde el año 2, con solo $18,000 anuales de mantenimiento</div>
+          </div>
+        </div>
+        <div style="background:var(--navy);border-radius:16px;padding:20px 24px;color:var(--white);">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-light);margin-bottom:8px;">Fuentes</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.7;">Gartner: 80% de interacciones de servicio al cliente manejadas por IA para 2025. McKinsey: seguros que adoptan IA reducen costos operativos 25–35% en 2 años. IBM: ROI promedio de chatbots empresariales en sector seguros: 3.5x en 18 meses.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRÓXIMOS PASOS ─── -->
+<section id="pasos">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-eyebrow">Próximos Pasos</div>
+      <h2 class="section-title" style="color:var(--white)">De propuesta a impacto en 4 movimientos</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-number">01</div>
+        <div class="step-icon">✅</div>
+        <div class="step-title">Aprobación Comité Ejecutivo</div>
+        <div class="step-desc">Presentación de esta propuesta al comité y aprobación formal del proyecto y presupuesto.</div>
+        <div class="step-timing">Miércoles · Comité Ejecutivo</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-number">02</div>
+        <div class="step-icon">📝</div>
+        <div class="step-title">Firma de Contrato &amp; SOW</div>
+        <div class="step-desc">Revisión legal del contrato, firma de Statement of Work y acuerdo de confidencialidad (NDA).</div>
+        <div class="step-timing">Semana siguiente a aprobación</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-number">03</div>
+        <div class="step-icon">🚀</div>
+        <div class="step-title">Kick-off del Proyecto</div>
+        <div class="step-desc">Reunión de arranque con los equipos técnicos de Saludsa y Vibramente para iniciar la Fase 1 de Discovery.</div>
+        <div class="step-timing">Semana 1 del proyecto</div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-number">04</div>
+        <div class="step-icon">🎯</div>
+        <div class="step-title">Primera Demo en Vivo</div>
+        <div class="step-desc">Demostración del agente conversacional funcionando con datos reales de Saludsa ante el equipo directivo.</div>
+        <div class="step-timing">Semana 5 del proyecto</div>
+      </div>
+    </div>
+
+    <div style="margin-top:60px;text-align:center;padding:48px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,162,39,0.25);border-radius:28px;" class="reveal">
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--white);margin-bottom:14px;">¿Listos para redefinir la atención al afiliado?</div>
+      <p style="font-size:15px;color:rgba(255,255,255,0.5);margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;">Esta propuesta tiene validez de 30 días. Estamos disponibles para resolver cualquier duda técnica o comercial antes del comité ejecutivo.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <div style="background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy-dark);border-radius:12px;padding:14px 32px;font-size:14px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;">Felipe Salgado · Vibramente</div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:var(--white);border-radius:12px;padding:14px 32px;font-size:14px;font-weight:600;">Para: Marco Puente · VP Saludsa</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">Vibramente</div>
+  <div class="footer-sub">Inteligencia Artificial Empresarial · Quito, Ecuador</div>
+  <div class="footer-contact">Propuesta preparada por Felipe Salgado · Abril 2026</div>
+  <div class="footer-legal">Documento confidencial preparado exclusivamente para Saludsa Ecuador. No distribuir sin autorización. © 2026 Vibramente.</div>
+</footer>
+
+<!-- ─── SCROLL ANIMATION SCRIPT ─── -->
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Stagger children in grids
+  document.querySelectorAll('.problem-grid .problem-card, .casos-grid .caso-card, .metrics-grid .metric-card, .steps-grid .step-card, .entregables-grid .entregable-card').forEach((card, i) => {
+    card.style.transitionDelay = `${(i % 4) * 0.1}s`;
+  });
+
+  // Animate chat messages sequentially
+  const msgs = document.querySelectorAll('.msg, .typing-indicator');
+  msgs.forEach((msg, i) => {
+    msg.style.opacity = '0';
+    setTimeout(() => {
+      msg.style.opacity = '1';
+      msg.style.animation = 'msg-in 0.4s ease forwards';
+    }, 800 + i * 700);
+  });
+</script>
+
+</body>
+</html>

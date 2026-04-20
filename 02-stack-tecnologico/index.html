@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stack Tecnológico IA · Propuesta Saludsa 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:      #1a2744;
+      --navy-mid:  #22325a;
+      --navy-light:#2d4070;
+      --gold:      #c9a227;
+      --gold-light:#e8c547;
+      --gold-pale: #f5e8b5;
+      --white:     #ffffff;
+      --gray-100:  #f4f6fa;
+      --gray-200:  #e8ecf5;
+      --gray-400:  #9ba8c0;
+      --gray-600:  #5a6680;
+      --text:      #1e2535;
+      --shadow-sm: 0 2px 8px rgba(26,39,68,.08);
+      --shadow-md: 0 8px 32px rgba(26,39,68,.12);
+      --shadow-lg: 0 20px 60px rgba(26,39,68,.18);
+      --radius:    14px;
+      --transition: .4s cubic-bezier(.25,.8,.25,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4 { font-family: 'Playfair Display', serif; line-height: 1.2; }
+    a { color: var(--gold); text-decoration: none; }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+    .reveal-left  { opacity:0; transform:translateX(-40px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal-right { opacity:0; transform:translateX(40px);  transition: opacity .7s ease, transform .7s ease; }
+    .reveal-left.visible, .reveal-right.visible { opacity:1; transform:none; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(26,39,68,.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,162,39,.2);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-brand { display:flex; align-items:center; gap:.75rem; }
+    .nav-brand .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 8px var(--gold);
+    }
+    .nav-brand span { font-family:'Montserrat',sans-serif; font-weight:700; font-size:.95rem; color:var(--white); letter-spacing:.08em; text-transform:uppercase; }
+    .nav-links { display:flex; gap:2rem; }
+    .nav-links a { font-size:.78rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.65); transition:color .25s; }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-badge {
+      background: linear-gradient(135deg,var(--gold),var(--gold-light));
+      color: var(--navy); font-size:.7rem; font-weight:800; letter-spacing:.06em;
+      padding: .25rem .75rem; border-radius:20px; text-transform:uppercase;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 40%, #0f1c38 75%, #0a1228 100%);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 100px 2rem 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content:'';
+      position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(201,162,39,.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(45,64,112,.5) 0%, transparent 60%);
+      pointer-events:none;
+    }
+    .hero-grid {
+      position:absolute; inset:0; pointer-events:none;
+      background-image:
+        linear-gradient(rgba(201,162,39,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-inner { max-width:1100px; margin:0 auto; width:100%; position:relative; z-index:1; }
+    .hero-eyebrow {
+      display:inline-flex; align-items:center; gap:.6rem;
+      background: rgba(201,162,39,.15); border:1px solid rgba(201,162,39,.3);
+      border-radius:30px; padding:.4rem 1.1rem;
+      font-size:.72rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+      color: var(--gold-light); margin-bottom:2rem;
+    }
+    .hero-eyebrow span { width:6px; height:6px; border-radius:50%; background:var(--gold); display:block; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      color: var(--white); margin-bottom:1.2rem;
+      line-height: 1.1;
+    }
+    .hero h1 em { color:var(--gold); font-style:normal; }
+    .hero-subtitle {
+      font-size: clamp(1rem,2vw,1.2rem); font-weight:300;
+      color: rgba(255,255,255,.72); max-width:640px; margin-bottom:3rem;
+    }
+    .hero-meta {
+      display:flex; flex-wrap:wrap; gap:2rem;
+    }
+    .hero-meta-item { display:flex; flex-direction:column; gap:.2rem; }
+    .hero-meta-label { font-size:.68rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+    .hero-meta-value { font-size:.95rem; font-weight:600; color:var(--white); }
+    .hero-divider { width:60px; height:3px; background:linear-gradient(90deg,var(--gold),transparent); margin:2.5rem 0; }
+    .hero-stats {
+      display:flex; flex-wrap:wrap; gap:1rem; margin-top:3rem;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius:12px; padding:1.2rem 1.8rem;
+      display:flex; flex-direction:column; gap:.2rem;
+      flex:1; min-width:140px;
+      transition: var(--transition);
+    }
+    .hero-stat:hover { background:rgba(201,162,39,.1); border-color:rgba(201,162,39,.3); }
+    .hero-stat .num { font-family:'Playfair Display',serif; font-size:1.9rem; font-weight:700; color:var(--gold); }
+    .hero-stat .lbl { font-size:.72rem; font-weight:600; letter-spacing:.06em; color:rgba(255,255,255,.55); text-transform:uppercase; }
+
+    /* ─── SECTIONS ─── */
+    section { padding:100px 2rem; }
+    .container { max-width:1100px; margin:0 auto; width:100%; }
+    .section-eyebrow {
+      font-size:.7rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--gold); margin-bottom:.75rem; display:flex; align-items:center; gap:.6rem;
+    }
+    .section-eyebrow::before { content:''; display:block; width:28px; height:2px; background:var(--gold); }
+    .section-title { font-size:clamp(1.8rem,3.5vw,2.6rem); color:var(--navy); margin-bottom:1rem; }
+    .section-subtitle { font-size:1.05rem; color:var(--gray-600); max-width:640px; margin-bottom:3.5rem; font-weight:400; }
+    .section-dark { background:var(--navy); }
+    .section-dark .section-title { color:var(--white); }
+    .section-dark .section-subtitle { color:rgba(255,255,255,.6); }
+    .section-gray { background:var(--gray-100); }
+
+    /* ─── RESUMEN EJECUTIVO ─── */
+    .exec-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+    .exec-card {
+      background:var(--white); border-radius:var(--radius);
+      border:1px solid var(--gray-200); padding:2rem;
+      box-shadow:var(--shadow-sm);
+      transition:var(--transition);
+    }
+    .exec-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); }
+    .exec-card-icon {
+      width:48px; height:48px; border-radius:12px;
+      background:linear-gradient(135deg,var(--navy),var(--navy-light));
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.4rem; margin-bottom:1.2rem;
+    }
+    .exec-card h3 { font-family:'Montserrat',sans-serif; font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:.5rem; }
+    .exec-card p { font-size:.9rem; color:var(--gray-600); line-height:1.7; }
+    .exec-highlight {
+      grid-column:1/-1;
+      background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);
+      border:none; color:var(--white); padding:2.5rem;
+    }
+    .exec-highlight p { color:rgba(255,255,255,.8); font-size:1.05rem; }
+    .exec-highlight h3 { color:var(--gold); font-size:1.15rem; }
+
+    /* ─── PROBLEMA / OPORTUNIDAD ─── */
+    .oportunidad-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
+    .oportunidad-text p { color:rgba(255,255,255,.75); margin-bottom:1.2rem; font-size:.97rem; }
+    .pain-list { list-style:none; display:flex; flex-direction:column; gap:.8rem; }
+    .pain-list li {
+      display:flex; align-items:flex-start; gap:.8rem;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+      border-radius:10px; padding:.9rem 1.1rem;
+      font-size:.9rem; color:rgba(255,255,255,.8);
+    }
+    .pain-list li .icon { color:var(--gold); font-size:1.1rem; flex-shrink:0; margin-top:.1rem; }
+    .oportunidad-visual {
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(201,162,39,.2);
+      border-radius:var(--radius); padding:2rem;
+    }
+    .oportunidad-visual h3 { font-family:'Montserrat',sans-serif; font-weight:700; font-size:1rem; color:var(--gold); margin-bottom:1.5rem; text-transform:uppercase; letter-spacing:.06em; }
+    .opp-item {
+      display:flex; gap:1rem; margin-bottom:1.2rem; align-items:flex-start;
+    }
+    .opp-num {
+      min-width:36px; height:36px; border-radius:50%;
+      background:linear-gradient(135deg,var(--gold),var(--gold-light));
+      color:var(--navy); display:flex; align-items:center; justify-content:center;
+      font-size:.8rem; font-weight:800;
+    }
+    .opp-text strong { display:block; font-size:.9rem; font-weight:700; color:var(--white); margin-bottom:.15rem; }
+    .opp-text span { font-size:.82rem; color:rgba(255,255,255,.55); }
+
+    /* ─── METODOLOGÍA ─── */
+    .phases { display:flex; gap:0; flex-direction:column; }
+    .phase-row {
+      display:grid; grid-template-columns:220px 1fr;
+      border-bottom:1px solid var(--gray-200); position:relative;
+    }
+    .phase-row:last-child { border-bottom:none; }
+    .phase-label {
+      padding:2.5rem 2rem 2.5rem 0;
+      border-right:2px solid var(--gold);
+      display:flex; flex-direction:column; gap:.5rem;
+      position:relative;
+    }
+    .phase-label::after {
+      content:'';
+      position:absolute; right:-8px; top:50%;
+      transform:translateY(-50%);
+      width:14px; height:14px; border-radius:50%;
+      background:var(--gold); border:3px solid var(--white);
+      box-shadow:0 0 0 3px var(--gold);
+    }
+    .phase-num { font-size:.68rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+    .phase-name { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--navy); }
+    .phase-weeks { font-size:.78rem; color:var(--gray-400); font-weight:600; }
+    .phase-content { padding:2.5rem 0 2.5rem 2.5rem; }
+    .phase-content p { font-size:.92rem; color:var(--gray-600); margin-bottom:1rem; }
+    .phase-tags { display:flex; flex-wrap:wrap; gap:.5rem; }
+    .phase-tag {
+      background:var(--gray-200); color:var(--navy);
+      font-size:.72rem; font-weight:700; padding:.3rem .8rem;
+      border-radius:20px; letter-spacing:.04em;
+    }
+    .phase-tag.gold { background:var(--gold-pale); color:#7a5e00; }
+
+    /* ─── ENTREGABLES ─── */
+    .deliverables-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+    .deliverable {
+      background:var(--white); border-radius:var(--radius);
+      border:1px solid var(--gray-200); padding:1.8rem;
+      display:flex; gap:1.2rem; align-items:flex-start;
+      transition:var(--transition); box-shadow:var(--shadow-sm);
+    }
+    .deliverable:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); border-color:var(--gold-pale); }
+    .deliverable-check {
+      min-width:40px; height:40px; border-radius:50%;
+      background:linear-gradient(135deg,#1a8c4e,#22b86e);
+      display:flex; align-items:center; justify-content:center;
+      color:white; font-size:1rem; flex-shrink:0;
+    }
+    .deliverable-body h4 { font-family:'Montserrat',sans-serif; font-size:.95rem; font-weight:700; color:var(--navy); margin-bottom:.3rem; }
+    .deliverable-body p { font-size:.85rem; color:var(--gray-600); line-height:1.6; }
+    .deliverable-body .badge {
+      display:inline-block; margin-top:.5rem;
+      font-size:.65rem; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+      background:var(--gray-200); color:var(--navy-mid); padding:.2rem .6rem; border-radius:10px;
+    }
+
+    /* ─── CRONOGRAMA ─── */
+    .timeline-wrap { overflow-x:auto; }
+    .timeline-table {
+      width:100%; border-collapse:separate; border-spacing:0;
+      font-size:.85rem;
+    }
+    .timeline-table thead th {
+      background:var(--navy); color:var(--white);
+      padding:.85rem 1rem; text-align:center;
+      font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    }
+    .timeline-table thead th:first-child { text-align:left; border-radius:var(--radius) 0 0 0; }
+    .timeline-table thead th:last-child { border-radius:0 var(--radius) 0 0; }
+    .timeline-table tbody tr:nth-child(even) td { background:#fafbfd; }
+    .timeline-table tbody tr:hover td { background:var(--gold-pale); }
+    .timeline-table td {
+      padding:.8rem 1rem; border-bottom:1px solid var(--gray-200);
+      text-align:center; color:var(--gray-600);
+    }
+    .timeline-table td:first-child { text-align:left; font-weight:600; color:var(--navy); }
+    .timeline-table .bar {
+      background:linear-gradient(90deg,var(--gold),var(--gold-light));
+      border-radius:4px; height:18px; width:100%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:.65rem; font-weight:700; color:var(--navy); white-space:nowrap;
+    }
+    .timeline-table .bar-empty { background:transparent; }
+
+    /* ─── INVERSIÓN ─── */
+    .inversion-wrap { display:grid; grid-template-columns:1.2fr 1fr; gap:3rem; align-items:start; }
+    .price-card {
+      background:linear-gradient(145deg,#fff 60%,#f9f6ee 100%);
+      border:2px solid var(--gold);
+      border-radius:20px; padding:3rem 2.5rem;
+      text-align:center; box-shadow:var(--shadow-lg);
+      position:relative; overflow:hidden;
+    }
+    .price-card::before {
+      content:'';
+      position:absolute; top:-40px; right:-40px;
+      width:160px; height:160px; border-radius:50%;
+      background:radial-gradient(circle,rgba(201,162,39,.15),transparent 70%);
+    }
+    .price-badge {
+      display:inline-block; background:var(--navy);
+      color:var(--gold); font-size:.7rem; font-weight:800;
+      letter-spacing:.1em; text-transform:uppercase;
+      padding:.35rem 1rem; border-radius:20px; margin-bottom:1.5rem;
+    }
+    .price-main { font-family:'Playfair Display',serif; font-size:clamp(3rem,6vw,4.5rem); color:var(--navy); font-weight:800; line-height:1; }
+    .price-currency { font-size:1.8rem; vertical-align:top; margin-top:.5rem; display:inline-block; color:var(--gold); }
+    .price-usd { font-size:1rem; font-weight:700; color:var(--gray-400); letter-spacing:.06em; margin-top:.3rem; }
+    .price-note { font-size:.85rem; color:var(--gray-600); margin-top:.75rem; }
+    .price-includes { margin-top:2rem; text-align:left; }
+    .price-includes h4 { font-family:'Montserrat',sans-serif; font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); margin-bottom:1rem; }
+    .price-item { display:flex; align-items:center; gap:.7rem; margin-bottom:.65rem; font-size:.88rem; color:var(--gray-600); }
+    .price-item .chk { color:#22b86e; font-size:1rem; }
+    .inversion-detail { display:flex; flex-direction:column; gap:1.2rem; }
+    .inv-row {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 1.2rem; background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.1); border-radius:10px;
+    }
+    .inv-row.total {
+      background:linear-gradient(135deg,var(--gold),var(--gold-light));
+      border-color:transparent;
+    }
+    .inv-row.total .inv-label, .inv-row.total .inv-val { color:var(--navy); font-weight:800; }
+    .inv-label { font-size:.88rem; font-weight:500; color:rgba(255,255,255,.8); }
+    .inv-val { font-size:.95rem; font-weight:700; color:var(--white); }
+    .inv-note { font-size:.75rem; color:rgba(255,255,255,.45); margin-top:.3rem; display:block; }
+
+    /* ─── ROI ─── */
+    .roi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+    .roi-card {
+      background:rgba(255,255,255,.06); border:1px solid rgba(201,162,39,.2);
+      border-radius:var(--radius); padding:2rem; text-align:center;
+      transition:var(--transition);
+    }
+    .roi-card:hover { background:rgba(255,255,255,.1); border-color:rgba(201,162,39,.45); transform:translateY(-4px); }
+    .roi-icon { font-size:2.2rem; margin-bottom:1rem; }
+    .roi-num { font-family:'Playfair Display',serif; font-size:2.4rem; color:var(--gold); font-weight:700; }
+    .roi-label { font-size:.8rem; font-weight:600; color:rgba(255,255,255,.55); text-transform:uppercase; letter-spacing:.07em; margin-top:.3rem; }
+    .roi-desc { font-size:.85rem; color:rgba(255,255,255,.65); margin-top:.7rem; line-height:1.6; }
+
+    /* ─── PRÓXIMOS PASOS ─── */
+    .steps-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5rem; }
+    .step {
+      background:var(--white); border:1px solid var(--gray-200);
+      border-radius:var(--radius); padding:2rem 1.5rem; text-align:center;
+      transition:var(--transition); box-shadow:var(--shadow-sm);
+    }
+    .step:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); }
+    .step-num {
+      width:52px; height:52px; border-radius:50%; margin:0 auto 1.2rem;
+      background:linear-gradient(135deg,var(--navy),var(--navy-light));
+      display:flex; align-items:center; justify-content:center;
+      font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--gold); font-weight:700;
+    }
+    .step h4 { font-family:'Montserrat',sans-serif; font-size:.9rem; font-weight:700; color:var(--navy); margin-bottom:.5rem; }
+    .step p { font-size:.82rem; color:var(--gray-600); line-height:1.6; }
+    .step-tag { display:inline-block; margin-top:.75rem; font-size:.68rem; font-weight:700; padding:.2rem .7rem; border-radius:10px; background:var(--gold-pale); color:#7a5e00; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background:var(--navy); padding:3rem 2rem;
+      border-top:1px solid rgba(201,162,39,.2);
+      text-align:center;
+    }
+    .footer-brand { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--gold); margin-bottom:.5rem; }
+    .footer-sub { font-size:.82rem; color:rgba(255,255,255,.45); }
+    .footer-divider { width:60px; height:2px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:1.5rem auto; }
+    .footer-contact { font-size:.88rem; color:rgba(255,255,255,.6); }
+    .footer-contact strong { color:var(--white); }
+    .confidential {
+      margin-top:2rem; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+      color:rgba(255,255,255,.25);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:900px) {
+      .exec-grid, .oportunidad-grid, .inversion-wrap { grid-template-columns:1fr; }
+      .deliverables-grid { grid-template-columns:1fr; }
+      .roi-grid { grid-template-columns:1fr 1fr; }
+      .steps-grid { grid-template-columns:1fr 1fr; }
+      .phase-row { grid-template-columns:1fr; }
+      .phase-label { border-right:none; border-bottom:2px solid var(--gold); padding-bottom:1rem; }
+      .phase-label::after { display:none; }
+      .phase-content { padding:1.5rem 0; }
+      .nav-links { display:none; }
+    }
+    @media(max-width:600px) {
+      section { padding:70px 1.2rem; }
+      .roi-grid { grid-template-columns:1fr; }
+      .steps-grid { grid-template-columns:1fr; }
+      .hero-stats { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-brand">
+    <div class="dot"></div>
+    <span>Vibramente · Saludsa</span>
+  </div>
+  <div class="nav-links">
+    <a href="#resumen">Resumen</a>
+    <a href="#metodologia">Metodología</a>
+    <a href="#entregables">Entregables</a>
+    <a href="#inversion">Inversión</a>
+    <a href="#pasos">Siguiente paso</a>
+  </div>
+  <div class="nav-badge">Propuesta v1</div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="inicio">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow reveal">
+      <span></span>
+      Consultoría Estratégica de Inteligencia Artificial
+    </div>
+    <h1 class="reveal">Stack Tecnológico IA:<br /><em>Diagnóstico y Definición</em></h1>
+    <p class="hero-subtitle reveal">
+      Una propuesta para entender exactamente dónde está parado Saludsa en materia de IA, optimizar lo que ya existe y definir el camino tecnológico de los próximos 3–5 años.
+    </p>
+    <div class="hero-divider reveal"></div>
+    <div class="hero-meta reveal">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Cliente</span>
+        <span class="hero-meta-value">Saludsa Ecuador</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Interlocutor</span>
+        <span class="hero-meta-value">Marco Puente · VP</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Proveedor</span>
+        <span class="hero-meta-value">Vibramente</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Versión</span>
+        <span class="hero-meta-value">v1 · Abril 2026</span>
+      </div>
+    </div>
+    <div class="hero-stats reveal">
+      <div class="hero-stat">
+        <span class="num">7</span>
+        <span class="lbl">Semanas de Engagement</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">6</span>
+        <span class="lbl">Entregables Estratégicos</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">18m</span>
+        <span class="lbl">Roadmap de Implementación</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">3–5a</span>
+        <span class="lbl">Horizonte de Planificación</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── RESUMEN EJECUTIVO ─── -->
+<section id="resumen">
+  <div class="container">
+    <div class="section-eyebrow reveal">Resumen Ejecutivo</div>
+    <h2 class="section-title reveal">El punto de partida correcto</h2>
+    <p class="section-subtitle reveal">
+      Antes de definir un stack tecnológico, hay que saber exactamente qué se tiene. Este engagement produce ese mapa con precisión quirúrgica.
+    </p>
+    <div class="exec-grid">
+      <div class="exec-card reveal-left">
+        <div class="exec-card-icon">🔍</div>
+        <h3>Diagnóstico de Precisión</h3>
+        <p>Auditoría completa de todas las APIs, herramientas y consumos de IA activos en Saludsa. Sin zonas grises, sin suposiciones.</p>
+      </div>
+      <div class="exec-card reveal-right">
+        <div class="exec-card-icon">💡</div>
+        <h3>Inteligencia de Costos</h3>
+        <p>Mapeo detallado del gasto actual en IA: qué se paga, a quién y para qué. Identificación de redundancias y oportunidades de consolidación.</p>
+      </div>
+      <div class="exec-card reveal-left">
+        <div class="exec-card-icon">🏗️</div>
+        <h3>Stack Óptimo Definido</h3>
+        <p>Con base en el diagnóstico, proponemos el stack de IA ideal para Saludsa: vendors, arquitectura, integraciones y gobernanza.</p>
+      </div>
+      <div class="exec-card reveal-right">
+        <div class="exec-card-icon">🗺️</div>
+        <h3>Hoja de Ruta Ejecutable</h3>
+        <p>Roadmap de 18 meses con fases claras, hitos medibles y criterios de éxito definidos. Listo para presentar a Directorio.</p>
+      </div>
+      <div class="exec-card exec-highlight reveal">
+        <h3>¿Por qué ahora?</h3>
+        <p>Saludsa ya tiene un consumo significativo de IA. Eso es una fortaleza —y también un riesgo latente si no hay visibilidad total sobre qué se usa, cuánto cuesta y si genera el valor esperado. Este proyecto convierte ese consumo disperso en una ventaja competitiva estructurada, antes de que la competencia (Ecuasanitas, Humana, BMI) lo haga primero.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROBLEMA / OPORTUNIDAD ─── -->
+<section class="section-dark" id="oportunidad">
+  <div class="container">
+    <div class="oportunidad-grid">
+      <div class="oportunidad-text">
+        <div class="section-eyebrow reveal" style="color:var(--gold)">Diagnóstico del Contexto</div>
+        <h2 class="section-title reveal">El problema no es la IA.<br/>Es la falta de visibilidad.</h2>
+        <p class="reveal" style="color:rgba(255,255,255,.72); margin-bottom:1.5rem">Muchas organizaciones en la región acumulan herramientas de IA de forma reactiva: un equipo adoptó ChatGPT, otro integró una API de Azure, otro contrató una solución de un proveedor local. El resultado es un ecosistema fragmentado, costoso y difícil de gobernar.</p>
+        <ul class="pain-list reveal">
+          <li><span class="icon">⚠️</span> APIs de IA activas sin inventario centralizado ni ownership claro</li>
+          <li><span class="icon">⚠️</span> Costos de consumo distribuidos en múltiples centros de costo sin consolidación</li>
+          <li><span class="icon">⚠️</span> Casos de uso duplicados o redundantes entre áreas</li>
+          <li><span class="icon">⚠️</span> Dependencias tecnológicas no documentadas que generan riesgo operativo</li>
+          <li><span class="icon">⚠️</span> Sin benchmark frente a la competencia: ¿está Saludsa adelante o atrás?</li>
+          <li><span class="icon">⚠️</span> Decisiones de IA tomadas tácticamente, sin estrategia de largo plazo</li>
+        </ul>
+      </div>
+      <div class="oportunidad-visual reveal-right">
+        <h3>Oportunidades Identificadas</h3>
+        <div class="opp-item">
+          <div class="opp-num">1</div>
+          <div class="opp-text">
+            <strong>Consolidación de vendors</strong>
+            <span>Reducir contratos paralelos y negociar volumen. Potencial ahorro del 20–35% en costos de APIs.</span>
+          </div>
+        </div>
+        <div class="opp-item">
+          <div class="opp-num">2</div>
+          <div class="opp-text">
+            <strong>Casos de uso de alto impacto</strong>
+            <span>Autorización médica, detección de fraude, atención al afiliado, análisis predictivo de siniestralidad.</span>
+          </div>
+        </div>
+        <div class="opp-item">
+          <div class="opp-num">3</div>
+          <div class="opp-text">
+            <strong>Arquitectura unificada</strong>
+            <span>Una capa de orquestación de IA que centralice el acceso y simplifique la gobernanza.</span>
+          </div>
+        </div>
+        <div class="opp-item">
+          <div class="opp-num">4</div>
+          <div class="opp-text">
+            <strong>Diferenciación competitiva</strong>
+            <span>Un stack moderno y documentado como activo estratégico y argumento comercial ante el mercado.</span>
+          </div>
+        </div>
+        <div class="opp-item">
+          <div class="opp-num">5</div>
+          <div class="opp-text">
+            <strong>Cumplimiento y gobernanza</strong>
+            <span>Marco de ética y privacidad de datos para operar con certeza regulatoria en el sector salud.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── METODOLOGÍA ─── -->
+<section id="metodologia">
+  <div class="container">
+    <div class="section-eyebrow reveal">Metodología</div>
+    <h2 class="section-title reveal">Cuatro fases. Un resultado concreto.</h2>
+    <p class="section-subtitle reveal">Un proceso estructurado de consultoría de alto nivel, orientado a entregables ejecutivos y técnicos de primer orden.</p>
+    <div class="phases">
+
+      <div class="phase-row reveal">
+        <div class="phase-label">
+          <span class="phase-num">Fase 01</span>
+          <span class="phase-name">Levantamiento</span>
+          <span class="phase-weeks">Semanas 1–2</span>
+        </div>
+        <div class="phase-content">
+          <p>Entrevistas estructuradas con líderes de tecnología, operaciones, comercial y finanzas. Inventario de herramientas y APIs de IA en uso. Revisión de arquitectura actual, documentación técnica y contratos de servicio.</p>
+          <div class="phase-tags">
+            <span class="phase-tag">Entrevistas ejecutivas</span>
+            <span class="phase-tag">Auditoría de APIs</span>
+            <span class="phase-tag">Revisión de contratos</span>
+            <span class="phase-tag">Mapeo de integraciones</span>
+            <span class="phase-tag gold">Inventario de casos de uso</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-row reveal">
+        <div class="phase-label">
+          <span class="phase-num">Fase 02</span>
+          <span class="phase-name">Análisis</span>
+          <span class="phase-weeks">Semanas 3–4</span>
+        </div>
+        <div class="phase-content">
+          <p>Análisis de costos actuales vs. valor generado. Identificación de redundancias, gaps y dependencias críticas. Benchmark frente a Ecuasanitas, Humana y BMI. Análisis de riesgos tecnológicos y regulatorios.</p>
+          <div class="phase-tags">
+            <span class="phase-tag">Análisis de costos TCO</span>
+            <span class="phase-tag">Benchmark competitivo</span>
+            <span class="phase-tag">Mapa de riesgos</span>
+            <span class="phase-tag gold">ROI del stack actual</span>
+            <span class="phase-tag">Análisis de gaps</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-row reveal">
+        <div class="phase-label">
+          <span class="phase-num">Fase 03</span>
+          <span class="phase-name">Definición</span>
+          <span class="phase-weeks">Semanas 5–6</span>
+        </div>
+        <div class="phase-content">
+          <p>Propuesta del stack tecnológico IA óptimo para Saludsa: selección de vendors, arquitectura de referencia, modelo de gobernanza. Definición del roadmap de implementación a 18 meses con fases y criterios de éxito.</p>
+          <div class="phase-tags">
+            <span class="phase-tag">Selección de vendors</span>
+            <span class="phase-tag">Arquitectura de referencia</span>
+            <span class="phase-tag">Modelo de gobernanza</span>
+            <span class="phase-tag gold">Roadmap 18 meses</span>
+            <span class="phase-tag">Framework de ética IA</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-row reveal">
+        <div class="phase-label">
+          <span class="phase-num">Fase 04</span>
+          <span class="phase-name">Presentación</span>
+          <span class="phase-weeks">Semana 7</span>
+        </div>
+        <div class="phase-content">
+          <p>Entrega formal de todos los entregables. Presentación ejecutiva al Comité de Tecnología y/o Directorio. Sesión de Q&A y validación. Ajustes finales e incorporación de feedback para versión definitiva.</p>
+          <div class="phase-tags">
+            <span class="phase-tag">Presentación ejecutiva</span>
+            <span class="phase-tag">Entrega de entregables</span>
+            <span class="phase-tag gold">Sesión de validación</span>
+            <span class="phase-tag">Ajustes finales</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── ENTREGABLES ─── -->
+<section class="section-gray" id="entregables">
+  <div class="container">
+    <div class="section-eyebrow reveal">Entregables</div>
+    <h2 class="section-title reveal">Lo que Saludsa recibe al finalizar</h2>
+    <p class="section-subtitle reveal">Seis documentos de alto valor, listos para ser usados en la toma de decisiones ejecutivas y en la planificación operativa.</p>
+    <div class="deliverables-grid">
+      <div class="deliverable reveal">
+        <div class="deliverable-check">✓</div>
+        <div class="deliverable-body">
+          <h4>Informe de Diagnóstico Ejecutivo + Técnico</h4>
+          <p>Documento completo del estado actual de IA en Saludsa. Dos versiones: resumen para CEO/Directorio y versión técnica para TI.</p>
+          <span class="badge">Formato: PDF + PPT</span>
+        </div>
+      </div>
+      <div class="deliverable reveal">
+        <div class="deliverable-check">✓</div>
+        <div class="deliverable-body">
+          <h4>Mapa del Stack Actual</h4>
+          <p>Diagrama de arquitectura de todas las herramientas y APIs de IA en uso, con sus integraciones, dependencias y flujos de datos.</p>
+          <span class="badge">Formato: Lucidchart / PDF</span>
+        </div>
+      </div>
+      <div class="deliverable reveal">
+        <div class="deliverable-check">✓</div>
+        <div class="deliverable-body">
+          <h4>Análisis de Costos y ROI del Stack Actual</h4>
+          <p>Desglose de costos por herramienta, área y caso de uso. Análisis de retorno sobre inversión con datos reales de Saludsa.</p>
+          <span class="badge">Formato: Excel + Informe PDF</span>
+        </div>
+      </div>
+      <div class="deliverable reveal">
+        <div class="deliverable-check">✓</div>
+        <div class="deliverable-body">
+          <h4>Propuesta del Stack IA Óptimo</h4>
+          <p>Recomendación del stack tecnológico ideal para los próximos 3–5 años: vendors, arquitectura, modelo operativo y justificación estratégica.</p>
+          <span class="badge">Formato: PDF + Presentación ejecutiva</span>
+        </div>
+      </div>
+      <div class="deliverable reveal">
+        <div class="deliverable-check">✓</div>
+        <div class="deliverable-body">
+          <h4>Roadmap de Implementación a 18 Meses</h4>
+          <p>Plan de ejecución por fases: hitos, responsables, dependencias técnicas, presupuesto estimado y criterios de éxito medibles.</p>
+          <span class="badge">Formato: Gantt + PDF ejecutivo</span>
+        </div>
+      </div>
+      <div class="deliverable reveal">
+        <div class="deliverable-check">✓</div>
+        <div class="deliverable-body">
+          <h4>Guía de Gobernanza de IA</h4>
+          <p>Framework de políticas, roles, procesos de aprobación y principios éticos para la adopción responsable de IA en Saludsa.</p>
+          <span class="badge">Formato: PDF + Plantillas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CRONOGRAMA ─── -->
+<section id="cronograma">
+  <div class="container">
+    <div class="section-eyebrow reveal">Cronograma</div>
+    <h2 class="section-title reveal">7 semanas. Resultado concreto.</h2>
+    <p class="section-subtitle reveal">Engagement compacto y de alta intensidad, diseñado para generar valor desde la primera semana.</p>
+    <div class="timeline-wrap reveal">
+      <table class="timeline-table">
+        <thead>
+          <tr>
+            <th>Actividad</th>
+            <th>S1</th><th>S2</th><th>S3</th><th>S4</th><th>S5</th><th>S6</th><th>S7</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Kickoff y planificación</td>
+            <td><div class="bar">●</div></td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+          </tr>
+          <tr>
+            <td>Entrevistas con stakeholders</td>
+            <td><div class="bar">▬▬</div></td>
+            <td><div class="bar">▬▬</div></td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+          </tr>
+          <tr>
+            <td>Auditoría de APIs y herramientas</td>
+            <td><div class="bar">▬▬</div></td>
+            <td><div class="bar">▬▬</div></td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+          </tr>
+          <tr>
+            <td>Análisis de costos y ROI</td>
+            <td class="bar-empty"></td>
+            <td class="bar-empty"></td>
+            <td><div class="bar">▬▬</div></td>
+            <td><div class="bar">▬▬</div></td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+          </tr>
+          <tr>
+            <td>Benchmark competitivo</td>
+            <td class="bar-empty"></td>
+            <td class="bar-empty"></td>
+            <td><div class="bar">▬▬</div></td>
+            <td class="bar-empty"></td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+          </tr>
+          <tr>
+            <td>Definición del stack óptimo</td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+            <td><div class="bar">▬▬</div></td>
+            <td><div class="bar">▬▬</div></td>
+            <td class="bar-empty"></td>
+          </tr>
+          <tr>
+            <td>Roadmap + Gobernanza</td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+            <td><div class="bar">▬▬</div></td>
+            <td><div class="bar">▬▬</div></td>
+            <td class="bar-empty"></td>
+          </tr>
+          <tr>
+            <td>Presentación ejecutiva y validación</td>
+            <td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td><td class="bar-empty"></td>
+            <td><div class="bar">✓ Entrega</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── INVERSIÓN ─── -->
+<section class="section-dark" id="inversion">
+  <div class="container">
+    <div class="section-eyebrow reveal" style="color:var(--gold)">Inversión</div>
+    <h2 class="section-title reveal" style="color:var(--white)">Precio fijo. Sin sorpresas.</h2>
+    <p class="section-subtitle reveal">Un fee único que cubre el engagement completo de 7 semanas, los seis entregables y las sesiones de presentación.</p>
+    <div class="inversion-wrap">
+      <div class="price-card reveal-left">
+        <div class="price-badge">Precio Total del Proyecto</div>
+        <div class="price-main">
+          <span class="price-currency">$</span>33,000
+        </div>
+        <div class="price-usd">USD · Precio Fijo</div>
+        <p class="price-note">Fee único. Sin costos ocultos ni variables adicionales.</p>
+        <div class="price-includes">
+          <h4>Incluye todo:</h4>
+          <div class="price-item"><span class="chk">✔</span> 7 semanas de engagement senior</div>
+          <div class="price-item"><span class="chk">✔</span> Consultor senior en IA + analista de soporte</div>
+          <div class="price-item"><span class="chk">✔</span> Entrevistas con todos los stakeholders clave</div>
+          <div class="price-item"><span class="chk">✔</span> 6 entregables formales documentados</div>
+          <div class="price-item"><span class="chk">✔</span> Presentación ejecutiva ante Comité / Directorio</div>
+          <div class="price-item"><span class="chk">✔</span> Sesión de Q&A y revisión final</div>
+          <div class="price-item"><span class="chk">✔</span> Benchmark vs. Ecuasanitas, Humana y BMI</div>
+          <div class="price-item"><span class="chk">✔</span> Herramientas y licencias de diagnóstico</div>
+          <div class="price-item"><span class="chk">✔</span> 30 días de soporte post-entrega para consultas</div>
+        </div>
+      </div>
+      <div class="inversion-detail reveal-right">
+        <div class="inv-row">
+          <div>
+            <div class="inv-label">Fase 1 · Levantamiento (2 semanas)</div>
+            <span class="inv-note">Entrevistas, auditoría de APIs, inventario técnico</span>
+          </div>
+          <div class="inv-val">$12,000</div>
+        </div>
+        <div class="inv-row">
+          <div>
+            <div class="inv-label">Fase 2 · Análisis (2 semanas)</div>
+            <span class="inv-note">Costos, benchmark competitivo, gaps y riesgos</span>
+          </div>
+          <div class="inv-val">$10,000</div>
+        </div>
+        <div class="inv-row">
+          <div>
+            <div class="inv-label">Fase 3 · Definición (2 semanas)</div>
+            <span class="inv-note">Stack óptimo, roadmap 18m, gobernanza</span>
+          </div>
+          <div class="inv-val">$9,000</div>
+        </div>
+        <div class="inv-row">
+          <div>
+            <div class="inv-label">Fase 4 · Presentación (1 semana)</div>
+            <span class="inv-note">Entrega ejecutiva, sesión de validación, ajustes</span>
+          </div>
+          <div class="inv-val">$2,000</div>
+        </div>
+        <div class="inv-row total">
+          <div class="inv-label">TOTAL PROYECTO</div>
+          <div class="inv-val" style="font-size:1.3rem">$33,000 USD</div>
+        </div>
+        <div style="margin-top:1.5rem; padding:1.2rem; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:10px;">
+          <p style="font-size:.83rem; color:rgba(255,255,255,.55); line-height:1.7;">
+            <strong style="color:rgba(255,255,255,.75);">Condiciones de pago sugeridas:</strong><br/>
+            50% al inicio del engagement · 50% a la entrega final.<br/>
+            Forma de pago: transferencia bancaria o factura electrónica.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ROI ─── -->
+<section class="section-dark" id="roi" style="padding-top:0; border-top:1px solid rgba(255,255,255,.07)">
+  <div class="container">
+    <div class="section-eyebrow reveal" style="color:var(--gold)">Retorno sobre la Inversión</div>
+    <h2 class="section-title reveal" style="color:var(--white)">$33K que se pagan solos</h2>
+    <p class="section-subtitle reveal">Los resultados del diagnóstico generan ahorros y eficiencias que superan ampliamente la inversión en el primer año.</p>
+    <div class="roi-grid">
+      <div class="roi-card reveal">
+        <div class="roi-icon">💰</div>
+        <div class="roi-num">20–35%</div>
+        <div class="roi-label">Ahorro en APIs de IA</div>
+        <div class="roi-desc">Consolidación de vendors y eliminación de redundancias. En consumos de escala media, representa $15K–$60K/año recuperados.</div>
+      </div>
+      <div class="roi-card reveal">
+        <div class="roi-icon">⚡</div>
+        <div class="roi-num">3–6×</div>
+        <div class="roi-label">Velocidad de adopción</div>
+        <div class="roi-desc">Un roadmap claro y un stack definido multiplica la velocidad de implementación de nuevas iniciativas de IA.</div>
+      </div>
+      <div class="roi-card reveal">
+        <div class="roi-icon">🛡️</div>
+        <div class="roi-num">0</div>
+        <div class="roi-label">Riesgo regulatorio</div>
+        <div class="roi-desc">Un framework de gobernanza robusto protege a Saludsa ante regulaciones emergentes de IA en el sector salud.</div>
+      </div>
+      <div class="roi-card reveal">
+        <div class="roi-icon">🏆</div>
+        <div class="roi-num">+1</div>
+        <div class="roi-label">Ventaja competitiva neta</div>
+        <div class="roi-desc">Pasar de IA ad-hoc a IA estratégica. Mientras la competencia improvisa, Saludsa ejecuta un plan.</div>
+      </div>
+      <div class="roi-card reveal">
+        <div class="roi-icon">📊</div>
+        <div class="roi-num">18m</div>
+        <div class="roi-label">Visibilidad total</div>
+        <div class="roi-desc">Por primera vez, un mapa completo de todo lo que Saludsa tiene, gasta y puede optimizar en materia de IA.</div>
+      </div>
+      <div class="roi-card reveal">
+        <div class="roi-icon">🤝</div>
+        <div class="roi-num">∞</div>
+        <div class="roi-label">Capacidad instalada</div>
+        <div class="roi-desc">Los entregables quedan como activo interno: documentos vivos que guían decisiones por años, no por meses.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRÓXIMOS PASOS ─── -->
+<section id="pasos">
+  <div class="container">
+    <div class="section-eyebrow reveal">Próximos Pasos</div>
+    <h2 class="section-title reveal">Del Comité Ejecutivo al kickoff</h2>
+    <p class="section-subtitle reveal">Cuatro pasos simples para arrancar. El primero ya está dado.</p>
+    <div class="steps-grid">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h4>Aprobación del Comité</h4>
+        <p>Presentación de esta propuesta ante el Comité Ejecutivo de Saludsa para aprobación formal.</p>
+        <span class="step-tag">Esta semana</span>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h4>Firma de Acuerdo</h4>
+        <p>Contrato de consultoría y NDA. Definición de interlocutores internos y accesos requeridos.</p>
+        <span class="step-tag">Semana 1</span>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h4>Kickoff Formal</h4>
+        <p>Sesión de arranque con el equipo de TI y líderes de área. Agenda de entrevistas definida.</p>
+        <span class="step-tag">Semana 1</span>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <h4>Entrega Final</h4>
+        <p>Presentación de los seis entregables ante el Comité de Tecnología / Directorio en semana 7.</p>
+        <span class="step-tag">Semana 7</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">Vibramente</div>
+  <div class="footer-sub">Consultoría Estratégica en Inteligencia Artificial</div>
+  <div class="footer-divider"></div>
+  <div class="footer-contact">
+    Preparado por <strong>Felipe Salgado</strong> · Vibramente<br/>
+    Para <strong>Marco Puente</strong>, VP · Saludsa Ecuador<br/>
+    Abril 2026 · Versión 1.0
+  </div>
+  <div class="confidential">Documento confidencial · Uso exclusivo Saludsa Ecuador</div>
+</footer>
+
+<!-- ─── SCRIPTS ─── -->
+<script>
+  // IntersectionObserver para animaciones on-scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Stagger para grids
+  document.querySelectorAll('.exec-grid, .deliverables-grid, .roi-grid, .steps-grid').forEach(grid => {
+    const children = grid.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    children.forEach((child, i) => {
+      child.style.transitionDelay = `${i * 0.08}s`;
+    });
+  });
+
+  // Nav activo
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const scrollSpy = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.style.color = '');
+        const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (active) active.style.color = 'var(--gold)';
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => scrollSpy.observe(s));
+</script>
+</body>
+</html>

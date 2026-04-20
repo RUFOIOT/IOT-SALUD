@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assessment de Ciberseguridad + Arquitectura IA Segura — Saludsa Ecuador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy: #1a2744;
+      --navy-light: #243560;
+      --navy-dark: #0f1929;
+      --gold: #c9a227;
+      --gold-light: #e8c04a;
+      --gold-dark: #a07e1a;
+      --red: #c0392b;
+      --red-light: #e74c3c;
+      --green: #27ae60;
+      --orange: #e67e22;
+      --white: #ffffff;
+      --off-white: #f8f9fb;
+      --gray-100: #f0f2f7;
+      --gray-200: #dde1ec;
+      --gray-400: #8892b0;
+      --gray-600: #4a5568;
+      --gray-800: #2d3748;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--white);
+      color: var(--gray-800);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left  { opacity: 0; transform: translateX(-50px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-right { opacity: 0; transform: translateX(50px);  transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-left.visible, .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(26, 39, 68, 0.97);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(201, 162, 39, 0.25);
+      padding: 14px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; }
+    .nav-brand-icon {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .nav-brand-text { color: var(--white); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
+    .nav-badge {
+      background: rgba(201, 162, 39, 0.15);
+      border: 1px solid rgba(201, 162, 39, 0.4);
+      color: var(--gold-light);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-light) 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 100px 0 60px;
+    }
+
+    /* Animated grid bg */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 20s linear infinite;
+    }
+    @keyframes gridMove {
+      0%   { background-position: 0 0; }
+      100% { background-position: 60px 60px; }
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: float 8s ease-in-out infinite;
+    }
+    .orb-1 { width: 500px; height: 500px; background: rgba(201,162,39,0.08); top: -100px; right: -100px; animation-delay: 0s; }
+    .orb-2 { width: 350px; height: 350px; background: rgba(192,57,43,0.07); bottom: -50px; left: 200px; animation-delay: 3s; }
+    .orb-3 { width: 250px; height: 250px; background: rgba(201,162,39,0.05); top: 40%; right: 25%; animation-delay: 6s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-30px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,162,39,0.12);
+      border: 1px solid rgba(201,162,39,0.35);
+      color: var(--gold-light);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-eyebrow::before { content: '🔒'; font-size: 0.9rem; }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 4vw, 3.6rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero-title .accent { color: var(--gold); }
+    .hero-title .block { display: block; }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 36px;
+      max-width: 560px;
+      font-weight: 400;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+    .hero-tag {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-cta-group { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 14px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(201,162,39,0.4);
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 28px rgba(201,162,39,0.5); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.3);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--gold); background: rgba(201,162,39,0.1); }
+
+    /* Hero card */
+    .hero-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,162,39,0.3);
+      border-radius: 20px;
+      padding: 36px 30px;
+      backdrop-filter: blur(10px);
+    }
+    .hero-card-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(201,162,39,0.2);
+    }
+
+    .stat-row { display: flex; flex-direction: column; gap: 16px; }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-item:last-child { border-bottom: none; }
+    .stat-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: rgba(201,162,39,0.1);
+      border: 1px solid rgba(201,162,39,0.25);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .stat-value { font-size: 1.4rem; font-weight: 800; color: var(--white); line-height: 1; }
+    .stat-label { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 100px 0; }
+    .section-alt { background: var(--off-white); }
+    .section-dark { background: var(--navy); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .section-dark .section-label { color: var(--gold-light); }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 3vw, 2.8rem);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .section-dark .section-title { color: var(--white); }
+
+    .section-desc {
+      font-size: 1rem;
+      color: var(--gray-600);
+      max-width: 640px;
+      margin-bottom: 60px;
+    }
+    .section-dark .section-desc { color: rgba(255,255,255,0.6); }
+
+    .divider-gold {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark));
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    /* ── RESUMEN EJECUTIVO ── */
+    .exec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    .exec-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .exec-card:hover { box-shadow: 0 12px 40px rgba(26,39,68,0.12); transform: translateY(-4px); }
+    .exec-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .exec-card.gold::before { background: var(--gold); }
+    .exec-card.red::before  { background: var(--red-light); }
+    .exec-card.navy::before { background: var(--navy); }
+    .exec-card.green::before { background: var(--green); }
+
+    .exec-card-icon { font-size: 2rem; margin-bottom: 14px; }
+    .exec-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .exec-card p  { font-size: 0.88rem; color: var(--gray-600); line-height: 1.65; }
+
+    /* ── RISK SECTION ── */
+    .risk-banner {
+      background: linear-gradient(135deg, #c0392b 0%, #8b0000 100%);
+      border-radius: 20px;
+      padding: 50px 60px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .risk-banner::before {
+      content: '⚠';
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 180px;
+      opacity: 0.06;
+      line-height: 1;
+    }
+    .risk-banner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .risk-banner p { font-size: 1rem; opacity: 0.85; max-width: 700px; margin-bottom: 36px; }
+
+    .risk-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      position: relative; z-index: 2;
+    }
+    .risk-stat-item {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .risk-stat-num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .risk-stat-label { font-size: 0.75rem; opacity: 0.75; line-height: 1.4; }
+
+    /* ── GAUGE ── */
+    .gauge-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .gauge-wrapper { text-align: center; }
+    .gauge-container {
+      position: relative;
+      width: 260px;
+      height: 145px;
+      margin: 0 auto 20px;
+      overflow: visible;
+    }
+    .gauge-bg {
+      width: 260px; height: 130px;
+      border-radius: 130px 130px 0 0;
+      background: conic-gradient(
+        from 180deg,
+        #27ae60 0deg 54deg,
+        #f39c12 54deg 108deg,
+        #e67e22 108deg 144deg,
+        #e74c3c 144deg 180deg
+      );
+      position: relative;
+    }
+    .gauge-cover {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 180px; height: 90px;
+      background: var(--off-white);
+      border-radius: 90px 90px 0 0;
+    }
+    .gauge-needle {
+      position: absolute;
+      bottom: -4px; left: 50%;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(120deg);
+      width: 3px; height: 110px;
+      background: var(--navy);
+      border-radius: 2px;
+      transition: transform 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .gauge-needle::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 50%;
+      transform: translateX(-50%);
+      width: 14px; height: 14px;
+      background: var(--navy);
+      border-radius: 50%;
+    }
+    .gauge-label { font-size: 0.75rem; color: var(--gray-400); margin-top: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .gauge-value { font-size: 1.5rem; font-weight: 800; color: var(--red); margin-top: 4px; }
+
+    .gauge-legend { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--gray-600); }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+    .gauge-text h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; line-height: 1.3; }
+    .gauge-text p { font-size: 0.92rem; color: var(--gray-600); margin-bottom: 14px; }
+
+    /* ── METODOLOGÍA ── */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .method-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,162,39,0.2);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+    }
+    .method-card:hover {
+      background: rgba(201,162,39,0.08);
+      border-color: rgba(201,162,39,0.5);
+      transform: translateY(-4px);
+    }
+    .method-icon { font-size: 2.5rem; margin-bottom: 14px; }
+    .method-card h3 { font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+    .method-card p  { font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.6; }
+    .method-badge {
+      display: inline-block;
+      background: rgba(201,162,39,0.15);
+      border: 1px solid rgba(201,162,39,0.3);
+      color: var(--gold-light);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    /* ── FASES ── */
+    .phase-list { display: flex; flex-direction: column; gap: 0; }
+    .phase-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0;
+      position: relative;
+    }
+    .phase-item:not(:last-child) .phase-line {
+      position: absolute;
+      left: 39px; top: 70px; bottom: -1px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold), rgba(201,162,39,0.1));
+    }
+    .phase-number-col { display: flex; flex-direction: column; align-items: center; padding-top: 24px; }
+    .phase-num {
+      width: 56px; height: 56px;
+      background: var(--navy);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold);
+      flex-shrink: 0;
+      position: relative; z-index: 2;
+    }
+
+    .phase-content {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin: 16px 0 16px 16px;
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+    .phase-content:hover { box-shadow: 0 8px 30px rgba(26,39,68,0.1); border-color: var(--gold); }
+
+    .phase-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .phase-title { font-size: 1.15rem; font-weight: 700; color: var(--navy); }
+    .phase-weeks {
+      background: var(--navy);
+      color: var(--gold);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .phase-desc { font-size: 0.88rem; color: var(--gray-600); margin-bottom: 18px; line-height: 1.65; }
+
+    .phase-items { display: flex; flex-direction: column; gap: 8px; }
+    .phase-item-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 0.84rem; color: var(--gray-700);
+    }
+    .phase-item-row::before { content: '→'; color: var(--gold); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── SEVERITY ── */
+    .severity-section { display: flex; flex-direction: column; gap: 16px; }
+    .severity-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 100px;
+      align-items: center;
+      gap: 20px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 18px 24px;
+    }
+    .sev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .sev-critical { background: rgba(192,57,43,0.1); color: var(--red); border: 1px solid rgba(192,57,43,0.3); }
+    .sev-high     { background: rgba(230,126,34,0.1); color: var(--orange); border: 1px solid rgba(230,126,34,0.3); }
+    .sev-medium   { background: rgba(241,196,15,0.1); color: #d4a017; border: 1px solid rgba(241,196,15,0.3); }
+    .sev-low      { background: rgba(39,174,96,0.1);  color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+
+    .sev-bar-wrap { flex: 1; background: var(--gray-100); border-radius: 20px; height: 8px; overflow: hidden; }
+    .sev-bar { height: 100%; border-radius: 20px; }
+    .bar-critical { width: 100%; background: var(--red); }
+    .bar-high     { width: 75%;  background: var(--orange); }
+    .bar-medium   { width: 50%;  background: #d4a017; }
+    .bar-low      { width: 25%;  background: var(--green); }
+
+    .sev-action { font-size: 0.75rem; color: var(--gray-600); text-align: right; font-weight: 600; }
+
+    /* ── ENTREGABLES ── */
+    .deliverables-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .deliverable-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+    }
+    .deliverable-card:hover { box-shadow: 0 10px 30px rgba(26,39,68,0.1); transform: translateY(-4px); border-color: var(--gold); }
+    .del-icon { font-size: 2rem; margin-bottom: 12px; }
+    .del-title { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .del-desc  { font-size: 0.75rem; color: var(--gray-400); line-height: 1.5; }
+
+    /* ── CRONOGRAMA ── */
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin-bottom: 30px;
+    }
+    .week-col { display: flex; flex-direction: column; gap: 8px; }
+    .week-header {
+      background: var(--navy);
+      color: var(--gold);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 6px 4px;
+      text-align: center;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+    .week-phase {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 8px 6px;
+      text-align: center;
+      border-radius: 6px;
+      line-height: 1.3;
+    }
+    .phase-a { background: rgba(201,162,39,0.15); color: var(--gold-dark); border: 1px solid rgba(201,162,39,0.3); }
+    .phase-b { background: rgba(192,57,43,0.1);  color: var(--red);      border: 1px solid rgba(192,57,43,0.25); }
+    .phase-c { background: rgba(26,39,68,0.08);  color: var(--navy);     border: 1px solid rgba(26,39,68,0.2); }
+    .phase-d { background: rgba(39,174,96,0.1);  color: var(--green);    border: 1px solid rgba(39,174,96,0.3); }
+
+    .timeline-legend {
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .tl-legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--gray-600); }
+    .tl-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+    /* ── INVERSIÓN ── */
+    .investment-hero {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+      border-radius: 24px;
+      padding: 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+    .investment-hero::before {
+      content: '$';
+      position: absolute;
+      right: -20px; top: -30px;
+      font-size: 300px;
+      font-weight: 900;
+      color: rgba(201,162,39,0.04);
+      line-height: 1;
+      font-family: 'Playfair Display', serif;
+    }
+    .inv-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .inv-price {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4rem, 8vw, 6.5rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .inv-price span { color: var(--gold); }
+    .inv-currency { font-size: 1.1rem; color: rgba(255,255,255,0.5); margin-bottom: 30px; }
+    .inv-note {
+      display: inline-block;
+      background: rgba(201,162,39,0.12);
+      border: 1px solid rgba(201,162,39,0.3);
+      color: rgba(255,255,255,0.8);
+      font-size: 0.82rem;
+      padding: 8px 20px;
+      border-radius: 20px;
+    }
+
+    .inv-includes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .inv-item {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .inv-item-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: rgba(26,39,68,0.06);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .inv-item h4 { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .inv-item p  { font-size: 0.78rem; color: var(--gray-400); line-height: 1.5; }
+
+    /* ── ROI ── */
+    .roi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .roi-card {
+      border-radius: 16px;
+      padding: 36px 30px;
+    }
+    .roi-card.cost {
+      background: rgba(192,57,43,0.06);
+      border: 2px solid rgba(192,57,43,0.25);
+    }
+    .roi-card.invest {
+      background: rgba(39,174,96,0.06);
+      border: 2px solid rgba(39,174,96,0.25);
+    }
+    .roi-card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .cost .roi-card-title { color: var(--red); }
+    .invest .roi-card-title { color: var(--green); }
+
+    .roi-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .cost .roi-number   { color: var(--red); }
+    .invest .roi-number { color: var(--green); }
+
+    .roi-desc { font-size: 0.85rem; color: var(--gray-600); margin-bottom: 20px; }
+    .roi-items { display: flex; flex-direction: column; gap: 8px; }
+    .roi-item { display: flex; align-items: flex-start; gap: 8px; font-size: 0.82rem; color: var(--gray-600); }
+    .roi-item::before { flex-shrink: 0; margin-top: 1px; }
+    .cost .roi-item::before   { content: '✕'; color: var(--red); font-weight: 700; }
+    .invest .roi-item::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+    /* ── PRÓXIMOS PASOS ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .step-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,162,39,0.2);
+      border-radius: 14px;
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+    .step-num {
+      width: 40px; height: 40px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1rem;
+      color: var(--navy-dark);
+      margin: 0 auto 14px;
+    }
+    .step-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .step-card p  { font-size: 0.78rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+    .step-card .step-date {
+      display: inline-block;
+      background: rgba(201,162,39,0.15);
+      border: 1px solid rgba(201,162,39,0.3);
+      color: var(--gold);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 12px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy-dark);
+      padding: 50px 0 30px;
+      color: rgba(255,255,255,0.4);
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 40px;
+      display: flex; flex-direction: column; gap: 30px;
+    }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+    .footer-brand { display: flex; align-items: center; gap: 14px; }
+    .footer-brand-name { font-size: 1.1rem; font-weight: 700; color: var(--white); }
+    .footer-brand-tagline { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+    .footer-meta { font-size: 0.75rem; text-align: right; line-height: 1.7; }
+    .footer-divider { height: 1px; background: rgba(255,255,255,0.08); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 0.72rem; }
+    .footer-conf {
+      background: rgba(201,162,39,0.1);
+      border: 1px solid rgba(201,162,39,0.2);
+      color: var(--gold);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 4px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .hero-content { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .exec-grid { grid-template-columns: 1fr; }
+      .risk-stats { grid-template-columns: repeat(2, 1fr); }
+      .gauge-section { grid-template-columns: 1fr; }
+      .method-grid { grid-template-columns: 1fr; }
+      .deliverables-grid { grid-template-columns: repeat(2, 1fr); }
+      .inv-includes { grid-template-columns: 1fr; }
+      .roi-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .timeline-grid { grid-template-columns: repeat(4, 1fr); }
+      .investment-hero { padding: 40px 24px; }
+      .container { padding: 0 20px; }
+      .section { padding: 70px 0; }
+      .risk-banner { padding: 36px 28px; }
+    }
+    @media (max-width: 600px) {
+      .risk-stats { grid-template-columns: 1fr 1fr; }
+      .deliverables-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .timeline-grid { grid-template-columns: repeat(2, 1fr); }
+      .severity-row { grid-template-columns: 1fr; }
+      .sev-bar-wrap { display: none; }
+      .hero-content { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">
+      <div class="nav-brand-icon">🛡️</div>
+      <div>
+        <div class="nav-brand-text">Vibramente × Saludsa</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#resumen">Resumen</a>
+      <a href="#riesgo">Riesgo</a>
+      <a href="#metodologia">Metodología</a>
+      <a href="#fases">Fases</a>
+      <a href="#entregables">Entregables</a>
+      <a href="#inversion">Inversión</a>
+      <a href="#pasos">Pasos</a>
+    </div>
+    <div class="nav-badge">Confidencial · Abril 2026</div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-eyebrow">Assessment de Ciberseguridad Empresarial</div>
+        <h1 class="hero-title">
+          <span class="block">Protege el activo</span>
+          <span class="block">más valioso de</span>
+          <span class="block accent">Saludsa.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Un assessment completo de ciberseguridad + arquitectura segura para implementación de IA.
+          Porque los datos de salud son los más codiciados en el mercado negro — y Saludsa no puede darse el lujo de descubrirlo tarde.
+        </p>
+        <div class="hero-meta">
+          <span class="hero-tag">🏥 Sector Healthcare</span>
+          <span class="hero-tag">🤖 Seguridad para IA</span>
+          <span class="hero-tag">📋 NIST Framework</span>
+          <span class="hero-tag">🔍 OWASP Top 10</span>
+          <span class="hero-tag">🇪🇨 Normativa Ecuador</span>
+        </div>
+        <div class="hero-cta-group">
+          <a href="#inversion" class="btn-primary">Ver Propuesta Completa</a>
+          <a href="#riesgo" class="btn-secondary">¿Por qué es urgente?</a>
+        </div>
+      </div>
+
+      <div class="hero-card reveal-right">
+        <div class="hero-card-title">⚡ Indicadores Críticos — Sector Salud Global</div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-icon">💰</div>
+            <div>
+              <div class="stat-value">$10.9M</div>
+              <div class="stat-label">Costo promedio de breach en salud (IBM 2023)</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">🎯</div>
+            <div>
+              <div class="stat-value">#1</div>
+              <div class="stat-label">Healthcare: sector más atacado por 13 años consecutivos</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">⏱️</div>
+            <div>
+              <div class="stat-value">277 días</div>
+              <div class="stat-label">Tiempo promedio para detectar un breach (IBM 2023)</div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">💊</div>
+            <div>
+              <div class="stat-value">$1,000+</div>
+              <div class="stat-label">Valor de un historial médico en el mercado negro</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESUMEN EJECUTIVO -->
+  <section class="section" id="resumen">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Resumen Ejecutivo</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">Una sola brecha puede destruir la<br/>confianza que Saludsa tardó décadas en construir.</h2>
+        <p class="section-desc">
+          Vibramente propone un assessment integral de ciberseguridad diseñado específicamente para la realidad de Saludsa: datos de salud altamente sensibles, ecosistemas de IA en implementación, y un entorno regulatorio cada vez más exigente en Ecuador.
+        </p>
+      </div>
+
+      <div class="exec-grid">
+        <div class="exec-card gold reveal">
+          <div class="exec-card-icon">🎯</div>
+          <h3>¿Qué es este assessment?</h3>
+          <p>Un diagnóstico profundo y honesto del estado real de la ciberseguridad de Saludsa. No auditamos para cumplir — auditamos para encontrar lo que los atacantes ya están buscando, antes de que lo encuentren ellos.</p>
+        </div>
+        <div class="exec-card red reveal">
+          <div class="exec-card-icon">⚠️</div>
+          <h3>¿Por qué ahora?</h3>
+          <p>Saludsa está iniciando implementaciones de agentes de IA que accederán a datos de pacientes. Sin una arquitectura de seguridad robusta, cada nuevo agente es una nueva superficie de ataque. El momento de asegurar es antes de escalar.</p>
+        </div>
+        <div class="exec-card navy reveal">
+          <div class="exec-card-icon">🏗️</div>
+          <h3>Alcance completo</h3>
+          <p>Vulnerability assessment, penetration testing ético, revisión de arquitectura de red, análisis de APIs, políticas de gobernanza de datos, y diseño de arquitectura segura específica para sus implementaciones de IA.</p>
+        </div>
+        <div class="exec-card green reveal">
+          <div class="exec-card-icon">📋</div>
+          <h3>Resultado concreto</h3>
+          <p>7 entregables accionables: desde el informe ejecutivo para el Comité hasta el playbook técnico de respuesta a incidentes. En 8 semanas, Saludsa sabrá exactamente dónde está parada y qué hacer al respecto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIESGO -->
+  <section class="section section-alt" id="riesgo">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">El Costo de la Inacción</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">Los datos de salud valen 50 veces más<br/>que una tarjeta de crédito en el mercado negro.</h2>
+        <p class="section-desc">
+          No estamos hablando de teoría. Hospitales, aseguradoras y clínicas en LATAM son atacados constantemente.
+          La pregunta no es si habrá un intento de breach — es si Saludsa estará preparada cuando ocurra.
+        </p>
+      </div>
+
+      <div class="risk-banner reveal">
+        <h2>⚠️ El Sector Salud: Blanco #1 del Cibercrimen Global</h2>
+        <p>
+          Según IBM Security Cost of a Data Breach Report 2023, el sector salud lidera el costo promedio por brecha de datos por
+          <strong>13 años consecutivos</strong>. Los registros médicos contienen datos de identidad, financieros y de comportamiento —
+          el combo perfecto para fraude y extorsión.
+        </p>
+        <div class="risk-stats">
+          <div class="risk-stat-item">
+            <div class="risk-stat-num">$10.9M</div>
+            <div class="risk-stat-label">Costo promedio breach salud 2023</div>
+          </div>
+          <div class="risk-stat-item">
+            <div class="risk-stat-num">+53%</div>
+            <div class="risk-stat-label">Aumento de ataques a salud en LATAM 2022-2024</div>
+          </div>
+          <div class="risk-stat-item">
+            <div class="risk-stat-num">93%</div>
+            <div class="risk-stat-label">De organizaciones de salud reportan breaches en 3 años</div>
+          </div>
+          <div class="risk-stat-item">
+            <div class="risk-stat-num">$1,000+</div>
+            <div class="risk-stat-label">Valor de un historial médico completo en dark web</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gauge de riesgo -->
+      <div class="gauge-section" style="margin-top: 60px;">
+        <div class="gauge-wrapper reveal-left">
+          <div class="gauge-container">
+            <div class="gauge-bg">
+              <div class="gauge-cover"></div>
+              <div class="gauge-needle" id="needle"></div>
+            </div>
+          </div>
+          <div class="gauge-label">Nivel de Riesgo Estimado — Sector Salud LATAM</div>
+          <div class="gauge-value">CRÍTICO</div>
+          <div class="gauge-legend" style="display:inline-flex; flex-direction:column; align-items:flex-start; gap:6px; margin-top:14px; text-align:left;">
+            <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div> Bajo</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div> Moderado</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#e67e22"></div> Alto</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#e74c3c"></div> Crítico</div>
+          </div>
+        </div>
+        <div class="gauge-text reveal-right">
+          <h3>Sin este assessment, Saludsa opera a ciegas.</h3>
+          <p>
+            Cada día que pasa sin un diagnóstico formal de seguridad, las vulnerabilidades existentes acumulan deuda técnica.
+            Los atacantes escanean infraestructuras de salud de forma automatizada las 24 horas.
+          </p>
+          <p>
+            Los nuevos sistemas de IA que se implementarán tendrán acceso a registros de pacientes, historiales, y datos financieros.
+            Sin una arquitectura de seguridad diseñada para IA, cada agente se convierte en un vector de ataque potencial.
+          </p>
+          <p style="font-weight:700; color:var(--red);">
+            El costo de este assessment es el 0.37% del costo promedio de un breach en el sector salud. Es el seguro más barato que existe.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METODOLOGÍA -->
+  <section class="section section-dark" id="metodologia">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Frameworks y Metodología</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">Estándares de clase mundial,<br/>aplicados a la realidad de Ecuador.</h2>
+        <p class="section-desc">
+          No inventamos procesos. Usamos los marcos más reconocidos de la industria,
+          adaptados al contexto regulatorio ecuatoriano y al sector salud.
+        </p>
+      </div>
+
+      <div class="method-grid">
+        <div class="method-card reveal">
+          <div class="method-badge">Seguridad General</div>
+          <div class="method-icon">🏛️</div>
+          <h3>NIST Cybersecurity Framework</h3>
+          <p>Identificar · Proteger · Detectar · Responder · Recuperar. El framework del gobierno de EE.UU. adoptado globalmente como estándar para evaluación de madurez de seguridad.</p>
+        </div>
+        <div class="method-card reveal">
+          <div class="method-badge">Vulnerabilidades Web y API</div>
+          <div class="method-icon">🕷️</div>
+          <h3>OWASP Top 10 + API Security</h3>
+          <p>Las 10 vulnerabilidades web más críticas, más el framework específico de seguridad en APIs — esencial dado que los agentes de IA operan principalmente vía API.</p>
+        </div>
+        <div class="method-card reveal">
+          <div class="method-badge">Penetration Testing</div>
+          <div class="method-icon">🎯</div>
+          <h3>PTES + OSSTMM</h3>
+          <p>Penetration Testing Execution Standard y Open Source Security Testing Methodology Manual. Metodologías estructuradas para pentesting ético con resultados reproducibles y verificables.</p>
+        </div>
+        <div class="method-card reveal">
+          <div class="method-badge">Datos de Salud</div>
+          <div class="method-icon">🏥</div>
+          <h3>Equivalencia HIPAA para LATAM</h3>
+          <p>Adaptación de los controles de privacidad de datos de salud de HIPAA a la normativa de la Superintendencia de Bancos y Seguros del Ecuador y la Ley Orgánica de Datos Personales.</p>
+        </div>
+        <div class="method-card reveal">
+          <div class="method-badge">Seguridad en IA</div>
+          <div class="method-icon">🤖</div>
+          <h3>OWASP LLM Top 10</h3>
+          <p>El framework específico para vulnerabilidades en sistemas de IA: prompt injection, data poisoning, model inversion, insecure plugins — riesgos únicos de los agentes de IA.</p>
+        </div>
+        <div class="method-card reveal">
+          <div class="method-badge">Normativa Ecuador</div>
+          <div class="method-icon">🇪🇨</div>
+          <h3>INEN + SBS + LOPDP</h3>
+          <p>Evaluación de cumplimiento bajo las normas técnicas INEN de seguridad, regulaciones de la Superintendencia de Bancos y Seguros, y la Ley Orgánica de Protección de Datos Personales de Ecuador.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FASES DEL PROYECTO -->
+  <section class="section" id="fases">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Las Tres Fases</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">Un proceso estructurado,<br/>de diagnóstico a arquitectura.</h2>
+        <p class="section-desc">
+          Ocho semanas organizadas en tres fases progresivas. Cada fase construye sobre la anterior,
+          garantizando que los hallazgos técnicos se traduzcan en decisiones de negocio accionables.
+        </p>
+      </div>
+
+      <div class="phase-list">
+
+        <!-- FASE 1 -->
+        <div class="phase-item">
+          <div class="phase-line"></div>
+          <div class="phase-number-col">
+            <div class="phase-num">I</div>
+          </div>
+          <div class="phase-content reveal-right">
+            <div class="phase-header">
+              <div>
+                <div class="phase-title">🔍 Assessment de Vulnerabilidades</div>
+                <div style="font-size:0.78rem; color:var(--gray-400); margin-top:4px;">Diagnóstico completo del ecosistema de seguridad actual</div>
+              </div>
+              <div class="phase-weeks">Semanas 1 – 5</div>
+            </div>
+            <p class="phase-desc">
+              Evaluación exhaustiva del estado actual de la ciberseguridad de Saludsa. Comenzamos por entender
+              el ecosistema completo — redes, sistemas, APIs, políticas y personas — antes de ejecutar el testing técnico.
+              Todo trabajo se realiza bajo NDA y con coordinación con el equipo de IT interno.
+            </p>
+            <div class="phase-items">
+              <div class="phase-item-row">Recopilación de información y entrevistas con equipos de IT, compliance y negocio (Semana 1-2)</div>
+              <div class="phase-item-row">Análisis de arquitectura de red, perímetro, firewalls y segmentación de sistemas</div>
+              <div class="phase-item-row">Vulnerability scanning automatizado con herramientas Nessus, Burp Suite y OpenVAS</div>
+              <div class="phase-item-row">Penetration testing ético: superficie externa, interna y aplicaciones web</div>
+              <div class="phase-item-row">Análisis de seguridad de APIs: autenticación, autorización, rate limiting, exposición de datos</div>
+              <div class="phase-item-row">Revisión de gestión de identidades y accesos (IAM), privilegios y autenticación multifactor</div>
+              <div class="phase-item-row">Auditoría de políticas de seguridad existentes vs. mejores prácticas del sector</div>
+              <div class="phase-item-row">Análisis de seguridad en endpoints, servidores cloud y backups</div>
+              <div class="phase-item-row">Clasificación de hallazgos: Crítico · Alto · Medio · Bajo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FASE 2 -->
+        <div class="phase-item">
+          <div class="phase-line"></div>
+          <div class="phase-number-col">
+            <div class="phase-num">II</div>
+          </div>
+          <div class="phase-content reveal-right">
+            <div class="phase-header">
+              <div>
+                <div class="phase-title">🤖 Arquitectura de Seguridad para IA</div>
+                <div style="font-size:0.78rem; color:var(--gray-400); margin-top:4px;">Diseño del ecosistema seguro donde vivirán los agentes de IA</div>
+              </div>
+              <div class="phase-weeks">Semanas 6 – 7</div>
+            </div>
+            <p class="phase-desc">
+              Los agentes de IA no son software convencional — tienen superficies de ataque únicas.
+              Esta fase diseña la arquitectura específica para que las implementaciones de IA de Saludsa
+              operen de forma segura desde el primer día, protegiendo los datos de salud de sus afiliados.
+            </p>
+            <div class="phase-items">
+              <div class="phase-item-row">Diseño de arquitectura segura para agentes de IA (zero-trust, least privilege)</div>
+              <div class="phase-item-row">Política de gobernanza de datos de salud en sistemas IA: qué datos pueden ver los agentes, cuándo y por qué</div>
+              <div class="phase-item-row">Seguridad en integraciones con APIs de IA: OpenAI, Google, Anthropic — autenticación, manejo de keys, timeout</div>
+              <div class="phase-item-row">Controles anti-prompt injection y protección contra manipulación de agentes</div>
+              <div class="phase-item-row">Gestión de accesos y privilegios específica para sistemas IA: separación de roles y auditoría</div>
+              <div class="phase-item-row">Data minimization: asegurar que los agentes accedan solo a los datos estrictamente necesarios</div>
+              <div class="phase-item-row">Cumplimiento normativo: INEN, SBS, LOPDP Ecuador aplicado a sistemas IA</div>
+              <div class="phase-item-row">Diagramas de arquitectura de seguridad recomendada (entregable para equipo IT)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FASE 3 -->
+        <div class="phase-item">
+          <div class="phase-number-col">
+            <div class="phase-num">III</div>
+          </div>
+          <div class="phase-content reveal-right">
+            <div class="phase-header">
+              <div>
+                <div class="phase-title">🗺️ Hoja de Ruta y Remediación</div>
+                <div style="font-size:0.78rem; color:var(--gray-400); margin-top:4px;">Del diagnóstico al plan de acción concreto</div>
+              </div>
+              <div class="phase-weeks">Semana 8</div>
+            </div>
+            <p class="phase-desc">
+              Un assessment sin un plan de acción es un gasto. Esta fase entrega la hoja de ruta priorizada
+              de remediación, con quick wins (90 días), mejoras estructurales (6-12 meses), responsables
+              y estimación de inversión — lista para presentar al Comité Ejecutivo.
+            </p>
+            <div class="phase-items">
+              <div class="phase-item-row">Priorización de vulnerabilidades según criticidad, impacto y facilidad de explotación</div>
+              <div class="phase-item-row">Quick wins (90 días): acciones de alto impacto que pueden implementarse inmediatamente</div>
+              <div class="phase-item-row">Plan estructural (6-12 meses): mejoras de arquitectura e infraestructura de mediano plazo</div>
+              <div class="phase-item-row">Asignación de responsables: IT interno, proveedor externo o Vibramente</div>
+              <div class="phase-item-row">Estimación de budget de remediación (separada y referencial, no incluida en este proyecto)</div>
+              <div class="phase-item-row">Playbook de respuesta a incidentes: guía paso a paso cuando ocurre un breach</div>
+              <div class="phase-item-row">Presentación ejecutiva de resultados ante el Comité Directivo de Saludsa</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- NIVELES DE SEVERIDAD -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Sistema de Clasificación</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">Cada vulnerabilidad clasificada<br/>con criterio claro de acción.</h2>
+        <p class="section-desc">
+          Usamos el estándar CVSS (Common Vulnerability Scoring System) para clasificar cada hallazgo
+          con criterios objetivos, reproducibles y comparables con benchmarks de la industria.
+        </p>
+      </div>
+
+      <div class="severity-section reveal">
+        <div class="severity-row">
+          <div class="sev-badge sev-critical">🔴 Crítico (9-10)</div>
+          <div>
+            <div class="sev-bar-wrap"><div class="sev-bar bar-critical"></div></div>
+          </div>
+          <div class="sev-action">Acción: Inmediata<br/><span style="color:var(--red); font-weight:800;">≤ 24 horas</span></div>
+        </div>
+        <div class="severity-row">
+          <div class="sev-badge sev-high">🟠 Alto (7-8.9)</div>
+          <div>
+            <div class="sev-bar-wrap"><div class="sev-bar bar-high"></div></div>
+          </div>
+          <div class="sev-action">Acción: Urgente<br/><span style="color:var(--orange); font-weight:800;">≤ 7 días</span></div>
+        </div>
+        <div class="severity-row">
+          <div class="sev-badge sev-medium">🟡 Medio (4-6.9)</div>
+          <div>
+            <div class="sev-bar-wrap"><div class="sev-bar bar-medium"></div></div>
+          </div>
+          <div class="sev-action">Acción: Planificada<br/><span style="color:#d4a017; font-weight:800;">≤ 30 días</span></div>
+        </div>
+        <div class="severity-row">
+          <div class="sev-badge sev-low">🟢 Bajo (1-3.9)</div>
+          <div>
+            <div class="sev-bar-wrap"><div class="sev-bar bar-low"></div></div>
+          </div>
+          <div class="sev-action">Acción: Backlog<br/><span style="color:var(--green); font-weight:800;">90 días</span></div>
+        </div>
+      </div>
+
+      <div style="background: rgba(26,39,68,0.05); border: 1px solid rgba(26,39,68,0.1); border-radius: 12px; padding: 20px 24px; margin-top: 24px; font-size: 0.85rem; color: var(--gray-600);" class="reveal">
+        💡 <strong>Nota:</strong> Para cada hallazgo crítico o alto se entrega: descripción técnica, prueba de concepto (screenshot o log), impacto potencial en el negocio, y pasos específicos de remediación verificable. No vaga teoría — acción concreta.
+      </div>
+    </div>
+  </section>
+
+  <!-- ENTREGABLES -->
+  <section class="section" id="entregables">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Entregables del Proyecto</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">8 entregables concretos.<br/>Todo lo que el Comité y el equipo IT necesitan.</h2>
+        <p class="section-desc">
+          Cada entregable está diseñado para una audiencia específica y un propósito claro.
+          Desde el resumen para la junta directiva hasta el manual técnico para los ingenieros de IT.
+        </p>
+      </div>
+
+      <div class="deliverables-grid">
+        <div class="deliverable-card reveal">
+          <div class="del-icon">📊</div>
+          <div class="del-title">Informe Ejecutivo</div>
+          <div class="del-desc">Resumen de alto nivel para el Comité Directivo: hallazgos clave, riesgo residual y decisiones estratégicas requeridas.</div>
+        </div>
+        <div class="deliverable-card reveal">
+          <div class="del-icon">🔬</div>
+          <div class="del-title">Informe Técnico Detallado</div>
+          <div class="del-desc">Reporte completo para el equipo de IT: cada vulnerabilidad con evidencia, CVSS score, pasos de reproducción y remediación.</div>
+        </div>
+        <div class="deliverable-card reveal">
+          <div class="del-icon">🗺️</div>
+          <div class="del-title">Mapa de Vulnerabilidades</div>
+          <div class="del-desc">Visualización del ecosistema con vulnerabilidades georeferenciadas por sistema, severidad y vector de ataque.</div>
+        </div>
+        <div class="deliverable-card reveal">
+          <div class="del-icon">📜</div>
+          <div class="del-title">Política de Ciberseguridad IA</div>
+          <div class="del-desc">Documento normativo actualizado: políticas de acceso, manejo de datos, y gobernanza para sistemas de inteligencia artificial.</div>
+        </div>
+        <div class="deliverable-card reveal">
+          <div class="del-icon">🏗️</div>
+          <div class="del-title">Arquitectura de Seguridad</div>
+          <div class="del-desc">Diagramas y especificaciones de la arquitectura de seguridad recomendada para implementaciones de IA (formato Visio + PDF).</div>
+        </div>
+        <div class="deliverable-card reveal">
+          <div class="del-icon">📅</div>
+          <div class="del-title">Plan de Remediación</div>
+          <div class="del-desc">Roadmap priorizado: quick wins en 90 días, mejoras estructurales en 6-12 meses, con responsables, tiempos y KPIs.</div>
+        </div>
+        <div class="deliverable-card reveal">
+          <div class="del-icon">🚨</div>
+          <div class="del-title">Playbook de Incidentes</div>
+          <div class="del-desc">Manual paso a paso de respuesta ante breaches: roles, comunicación, contención, recuperación y notificación regulatoria.</div>
+        </div>
+        <div class="deliverable-card reveal">
+          <div class="del-icon">🎤</div>
+          <div class="del-title">Presentación Ejecutiva</div>
+          <div class="del-desc">Sesión presencial de resultados ante el Comité Directivo de Saludsa, con Q&A y recomendaciones estratégicas en vivo.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRONOGRAMA -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Cronograma de Trabajo</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">8 semanas. Diagnóstico completo<br/>y plan de acción en mano.</h2>
+        <p class="section-desc">Estructura clara, semana a semana, para que el equipo de Saludsa sepa exactamente qué esperar en cada etapa.</p>
+      </div>
+
+      <div class="timeline-grid reveal">
+        <div class="week-col">
+          <div class="week-header">SEM 1</div>
+          <div class="week-phase phase-a">Kickoff · NDA · Entrevistas · Inventario</div>
+        </div>
+        <div class="week-col">
+          <div class="week-header">SEM 2</div>
+          <div class="week-phase phase-a">Mapeo de sistemas · Revisión políticas · Acceso supervisado</div>
+        </div>
+        <div class="week-col">
+          <div class="week-header">SEM 3</div>
+          <div class="week-phase phase-b">Vulnerability Scanning · Análisis de red y perímetro</div>
+        </div>
+        <div class="week-col">
+          <div class="week-header">SEM 4</div>
+          <div class="week-phase phase-b">Penetration Testing · Análisis APIs · IAM Review</div>
+        </div>
+        <div class="week-col">
+          <div class="week-header">SEM 5</div>
+          <div class="week-phase phase-b">Testing profundo · Validación de hallazgos · CVSS scoring</div>
+        </div>
+        <div class="week-col">
+          <div class="week-header">SEM 6</div>
+          <div class="week-phase phase-c">Arquitectura IA · Políticas · Cumplimiento normativo</div>
+        </div>
+        <div class="week-col">
+          <div class="week-header">SEM 7</div>
+          <div class="week-phase phase-c">Redacción de informes · Diagramas · Playbook</div>
+        </div>
+        <div class="week-col">
+          <div class="week-header">SEM 8</div>
+          <div class="week-phase phase-d">Presentación Comité · Entrega de todos los documentos</div>
+        </div>
+      </div>
+
+      <div class="timeline-legend reveal" style="margin-top: 20px;">
+        <div class="tl-legend-item"><div class="tl-dot" style="background:rgba(201,162,39,0.5)"></div> Fase I: Recopilación e información</div>
+        <div class="tl-legend-item"><div class="tl-dot" style="background:rgba(192,57,43,0.6)"></div> Fase I: Assessment técnico y pentesting</div>
+        <div class="tl-legend-item"><div class="tl-dot" style="background:rgba(26,39,68,0.5)"></div> Fase II: Arquitectura e informes</div>
+        <div class="tl-legend-item"><div class="tl-dot" style="background:rgba(39,174,96,0.6)"></div> Fase III: Presentación y entregables</div>
+      </div>
+
+      <div style="background: rgba(201,162,39,0.08); border: 1px solid rgba(201,162,39,0.2); border-radius: 12px; padding: 20px 28px; margin-top: 30px; font-size: 0.85rem; color: rgba(255,255,255,0.7);" class="reveal">
+        📋 <strong style="color:var(--gold)">Nota operacional:</strong> Todas las actividades de pentesting se coordinan previamente con el equipo de IT de Saludsa, se ejecutan en ventanas horarias acordadas, y se monitorean en tiempo real para evitar impacto en operaciones productivas. Firmamos NDA antes de iniciar cualquier acceso.
+      </div>
+    </div>
+  </section>
+
+  <!-- INVERSIÓN -->
+  <section class="section section-alt" id="inversion">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Inversión</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">Precio fijo. Sin sorpresas.<br/>Sin costos adicionales ocultos.</h2>
+        <p class="section-desc">
+          Una inversión única que cubre el proyecto completo en sus 8 semanas de ejecución:
+          assessment, pentesting, arquitectura de seguridad para IA, todos los entregables y la presentación ejecutiva.
+        </p>
+      </div>
+
+      <div class="investment-hero reveal">
+        <div class="inv-label">Inversión Total del Proyecto — Precio Fijo</div>
+        <div class="inv-price"><span>$</span>40,000</div>
+        <div class="inv-currency">USD · Precio fijo · Sin mensualidades adicionales para este paquete</div>
+        <div class="inv-note">✓ Precio fijo · 8 semanas · 8 entregables · 3 fases completas</div>
+      </div>
+
+      <div class="inv-includes reveal">
+        <div class="inv-item">
+          <div class="inv-item-icon">🔍</div>
+          <div>
+            <h4>Fase I: Assessment Completo</h4>
+            <p>Vulnerability assessment, pentesting ético, análisis de red, APIs, políticas e IAM. 5 semanas de trabajo técnico profundo.</p>
+          </div>
+        </div>
+        <div class="inv-item">
+          <div class="inv-item-icon">🤖</div>
+          <div>
+            <h4>Fase II: Arquitectura IA Segura</h4>
+            <p>Diseño de arquitectura, políticas de gobernanza para IA, cumplimiento LOPDP/SBS, diagramas técnicos. 2 semanas.</p>
+          </div>
+        </div>
+        <div class="inv-item">
+          <div class="inv-item-icon">📋</div>
+          <div>
+            <h4>Fase III: Reportes + Presentación</h4>
+            <p>Los 8 entregables documentados + presentación en vivo al Comité Ejecutivo de Saludsa. Semana 8.</p>
+          </div>
+        </div>
+        <div class="inv-item">
+          <div class="inv-item-icon">🛡️</div>
+          <div>
+            <h4>NDA + Confidencialidad Total</h4>
+            <p>Todo el trabajo bajo acuerdo de confidencialidad. Los hallazgos nunca se comparten fuera del equipo de Saludsa.</p>
+          </div>
+        </div>
+        <div class="inv-item">
+          <div class="inv-item-icon">📞</div>
+          <div>
+            <h4>Soporte Post-Entrega (30 días)</h4>
+            <p>Un mes de consultas sobre los hallazgos y la implementación de las recomendaciones de remediación prioritaria.</p>
+          </div>
+        </div>
+        <div class="inv-item">
+          <div class="inv-item-icon">🎯</div>
+          <div>
+            <h4>Expertise Especializado</h4>
+            <p>Equipo con experiencia en ciberseguridad para sector salud, IA y cumplimiento normativo en Ecuador y LATAM.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(135deg, rgba(26,39,68,0.06), rgba(201,162,39,0.06)); border: 1px solid rgba(201,162,39,0.2); border-radius: 16px; padding: 28px 36px; text-align:center;" class="reveal">
+        <p style="font-size:0.9rem; color:var(--gray-600); margin-bottom:10px;">
+          💳 <strong>Condiciones de pago:</strong> 50% al inicio del proyecto (firma de contrato + NDA) · 50% a la entrega de informes finales (Semana 8)
+        </p>
+        <p style="font-size:0.82rem; color:var(--gray-400);">
+          Precios en USD · Facturación electrónica · Válido para inicio en mayo 2026
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI -->
+  <section class="section">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Análisis de Retorno</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">El costo de este assessment vs.<br/>el costo de un breach de datos.</h2>
+        <p class="section-desc">
+          Los números son contundentes. Invertir en este assessment no es un gasto de IT —
+          es el seguro más barato que existe para proteger los datos de salud de los afiliados de Saludsa.
+        </p>
+      </div>
+
+      <div class="roi-grid">
+        <div class="roi-card cost reveal-left">
+          <div class="roi-card-title">❌ Sin este assessment — Costo de un Breach</div>
+          <div class="roi-number">$10.9M</div>
+          <div class="roi-desc">Costo promedio de una brecha de datos en el sector salud (IBM Cost of a Data Breach Report 2023). Para Saludsa Ecuador, estimamos un impacto de $2M–$5M USD considerando escala regional.</div>
+          <div class="roi-items">
+            <div class="roi-item">Multas regulatorias bajo LOPDP Ecuador (hasta 2% de ingresos anuales)</div>
+            <div class="roi-item">Notificación obligatoria a afiliados y autoridades (SBS, ARCOTEL)</div>
+            <div class="roi-item">Daño reputacional irreversible y fuga de afiliados a competidores</div>
+            <div class="roi-item">Costos forenses post-breach: $500K–$1M solo en investigación</div>
+            <div class="roi-item">Interrupción operativa: días o semanas de sistemas caídos</div>
+            <div class="roi-item">Demandas civiles de afiliados cuyos datos fueron comprometidos</div>
+            <div class="roi-item">Bloqueo de expansión de proyectos de IA por falta de gobernanza</div>
+          </div>
+        </div>
+
+        <div class="roi-card invest reveal-right">
+          <div class="roi-card-title">✅ Con este assessment — Inversión Proactiva</div>
+          <div class="roi-number">$40K</div>
+          <div class="roi-desc">El 0.37% del costo promedio de un breach. El 0.8%–2% del impacto estimado para Saludsa. Una inversión única que protege décadas de confianza construida con los afiliados.</div>
+          <div class="roi-items">
+            <div class="roi-item">Identificar vulnerabilidades antes de que los atacantes las encuentren</div>
+            <div class="roi-item">Cumplimiento normativo documentado ante SBS y autoridades</div>
+            <div class="roi-item">Arquitectura de seguridad que habilita la expansión de IA con confianza</div>
+            <div class="roi-item">Reducción de primas de seguros cibernéticos (cyber insurance)</div>
+            <div class="roi-item">Diferenciador competitivo: Saludsa = la aseguradora más segura de Ecuador</div>
+            <div class="roi-item">Base sólida para escalar agentes IA sin riesgo regulatorio ni de datos</div>
+            <div class="roi-item">Confianza del Comité Ejecutivo en decisiones de tecnología y datos</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: linear-gradient(90deg, rgba(39,174,96,0.1), rgba(201,162,39,0.1)); border: 1px solid rgba(201,162,39,0.3); border-radius: 16px; padding: 28px 36px; margin-top: 30px; text-align:center;" class="reveal">
+        <p style="font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--navy); margin-bottom:8px;">
+          ROI mínimo estimado: 50x
+        </p>
+        <p style="font-size:0.88rem; color:var(--gray-600);">
+          Basado en evitar el menor impacto estimado de un breach ($2M USD) vs. la inversión del assessment ($40,000 USD).
+          Si este assessment previene una sola brecha de datos de salud, pagó su costo más de 50 veces.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRÓXIMOS PASOS -->
+  <section class="section section-dark" id="pasos">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Próximos Pasos</div>
+        <div class="divider-gold"></div>
+        <h2 class="section-title">De la aprobación al kickoff<br/>en menos de una semana.</h2>
+        <p class="section-desc">Un proceso de onboarding simple y rápido para arrancar sin fricciones.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-num">1</div>
+          <h4>Aprobación del Comité</h4>
+          <p>El Comité Ejecutivo aprueba la propuesta. Marco Puente confirma el go-ahead a Vibramente.</p>
+          <div class="step-date">Semana del 20 Abril</div>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num">2</div>
+          <h4>Firma de Contrato + NDA</h4>
+          <p>Firma del acuerdo de servicio y NDA bilateral. Primer pago del 50% para activar el proyecto.</p>
+          <div class="step-date">Semana del 27 Abril</div>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num">3</div>
+          <h4>Kickoff Meeting</h4>
+          <p>Reunión de arranque con el equipo de IT de Saludsa. Coordinación de accesos, ventanas y alcance.</p>
+          <div class="step-date">Primera semana de Mayo</div>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num">4</div>
+          <h4>Inicio del Assessment</h4>
+          <p>Comienza la Fase I. Semana 1 de las 8 semanas del proyecto completo.</p>
+          <div class="step-date">Mayo 2026</div>
+        </div>
+      </div>
+
+      <div style="background: rgba(201,162,39,0.08); border: 1px solid rgba(201,162,39,0.25); border-radius: 16px; padding: 40px; text-align:center; margin-top:50px;" class="reveal">
+        <h3 style="font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--white); margin-bottom:12px;">
+          ¿Tienes preguntas sobre el alcance o metodología?
+        </h3>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-bottom:28px; max-width:500px; margin-left:auto; margin-right:auto;">
+          Podemos agendar una sesión técnica con el equipo de IT de Saludsa para responder preguntas específicas antes de la aprobación del Comité.
+        </p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+          <div style="background:var(--gold); color:var(--navy-dark); font-weight:800; font-size:0.85rem; padding:14px 30px; border-radius:8px; letter-spacing:0.05em; text-transform:uppercase;">
+            📧 felipe@vibramente.io
+          </div>
+          <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.8); font-weight:600; font-size:0.85rem; padding:14px 30px; border-radius:8px;">
+            🗓️ Solicitar Sesión Técnica
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div style="width:40px;height:40px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🛡️</div>
+          <div>
+            <div class="footer-brand-name">Vibramente</div>
+            <div class="footer-brand-tagline">Ciberseguridad · IA · Transformación Digital</div>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <div>Preparado para: <strong style="color:rgba(255,255,255,0.7)">Marco Puente · VP Saludsa Ecuador</strong></div>
+          <div>Preparado por: <strong style="color:rgba(255,255,255,0.7)">Felipe Salgado · Vibramente</strong></div>
+          <div>Fecha: <strong style="color:rgba(255,255,255,0.7)">Abril 2026</strong></div>
+          <div>Versión: <strong style="color:var(--gold)">v1.0</strong></div>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <span>© 2026 Vibramente · Todos los derechos reservados</span>
+        <span class="footer-conf">🔒 DOCUMENTO CONFIDENCIAL</span>
+        <span>Este documento contiene información propietaria y confidencial de Vibramente y Saludsa Ecuador.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // Gauge needle animation
+    const needle = document.getElementById('needle');
+    const gaugeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            // 120deg = needle pointing to ~80% (Critical zone)
+            needle.style.transform = 'translateX(-50%) rotate(120deg)';
+          }, 400);
+          gaugeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    if (needle) gaugeObserver.observe(needle);
+
+    // Smooth active nav on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 100) current = sec.id;
+      });
+      navLinks.forEach(link => {
+        link.style.color = link.getAttribute('href') === '#' + current ? '#c9a227' : '';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta Escuelita de IA — Saludsa | Vibramente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================
+       RESET & BASE
+    ========================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #1a2744;
+      --navy-light: #223060;
+      --navy-dark: #0f1828;
+      --gold:    #c9a227;
+      --gold-light: #e2bb48;
+      --gold-pale: #f5e9c0;
+      --white:   #ffffff;
+      --gray-50: #f8f9fb;
+      --gray-100: #f0f2f6;
+      --gray-200: #e2e6ee;
+      --gray-400: #9aa3b8;
+      --gray-600: #5a637a;
+      --gray-800: #2e3548;
+      --shadow-sm: 0 2px 8px rgba(26,39,68,.08);
+      --shadow-md: 0 8px 32px rgba(26,39,68,.14);
+      --shadow-lg: 0 20px 60px rgba(26,39,68,.18);
+      --radius: 12px;
+      --radius-lg: 20px;
+      --transition: all .35s cubic-bezier(.25,.46,.45,.94);
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* =========================================
+       ANIMATIONS
+    ========================================= */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-left.visible { opacity: 1; transform: translateX(0); }
+    .fade-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-right.visible { opacity: 1; transform: translateX(0); }
+    .delay-1 { transition-delay: .1s; }
+    .delay-2 { transition-delay: .2s; }
+    .delay-3 { transition-delay: .3s; }
+    .delay-4 { transition-delay: .4s; }
+    .delay-5 { transition-delay: .5s; }
+
+    /* =========================================
+       LAYOUT
+    ========================================= */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    section { padding: 80px 0; }
+    section:nth-child(even) { background: var(--white); }
+
+    /* =========================================
+       NAV STRIP
+    ========================================= */
+    .topbar {
+      background: var(--navy-dark);
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .78rem;
+      color: var(--gray-400);
+      letter-spacing: .05em;
+    }
+    .topbar span { color: var(--gold); font-weight: 600; }
+
+    /* =========================================
+       HERO
+    ========================================= */
+    .hero {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 45%, #1e3566 100%);
+      color: var(--white);
+      padding: 100px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to bottom right, transparent 49%, var(--gray-50) 50%);
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: start;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(201,162,39,.18);
+      border: 1px solid rgba(201,162,39,.4);
+      color: var(--gold-light);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,.7);
+      font-weight: 300;
+      margin-bottom: 32px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .hero-meta-label {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .hero-meta-value { font-size: .95rem; color: rgba(255,255,255,.85); font-weight: 500; }
+    .hero-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      min-width: 220px;
+      text-align: center;
+    }
+    .hero-card-number {
+      font-family: 'Playfair Display', serif;
+      font-size: .85rem;
+      color: var(--gold);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .hero-card-id {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: .04em;
+    }
+    .hero-card-date {
+      font-size: .78rem;
+      color: rgba(255,255,255,.5);
+      margin-top: 6px;
+    }
+    .hero-card-divider {
+      height: 1px;
+      background: rgba(255,255,255,.12);
+      margin: 16px 0;
+    }
+    .hero-card-label { font-size: .72rem; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; }
+    .hero-card-val { font-size: .92rem; color: rgba(255,255,255,.8); font-weight: 600; margin-top: 2px; }
+    .hero-stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-size: 1.5rem; font-weight: 800; color: var(--gold-light); }
+    .hero-stat-desc { font-size: .68rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .05em; line-height: 1.3; }
+
+    /* =========================================
+       SECTION HEADERS
+    ========================================= */
+    .section-header { text-align: center; margin-bottom: 56px; }
+    .section-tag {
+      display: inline-block;
+      background: var(--gold-pale);
+      color: var(--gold);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .section-tag.white { background: rgba(201,162,39,.15); color: var(--gold-light); }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .section-header h2.light { color: var(--white); }
+    .section-header p {
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--gray-600);
+      font-size: 1.05rem;
+      font-weight: 400;
+    }
+    .section-header p.light { color: rgba(255,255,255,.65); }
+    .gold-line {
+      width: 48px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin: 16px auto 0;
+    }
+
+    /* =========================================
+       RESUMEN EJECUTIVO
+    ========================================= */
+    .exec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .exec-text { }
+    .exec-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .exec-text p { color: var(--gray-600); margin-bottom: 14px; font-size: .97rem; }
+    .exec-highlight {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+    }
+    .exec-highlight h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--gold-light);
+      margin-bottom: 20px;
+    }
+    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .kpi-box {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .kpi-box .num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--gold-light);
+      display: block;
+    }
+    .kpi-box .lbl { font-size: .72rem; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .07em; }
+
+    /* =========================================
+       MODULOS
+    ========================================= */
+    #modulos { background: var(--navy); }
+    .modulos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .modulo-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .modulo-card:hover {
+      background: rgba(255,255,255,.08);
+      border-color: rgba(201,162,39,.4);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .modulo-card::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      font-size: 5rem;
+      font-weight: 900;
+      color: rgba(201,162,39,.06);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .modulo-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(201,162,39,.3);
+    }
+    .modulo-tag {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .modulo-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .modulo-card p { font-size: .88rem; color: rgba(255,255,255,.55); margin-bottom: 20px; line-height: 1.6; }
+    .modulo-details { border-top: 1px solid rgba(255,255,255,.08); padding-top: 20px; }
+    .modulo-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: .82rem;
+    }
+    .modulo-detail-label { color: rgba(255,255,255,.45); }
+    .modulo-detail-value { color: var(--white); font-weight: 600; }
+    .modulo-topics { margin-top: 16px; }
+    .modulo-topics h5 { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--gold); margin-bottom: 10px; }
+    .topics-list { list-style: none; }
+    .topics-list li {
+      font-size: .83rem;
+      color: rgba(255,255,255,.6);
+      padding: 5px 0 5px 18px;
+      position: relative;
+    }
+    .topics-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: .7rem;
+    }
+    .audience-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(201,162,39,.15);
+      border: 1px solid rgba(201,162,39,.25);
+      color: var(--gold-light);
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: .72rem;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    /* =========================================
+       ENTREGABLES
+    ========================================= */
+    .entregables-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .entregable-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      text-align: center;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .entregable-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .entregable-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 16px;
+    }
+    .entregable-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .entregable-card p { font-size: .82rem; color: var(--gray-600); line-height: 1.5; }
+
+    /* =========================================
+       CRONOGRAMA
+    ========================================= */
+    #cronograma { background: var(--gray-50); }
+    .timeline { position: relative; padding: 0 0 0 48px; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 14px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold) 0%, var(--navy-light) 100%);
+    }
+    .timeline-item { position: relative; margin-bottom: 40px; }
+    .timeline-dot {
+      position: absolute;
+      left: -40px;
+      top: 4px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--navy);
+      border: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      font-weight: 800;
+      color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201,162,39,.15);
+    }
+    .timeline-content {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .timeline-content:hover {
+      border-color: var(--gold);
+      box-shadow: var(--shadow-md);
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .timeline-phase { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--gold); }
+    .timeline-duration {
+      background: var(--navy);
+      color: var(--white);
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 3px 12px;
+      border-radius: 100px;
+    }
+    .timeline-content h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 8px; }
+    .timeline-content p { font-size: .88rem; color: var(--gray-600); margin-bottom: 14px; }
+    .timeline-tasks { display: flex; flex-wrap: wrap; gap: 8px; }
+    .task-chip {
+      background: var(--gray-100);
+      color: var(--gray-800);
+      font-size: .75rem;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+    .timeline-total {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      border-radius: var(--radius-lg);
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: -10px;
+    }
+    .timeline-total span { color: rgba(255,255,255,.7); font-size: .88rem; }
+    .timeline-total strong { color: var(--white); font-size: 1.1rem; font-weight: 700; }
+    .timeline-total .big { font-size: 1.4rem; color: var(--gold-light); }
+
+    /* =========================================
+       INVERSIÓN
+    ========================================= */
+    #inversion { background: var(--white); }
+    .pricing-intro {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 24px 32px;
+      margin-bottom: 40px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .pricing-intro-icon { font-size: 2rem; }
+    .pricing-intro-text h4 { color: var(--navy); font-weight: 700; margin-bottom: 4px; }
+    .pricing-intro-text p { color: var(--gray-600); font-size: .88rem; }
+    .pricing-packages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+    .pkg-card {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      transition: var(--transition);
+      background: var(--white);
+    }
+    .pkg-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .pkg-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-light) 100%);
+      color: var(--white);
+      transform: scale(1.04);
+      box-shadow: var(--shadow-lg);
+    }
+    .pkg-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+    .pkg-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--navy-dark);
+      font-size: .7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      padding: 5px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .pkg-name { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--gold); margin-bottom: 8px; }
+    .pkg-card.featured .pkg-name { color: var(--gold-light); }
+    .pkg-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--navy); margin-bottom: 20px; }
+    .pkg-card.featured .pkg-title { color: var(--white); }
+    .pkg-price-block { margin-bottom: 24px; }
+    .pkg-price { font-size: 2.4rem; font-weight: 800; color: var(--navy); line-height: 1; }
+    .pkg-card.featured .pkg-price { color: var(--gold-light); }
+    .pkg-price span { font-size: 1rem; font-weight: 500; }
+    .pkg-per { font-size: .78rem; color: var(--gray-400); margin-top: 4px; }
+    .pkg-card.featured .pkg-per { color: rgba(255,255,255,.5); }
+    .pkg-total { font-size: .88rem; font-weight: 700; color: var(--gray-600); }
+    .pkg-card.featured .pkg-total { color: rgba(255,255,255,.75); }
+    .pkg-divider { height: 1px; background: var(--gray-200); margin: 20px 0; }
+    .pkg-card.featured .pkg-divider { background: rgba(255,255,255,.12); }
+    .pkg-features { list-style: none; text-align: left; margin-bottom: 24px; }
+    .pkg-features li {
+      font-size: .82rem;
+      color: var(--gray-600);
+      padding: 6px 0 6px 22px;
+      position: relative;
+    }
+    .pkg-card.featured .pkg-features li { color: rgba(255,255,255,.7); }
+    .pkg-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .pkg-cta {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid var(--navy);
+      background: transparent;
+      color: var(--navy);
+      transition: var(--transition);
+      letter-spacing: .04em;
+    }
+    .pkg-cta:hover { background: var(--navy); color: var(--white); }
+    .pkg-card.featured .pkg-cta {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--navy-dark);
+    }
+    .pkg-card.featured .pkg-cta:hover { background: var(--gold-light); border-color: var(--gold-light); }
+    .pricing-table-wrap {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .pricing-table-title {
+      background: var(--navy);
+      padding: 16px 28px;
+      color: var(--white);
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pricing-table-title span { color: var(--gold); }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: rgba(26,39,68,.04); }
+    thead th {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--navy);
+      border-bottom: 2px solid var(--gray-200);
+    }
+    thead th:last-child { text-align: right; }
+    tbody tr { border-bottom: 1px solid var(--gray-200); transition: background .2s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(201,162,39,.04); }
+    tbody td { padding: 14px 20px; font-size: .88rem; color: var(--gray-800); vertical-align: middle; }
+    tbody td:last-child { text-align: right; font-weight: 700; color: var(--navy); }
+    .td-tag {
+      display: inline-flex;
+      background: var(--navy);
+      color: var(--white);
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .table-footer {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--navy);
+    }
+    .table-footer-label { color: rgba(255,255,255,.6); font-size: .85rem; }
+    .table-footer-total {
+      color: var(--gold-light);
+      font-size: 1.5rem;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .saving-note {
+      background: linear-gradient(135deg, rgba(201,162,39,.1) 0%, rgba(201,162,39,.05) 100%);
+      border: 1px solid rgba(201,162,39,.3);
+      border-radius: var(--radius);
+      padding: 16px 24px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .88rem;
+      color: var(--gray-800);
+    }
+    .saving-note strong { color: var(--navy); }
+
+    /* =========================================
+       ROI
+    ========================================= */
+    #roi { background: var(--gray-50); }
+    .roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .roi-chart {
+      background: var(--navy);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      color: var(--white);
+    }
+    .roi-chart h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--gold-light);
+      margin-bottom: 24px;
+    }
+    .roi-bar-item { margin-bottom: 20px; }
+    .roi-bar-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: .82rem; }
+    .roi-bar-label { color: rgba(255,255,255,.7); }
+    .roi-bar-value { color: var(--gold-light); font-weight: 700; }
+    .roi-bar-track { height: 8px; background: rgba(255,255,255,.08); border-radius: 4px; overflow: hidden; }
+    .roi-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%); transition: width 1.2s cubic-bezier(.25,.46,.45,.94); width: 0; }
+    .roi-bar-fill.animate { width: var(--target-width); }
+    .roi-list { list-style: none; }
+    .roi-item {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: var(--transition);
+    }
+    .roi-item:hover { border-color: var(--gold); box-shadow: var(--shadow-sm); }
+    .roi-item-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--gold-pale);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .roi-item-text h5 { font-size: .9rem; color: var(--navy); font-weight: 700; margin-bottom: 4px; }
+    .roi-item-text p { font-size: .82rem; color: var(--gray-600); line-height: 1.5; }
+    .roi-item-text strong { color: var(--gold); }
+
+    /* =========================================
+       PRÓXIMOS PASOS
+    ========================================= */
+    #proximos { background: var(--navy); }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .step-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .step-card:hover {
+      background: rgba(255,255,255,.1);
+      border-color: rgba(201,162,39,.4);
+      transform: translateY(-4px);
+    }
+    .step-num {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: var(--navy-dark);
+      font-size: .95rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .step-card h4 { font-size: .9rem; color: var(--white); font-weight: 700; margin-bottom: 8px; }
+    .step-card p { font-size: .78rem; color: rgba(255,255,255,.5); line-height: 1.5; }
+    .step-card .step-date {
+      display: inline-block;
+      background: rgba(201,162,39,.2);
+      color: var(--gold-light);
+      font-size: .7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-top: 12px;
+    }
+
+    /* =========================================
+       CTA SECTION
+    ========================================= */
+    .cta-section {
+      background: linear-gradient(135deg, #0f1828 0%, var(--navy) 60%, #1e3566 100%);
+      padding: 80px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a227' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .cta-section p { font-size: 1rem; color: rgba(255,255,255,.6); margin-bottom: 36px; max-width: 600px; margin-left: auto; margin-right: auto; }
+    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: var(--navy-dark);
+      font-family: 'Montserrat', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      padding: 14px 32px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      letter-spacing: .04em;
+      transition: var(--transition);
+      box-shadow: 0 6px 20px rgba(201,162,39,.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,162,39,.5); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(255,255,255,.3);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      letter-spacing: .04em;
+      transition: var(--transition);
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold-light); }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+    footer {
+      background: var(--navy-dark);
+      color: rgba(255,255,255,.5);
+      padding: 48px 0 32px;
+    }
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 40px;
+    }
+    .footer-brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .footer-brand-tag { font-size: .78rem; color: var(--gold); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-brand-desc { font-size: .82rem; line-height: 1.6; max-width: 300px; }
+    .footer-col h5 {
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { font-size: .82rem; padding: 4px 0; }
+    .footer-col ul li a { color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
+    .footer-col ul li a:hover { color: var(--gold-light); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: .78rem;
+    }
+    .confidential-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(201,162,39,.12);
+      border: 1px solid rgba(201,162,39,.2);
+      color: var(--gold);
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .exec-grid { grid-template-columns: 1fr; }
+      .modulos-grid { grid-template-columns: 1fr; }
+      .entregables-grid { grid-template-columns: repeat(2, 1fr); }
+      .pricing-packages { grid-template-columns: 1fr; }
+      .pkg-card.featured { transform: none; }
+      .roi-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 60px 0; }
+      .entregables-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stat-row { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* Misc */
+    .text-gold { color: var(--gold); }
+    .text-navy { color: var(--navy); }
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .mt-8 { margin-top: 8px; }
+    .mt-24 { margin-top: 24px; }
+    .mb-24 { margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div>Confidencial &bull; Para uso exclusivo de <span>Saludsa Ecuador</span></div>
+  <div>Propuesta N° <span>VBM-2026-SAL-001</span> &bull; Abril 2026</div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="fade-up">
+        <div class="hero-badge">
+          🤖 Programa de Transformación IA
+        </div>
+        <h1>
+          <em>Escuelita</em> de<br/>Inteligencia Artificial
+        </h1>
+        <p class="hero-subtitle">Programa corporativo de capacitación IA para<br/>Saludsa Ecuador — 300 colaboradores · 4 módulos especializados</p>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Cliente</span>
+            <span class="hero-meta-value">Saludsa Ecuador</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Interlocutor</span>
+            <span class="hero-meta-value">Marco Puente · VP</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Proveedor</span>
+            <span class="hero-meta-value">Vibramente</span>
+          </div>
+          <div class="hero-meta-item">
+            <span class="hero-meta-label">Versión</span>
+            <span class="hero-meta-value">v1.0 — Borrador ejecutivo</span>
+          </div>
+        </div>
+
+        <!-- Stats strip -->
+        <div style="display:flex; gap:32px; flex-wrap:wrap;">
+          <div>
+            <div style="font-size:2rem; font-weight:800; color:var(--gold-light);">300</div>
+            <div style="font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.5);">Colaboradores</div>
+          </div>
+          <div>
+            <div style="font-size:2rem; font-weight:800; color:var(--gold-light);">4</div>
+            <div style="font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.5);">Módulos</div>
+          </div>
+          <div>
+            <div style="font-size:2rem; font-weight:800; color:var(--gold-light);">22</div>
+            <div style="font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.5);">Semanas</div>
+          </div>
+          <div>
+            <div style="font-size:2rem; font-weight:800; color:var(--gold-light);">$135K</div>
+            <div style="font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.5);">Inversión total</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proposal card -->
+      <div class="hero-card fade-up delay-2">
+        <div class="hero-card-number">Propuesta N°</div>
+        <div class="hero-card-id">VBM-2026<br/>SAL-001</div>
+        <div class="hero-card-date">Emitida: Abril 19, 2026</div>
+        <div class="hero-card-divider"></div>
+        <div class="hero-card-label">Válida hasta</div>
+        <div class="hero-card-val">Mayo 19, 2026</div>
+        <div class="hero-card-divider"></div>
+        <div class="hero-card-label">Comité ejecutivo</div>
+        <div class="hero-card-val">Miércoles, Abril 23</div>
+        <div class="hero-stat-row">
+          <div class="hero-stat">
+            <div class="hero-stat-num">12</div>
+            <div class="hero-stat-desc">max por grupo</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">25</div>
+            <div class="hero-stat-desc">grupos total</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">$450</div>
+            <div class="hero-stat-desc">por persona</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- RESUMEN EJECUTIVO -->
+<section id="resumen">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag">01 · Resumen Ejecutivo</div>
+      <h2>Una oportunidad de liderazgo<br/>en el sector salud de Ecuador</h2>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="exec-grid">
+      <div class="exec-text fade-left">
+        <h3>¿Por qué ahora?</h3>
+        <p>La inteligencia artificial está redefiniendo la industria de salud y seguros a nivel global. Las organizaciones que capaciten a sus equipos hoy tendrán una ventaja competitiva estructural en los próximos 3-5 años.</p>
+        <p>Saludsa tiene la oportunidad de convertirse en el referente de adopción IA en el sector salud ecuatoriano. Este programa no es solo capacitación — es una transformación cultural y operativa que posicionará a la organización un paso adelante de su competencia.</p>
+        <p>Vibramente, a través de su programa <strong>"Escuelita de IA"</strong>, propone un proceso de capacitación intensivo, personalizado y medible: 300 colaboradores, 4 módulos especializados, grupos de máximo 12 personas, y acompañamiento continuo durante 22 semanas.</p>
+        <p>El resultado esperado: un equipo humano altamente competente en el uso práctico de IA, con casos de uso reales implementados dentro de Saludsa desde el primer mes de programa.</p>
+      </div>
+
+      <div class="exec-highlight fade-right">
+        <h4>📊 Resumen de la propuesta</h4>
+        <div class="kpi-grid">
+          <div class="kpi-box">
+            <span class="num">300</span>
+            <span class="lbl">Colaboradores capacitados</span>
+          </div>
+          <div class="kpi-box">
+            <span class="num">4</span>
+            <span class="lbl">Módulos especializados</span>
+          </div>
+          <div class="kpi-box">
+            <span class="num">$450</span>
+            <span class="lbl">USD por persona</span>
+          </div>
+          <div class="kpi-box">
+            <span class="num">25%</span>
+            <span class="lbl">Bajo precio de mercado</span>
+          </div>
+          <div class="kpi-box">
+            <span class="num">22</span>
+            <span class="lbl">Semanas de programa</span>
+          </div>
+          <div class="kpi-box">
+            <span class="num">6</span>
+            <span class="lbl">Meses soporte post</span>
+          </div>
+        </div>
+        <div style="margin-top:20px; padding:16px; background:rgba(201,162,39,.12); border-radius:10px; border:1px solid rgba(201,162,39,.25);">
+          <div style="font-size:.72rem; color:var(--gold); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;">Inversión total recomendada</div>
+          <div style="font-size:2rem; font-weight:800; color:var(--white);">$135,000 <span style="font-size:1rem; font-weight:400; color:rgba(255,255,255,.5);">USD</span></div>
+          <div style="font-size:.78rem; color:rgba(255,255,255,.5); margin-top:4px;">Paquete Profesional completo · 4 módulos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJETIVO -->
+<section id="objetivo" style="background:var(--gray-50)">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag">02 · Objetivo</div>
+      <h2>Transformar el capital humano<br/>en activo estratégico digital</h2>
+      <div class="gold-line"></div>
+      <p style="margin-top:20px;">Desarrollar competencias reales y aplicables en IA para el 100% del personal clave de Saludsa, generando impacto medible en productividad, innovación y ventaja competitiva organizacional.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;" class="fade-up delay-2">
+      <div style="background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); padding:28px; box-shadow:var(--shadow-sm);">
+        <div style="font-size:2rem; margin-bottom:12px;">🎯</div>
+        <h4 style="color:var(--navy); font-weight:700; margin-bottom:8px;">Objetivo Principal</h4>
+        <p style="font-size:.88rem; color:var(--gray-600);">Capacitar a 300 colaboradores de Saludsa en el uso práctico y estratégico de herramientas de Inteligencia Artificial, con aplicación directa a sus roles y procesos actuales.</p>
+      </div>
+      <div style="background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); padding:28px; box-shadow:var(--shadow-sm);">
+        <div style="font-size:2rem; margin-bottom:12px;">⚡</div>
+        <h4 style="color:var(--navy); font-weight:700; margin-bottom:8px;">Objetivo Operativo</h4>
+        <p style="font-size:.88rem; color:var(--gray-600);">Reducir tiempo en tareas repetitivas en al menos un 30%, automatizar flujos transaccionales clave y elevar la calidad del trabajo digital en todos los niveles de la organización.</p>
+      </div>
+      <div style="background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); padding:28px; box-shadow:var(--shadow-sm);">
+        <div style="font-size:2rem; margin-bottom:12px;">🏆</div>
+        <h4 style="color:var(--navy); font-weight:700; margin-bottom:8px;">Objetivo Estratégico</h4>
+        <p style="font-size:.88rem; color:var(--gray-600);">Posicionar a Saludsa como organización de referencia en adopción IA en el sector salud del Ecuador, atrayendo talento de alta calidad y diferenciándose del mercado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULOS -->
+<section id="modulos">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag white">03 · Estructura del Programa</div>
+      <h2 class="light">4 módulos diseñados para<br/>cada perfil de tu organización</h2>
+      <div class="gold-line"></div>
+      <p class="light" style="margin-top:20px;">Cada módulo está diseñado para un perfil específico, con contenido práctico, casos de uso reales y evaluación certificada. Grupos de máximo 12 personas garantizan atención personalizada.</p>
+    </div>
+
+    <div class="modulos-grid">
+
+      <!-- Módulo 1 -->
+      <div class="modulo-card fade-up delay-1" data-num="01">
+        <div class="modulo-icon">🖥️</div>
+        <div class="modulo-tag">Módulo 1 · Todos los colaboradores</div>
+        <h3>IA para el Escritorio del Colaborador</h3>
+        <p>Productividad diaria con herramientas IA: redacción, análisis, síntesis, automatización de tareas del día a día en el entorno corporativo de Saludsa.</p>
+        <div class="audience-badge">👥 300 personas · Grupos de 12</div>
+        <div class="modulo-details">
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Duración</span>
+            <span class="modulo-detail-value">16 horas (4 sesiones × 4h)</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Modalidad</span>
+            <span class="modulo-detail-value">Presencial · Aula corporativa</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Sesiones necesarias</span>
+            <span class="modulo-detail-value">25 grupos × 4 sesiones = 100</span>
+          </div>
+          <div class="modulo-topics">
+            <h5>Contenidos clave</h5>
+            <ul class="topics-list">
+              <li>ChatGPT, Copilot y Gemini en el trabajo diario</li>
+              <li>Redacción asistida por IA: emails, reportes, presentaciones</li>
+              <li>Automatización de tareas con IA (resúmenes, transcripciones)</li>
+              <li>Búsqueda inteligente y síntesis de información</li>
+              <li>Ética y uso responsable de IA en seguros y salud</li>
+              <li>Casos prácticos aplicados a los procesos de Saludsa</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo 2 -->
+      <div class="modulo-card fade-up delay-2" data-num="02">
+        <div class="modulo-icon">💻</div>
+        <div class="modulo-tag">Módulo 2 · Equipo técnico IT/Dev</div>
+        <h3>IA para Programadores</h3>
+        <p>Dev tools con IA, copilots de código, automatización avanzada y arquitectura de soluciones con modelos de lenguaje para el equipo de desarrollo de Saludsa.</p>
+        <div class="audience-badge">👥 ~60 personas · Grupos de 12</div>
+        <div class="modulo-details">
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Duración</span>
+            <span class="modulo-detail-value">24 horas (6 sesiones × 4h)</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Modalidad</span>
+            <span class="modulo-detail-value">Presencial + Lab práctico</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Sesiones necesarias</span>
+            <span class="modulo-detail-value">5 grupos × 6 sesiones = 30</span>
+          </div>
+          <div class="modulo-topics">
+            <h5>Contenidos clave</h5>
+            <ul class="topics-list">
+              <li>GitHub Copilot, Cursor, Codeium y herramientas avanzadas</li>
+              <li>Integración de APIs de OpenAI / Anthropic / Google</li>
+              <li>Prompting para programadores: técnicas y patrones</li>
+              <li>Automatización de procesos con Python + LLMs</li>
+              <li>Testing y debugging asistido por IA</li>
+              <li>Arquitectura de soluciones IA en entornos corporativos</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo 3 -->
+      <div class="modulo-card fade-up delay-3" data-num="03">
+        <div class="modulo-icon">🤖</div>
+        <div class="modulo-tag">Módulo 3 · Operaciones y Producto</div>
+        <h3>Agentes Transaccionales y Conversacionales</h3>
+        <p>Diseño e implementación de chatbots, flujos conversacionales y agentes IA que automatizan procesos de atención al cliente y operaciones internas.</p>
+        <div class="audience-badge">👥 ~80 personas · Grupos de 12</div>
+        <div class="modulo-details">
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Duración</span>
+            <span class="modulo-detail-value">20 horas (5 sesiones × 4h)</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Modalidad</span>
+            <span class="modulo-detail-value">Presencial · Workshop aplicado</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Sesiones necesarias</span>
+            <span class="modulo-detail-value">7 grupos × 5 sesiones = 35</span>
+          </div>
+          <div class="modulo-topics">
+            <h5>Contenidos clave</h5>
+            <ul class="topics-list">
+              <li>Arquitectura de agentes conversacionales modernos</li>
+              <li>Diseño de flujos transaccionales con IA (n8n, Make, LangChain)</li>
+              <li>Implementación de chatbots para atención al afiliado</li>
+              <li>Integración con WhatsApp Business API y canales digitales</li>
+              <li>Gestión de intenciones, contexto y escalamiento humano</li>
+              <li>Métricas de éxito y mejora continua de agentes IA</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo 4 -->
+      <div class="modulo-card fade-up delay-4" data-num="04">
+        <div class="modulo-icon">🔐</div>
+        <div class="modulo-tag">Módulo 4 · Toda la organización</div>
+        <h3>IA Aplicada a Seguridad Corporativa</h3>
+        <p>Awareness de riesgos IA, políticas de uso seguro, herramientas de ciberseguridad potenciadas por IA, y cultura de seguridad digital en la era de los modelos de lenguaje.</p>
+        <div class="audience-badge">👥 300 personas · Grupos de 15</div>
+        <div class="modulo-details">
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Duración</span>
+            <span class="modulo-detail-value">8 horas (2 sesiones × 4h)</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Modalidad</span>
+            <span class="modulo-detail-value">Presencial · Sesión informativa</span>
+          </div>
+          <div class="modulo-detail-row">
+            <span class="modulo-detail-label">Sesiones necesarias</span>
+            <span class="modulo-detail-value">20 grupos × 2 sesiones = 40</span>
+          </div>
+          <div class="modulo-topics">
+            <h5>Contenidos clave</h5>
+            <ul class="topics-list">
+              <li>Riesgos IA: deepfakes, phishing potenciado, ingeniería social</li>
+              <li>Política de uso de IA generativa en entornos regulados</li>
+              <li>Protección de datos sensibles con herramientas IA</li>
+              <li>Detección de amenazas con sistemas de IA</li>
+              <li>Marcos regulatorios: GDPR, SBS, SUPERCOM Ecuador</li>
+              <li>Implementación de política corporativa de IA para Saludsa</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ENTREGABLES -->
+<section id="entregables">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag">04 · Entregables</div>
+      <h2>Lo que Saludsa recibe<br/>en cada módulo y etapa</h2>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="entregables-grid">
+      <div class="entregable-card fade-up delay-1">
+        <div class="entregable-icon">📚</div>
+        <h4>Plan de Estudios Completo</h4>
+        <p>Currículo detallado por módulo: objetivos de aprendizaje, contenidos, metodología, ejercicios prácticos y rúbricas de evaluación.</p>
+      </div>
+      <div class="entregable-card fade-up delay-2">
+        <div class="entregable-icon">💾</div>
+        <h4>Material Didáctico Digital</h4>
+        <p>Pack completo por participante: slides, guías de práctica, plantillas de prompts, recursos de referencia y acceso a plataforma de aprendizaje.</p>
+      </div>
+      <div class="entregable-card fade-up delay-3">
+        <div class="entregable-icon">🎓</div>
+        <h4>Evaluaciones y Certificaciones</h4>
+        <p>Evaluación práctica al cierre de cada módulo. Certificado digital de completación por Vibramente, reconocido en el mercado ecuatoriano.</p>
+      </div>
+      <div class="entregable-card fade-up delay-1">
+        <div class="entregable-icon">📊</div>
+        <h4>Informe de Progreso Mensual</h4>
+        <p>Reporte ejecutivo mensual con métricas de avance, tasas de completación, rendimiento por área y recomendaciones de ajuste.</p>
+      </div>
+      <div class="entregable-card fade-up delay-2">
+        <div class="entregable-icon">📈</div>
+        <h4>Dashboard de Adopción IA</h4>
+        <p>Panel de control visual con KPIs de adopción por departamento, horas de capacitación, certificaciones emitidas y proyección de impacto.</p>
+      </div>
+      <div class="entregable-card fade-up delay-3">
+        <div class="entregable-icon">🛎️</div>
+        <h4>Soporte Post-Capacitación</h4>
+        <p>Acompañamiento técnico durante 6 meses post-programa: canal de consultas, sesiones de refuerzo mensuales y actualización de contenidos.</p>
+      </div>
+    </div>
+
+    <!-- Bonus box -->
+    <div style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%); border-radius:var(--radius-lg); padding:32px; margin-top:32px; display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center; flex-wrap:wrap;" class="fade-up">
+      <div>
+        <div style="font-size:.72rem; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px;">🎁 Bonus Exclusivo — Paquete Profesional</div>
+        <h3 style="font-family:'Playfair Display',serif; color:var(--white); font-size:1.3rem; margin-bottom:8px;">Política Corporativa de IA para Saludsa</h3>
+        <p style="font-size:.88rem; color:rgba(255,255,255,.6);">Vibramente redactará y entregará el documento oficial de "Política de Uso de Inteligencia Artificial" personalizado para Saludsa, listo para aprobación del Directorio.</p>
+      </div>
+      <div style="text-align:center; min-width:140px;">
+        <div style="font-size:.72rem; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.08em;">Valor</div>
+        <div style="font-size:1.8rem; font-weight:800; color:var(--gold-light);">$2,500</div>
+        <div style="font-size:.75rem; color:var(--gold); font-weight:600;">INCLUIDO</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CRONOGRAMA -->
+<section id="cronograma">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag">05 · Cronograma</div>
+      <h2>De la firma al certificado<br/>en 22 semanas</h2>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item fade-up">
+        <div class="timeline-dot">F0</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-phase">Fase 0 · Kickoff</div>
+              <h4>Diagnóstico y Personalización del Programa</h4>
+            </div>
+            <span class="timeline-duration">2 semanas</span>
+          </div>
+          <p>Levantamiento de información, análisis de perfiles por área, diagnóstico de nivel IA actual, definición de grupos y personalización del currículo a los procesos de Saludsa.</p>
+          <div class="timeline-tasks">
+            <span class="task-chip">🔍 Encuesta de diagnóstico</span>
+            <span class="task-chip">👥 Segmentación de grupos</span>
+            <span class="task-chip">📋 Calendarización completa</span>
+            <span class="task-chip">🏢 Setup de instalaciones</span>
+            <span class="task-chip">✅ Kick-off meeting</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-up delay-1">
+        <div class="timeline-dot">F1</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-phase">Fase 1 · Módulos 1 & 2</div>
+              <h4>IA para Escritorio + IA para Programadores</h4>
+            </div>
+            <span class="timeline-duration">8 semanas</span>
+          </div>
+          <p>Ejecución simultánea o secuencial del módulo de productividad general (M1, 300 personas) y el módulo técnico para el equipo de desarrollo (M2, ~60 personas).</p>
+          <div class="timeline-tasks">
+            <span class="task-chip">🖥️ Módulo 1 · 25 grupos</span>
+            <span class="task-chip">💻 Módulo 2 · 5 grupos</span>
+            <span class="task-chip">📊 Reporte de avance #1</span>
+            <span class="task-chip">🎓 Certificaciones M1/M2</span>
+            <span class="task-chip">📈 Dashboard actualizado</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-up delay-2">
+        <div class="timeline-dot">F2</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-phase">Fase 2 · Módulos 3 & 4</div>
+              <h4>Agentes IA + Seguridad Corporativa</h4>
+            </div>
+            <span class="timeline-duration">8 semanas</span>
+          </div>
+          <p>Ejecución del módulo avanzado de agentes conversacionales para equipos de operaciones y producto (~80 personas), y el módulo de seguridad para toda la organización.</p>
+          <div class="timeline-tasks">
+            <span class="task-chip">🤖 Módulo 3 · 7 grupos</span>
+            <span class="task-chip">🔐 Módulo 4 · 20 grupos</span>
+            <span class="task-chip">📊 Reporte de avance #2</span>
+            <span class="task-chip">📜 Política IA Saludsa</span>
+            <span class="task-chip">🎓 Certificaciones M3/M4</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item fade-up delay-3">
+        <div class="timeline-dot">F3</div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <div>
+              <div class="timeline-phase">Fase 3 · Cierre</div>
+              <h4>Seguimiento, Certificación y Entrega</h4>
+            </div>
+            <span class="timeline-duration">4 semanas</span>
+          </div>
+          <p>Evaluaciones finales por módulo, emisión de certificaciones, presentación del informe ejecutivo final al Comité de Dirección y activación del soporte post-capacitación de 6 meses.</p>
+          <div class="timeline-tasks">
+            <span class="task-chip">📝 Evaluaciones finales</span>
+            <span class="task-chip">🏆 300 certificados emitidos</span>
+            <span class="task-chip">📊 Informe ejecutivo final</span>
+            <span class="task-chip">🎯 Presentación Directorio</span>
+            <span class="task-chip">🛎️ Activación soporte 6M</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="timeline-total fade-up">
+      <span>⏱️ Duración total del programa</span>
+      <div style="display:flex; gap:32px; align-items:center; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div class="big">22 semanas</div>
+          <div style="font-size:.72rem; color:rgba(255,255,255,.4); text-transform:uppercase; letter-spacing:.08em;">~5.5 meses</div>
+        </div>
+        <div style="height:40px; width:1px; background:rgba(255,255,255,.1);"></div>
+        <div style="text-align:center;">
+          <div class="big">+6 meses</div>
+          <div style="font-size:.72rem; color:rgba(255,255,255,.4); text-transform:uppercase; letter-spacing:.08em;">soporte post</div>
+        </div>
+        <div style="height:40px; width:1px; background:rgba(255,255,255,.1);"></div>
+        <strong style="font-size:1.3rem;">Inicio sugerido: Mayo 2026</strong>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- INVERSIÓN -->
+<section id="inversion">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag">06 · Inversión</div>
+      <h2>Una inversión justa con<br/>retorno garantizado</h2>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="pricing-intro fade-up">
+      <div class="pricing-intro-icon">💡</div>
+      <div class="pricing-intro-text">
+        <h4>Precio especial corporativo para Saludsa</h4>
+        <p>El precio público de los programas Vibramente en mercado abierto es de <strong>$600 USD por persona</strong>. Para Saludsa, dado el volumen de 300 colaboradores y la alianza estratégica que proponemos, el precio especial corporativo es de <strong>$450 USD por persona</strong> — un ahorro del 25% respecto al precio de mercado.</p>
+      </div>
+    </div>
+
+    <!-- Packages -->
+    <div class="pricing-packages fade-up">
+
+      <!-- Esencial -->
+      <div class="pkg-card">
+        <div class="pkg-name">Paquete</div>
+        <div class="pkg-title">Esencial</div>
+        <div class="pkg-price-block">
+          <div class="pkg-price"><span>$</span>350</div>
+          <div class="pkg-per">USD por persona</div>
+          <div class="pkg-total">Total: $105,000 USD</div>
+        </div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-features">
+          <li>Módulo 1: IA Escritorio (todos)</li>
+          <li>Módulo 4: Seguridad Corporativa</li>
+          <li>Material didáctico digital</li>
+          <li>Certificado de participación</li>
+          <li>3 meses soporte post</li>
+          <li>Informe final de programa</li>
+        </ul>
+        <button class="pkg-cta">Seleccionar</button>
+      </div>
+
+      <!-- Profesional (featured) -->
+      <div class="pkg-card featured">
+        <div class="pkg-badge">⭐ Recomendado</div>
+        <div class="pkg-name">Paquete</div>
+        <div class="pkg-title">Profesional</div>
+        <div class="pkg-price-block">
+          <div class="pkg-price"><span>$</span>450</div>
+          <div class="pkg-per">USD por persona</div>
+          <div class="pkg-total">Total: $135,000 USD</div>
+        </div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-features">
+          <li>Los 4 módulos completos</li>
+          <li>Material didáctico premium por participante</li>
+          <li>Evaluaciones y certificaciones</li>
+          <li>Dashboard de adopción IA</li>
+          <li>Informes mensuales de progreso</li>
+          <li>6 meses soporte post-capacitación</li>
+          <li>Política Corporativa de IA incluida</li>
+          <li>Sesión de presentación al Directorio</li>
+        </ul>
+        <button class="pkg-cta">Seleccionar</button>
+      </div>
+
+      <!-- Transformación Total -->
+      <div class="pkg-card">
+        <div class="pkg-name">Paquete</div>
+        <div class="pkg-title">Transformación Total</div>
+        <div class="pkg-price-block">
+          <div class="pkg-price"><span>$</span>450</div>
+          <div class="pkg-per">+ agente IA personalizado</div>
+          <div class="pkg-total">Total: $155,000 + $1,500/mes</div>
+        </div>
+        <div class="pkg-divider"></div>
+        <ul class="pkg-features">
+          <li>Todo el paquete Profesional</li>
+          <li>1 Agente IA corporativo a medida</li>
+          <li>Integración con sistemas Saludsa</li>
+          <li>12 meses mantenimiento del agente</li>
+          <li>Roadmap de automatización Q3-Q4</li>
+          <li>Workshop de innovación IA ejecutivo</li>
+        </ul>
+        <button class="pkg-cta">Seleccionar</button>
+      </div>
+
+    </div>
+
+    <!-- Desglose detallado -->
+    <div class="pricing-table-wrap fade-up">
+      <div class="pricing-table-title">
+        📋 Desglose detallado — <span>Paquete Profesional (Recomendado)</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Componente</th>
+            <th>Detalle</th>
+            <th>Cantidad</th>
+            <th>Precio Unit.</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Módulo 1</strong> — IA Escritorio <span class="td-tag">TODOS</span></td>
+            <td style="color:var(--gray-600); font-size:.82rem;">16h · 25 grupos de 12</td>
+            <td>300 pers.</td>
+            <td>$350</td>
+            <td>$105,000</td>
+          </tr>
+          <tr>
+            <td><strong>Módulo 2</strong> — IA para Devs <span class="td-tag">IT/DEV</span></td>
+            <td style="color:var(--gray-600); font-size:.82rem;">24h · 5 grupos de 12</td>
+            <td>60 pers.</td>
+            <td>Incl.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Módulo 3</strong> — Agentes IA <span class="td-tag">OPS</span></td>
+            <td style="color:var(--gray-600); font-size:.82rem;">20h · 7 grupos de 12</td>
+            <td>80 pers.</td>
+            <td>Incl.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Módulo 4</strong> — Seguridad IA <span class="td-tag">TODOS</span></td>
+            <td style="color:var(--gray-600); font-size:.82rem;">8h · 20 grupos de 15</td>
+            <td>300 pers.</td>
+            <td>Incl.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Material didáctico</strong> digital premium</td>
+            <td style="color:var(--gray-600); font-size:.82rem;">Pack completo por participante</td>
+            <td>300 packs</td>
+            <td>$25</td>
+            <td>$7,500</td>
+          </tr>
+          <tr>
+            <td><strong>Certificaciones</strong> — 4 módulos</td>
+            <td style="color:var(--gray-600); font-size:.82rem;">Certificado digital por módulo</td>
+            <td>—</td>
+            <td>Incl.</td>
+            <td>Incluido</td>
+          </tr>
+          <tr>
+            <td><strong>Dashboard</strong> de adopción IA</td>
+            <td style="color:var(--gray-600); font-size:.82rem;">Setup + 6 meses de acceso</td>
+            <td>1</td>
+            <td>$5,000</td>
+            <td>$5,000</td>
+          </tr>
+          <tr>
+            <td><strong>Informes</strong> mensuales de progreso</td>
+            <td style="color:var(--gray-600); font-size:.82rem;">5 informes durante el programa</td>
+            <td>5</td>
+            <td>$500</td>
+            <td>$2,500</td>
+          </tr>
+          <tr>
+            <td><strong>Política Corporativa</strong> de IA <span class="td-tag">BONUS</span></td>
+            <td style="color:var(--gray-600); font-size:.82rem;">Documento oficial personalizado</td>
+            <td>1</td>
+            <td>$2,500</td>
+            <td>$2,500</td>
+          </tr>
+          <tr>
+            <td><strong>Soporte post-capacitación</strong></td>
+            <td style="color:var(--gray-600); font-size:.82rem;">Canal consultas + sesiones mensuales</td>
+            <td>6 meses</td>
+            <td>Incl.</td>
+            <td>Incluido</td>
+          </tr>
+          <tr>
+            <td><strong>Presentación al Directorio</strong></td>
+            <td style="color:var(--gray-600); font-size:.82rem;">Sesión ejecutiva de resultados</td>
+            <td>1 sesión</td>
+            <td>Incl.</td>
+            <td>Incluido</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="font-size:.82rem; color:var(--gray-600);">Descuento volumen corporativo (300 colaboradores)</td>
+            <td colspan="2" style="color:#e74c3c; font-weight:700;">-$180,000*</td>
+            <td style="color:#e74c3c;">- $15,000</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <div>
+          <div class="table-footer-label">Inversión Total — Paquete Profesional</div>
+          <div style="font-size:.75rem; color:rgba(255,255,255,.4); margin-top:2px;">IVA no incluido · Condiciones de pago a convenir</div>
+        </div>
+        <div class="table-footer-total">$135,000 USD</div>
+      </div>
+    </div>
+
+    <div class="saving-note fade-up">
+      <span style="font-size:1.4rem;">💰</span>
+      <div>
+        <strong>Saludsa ahorra $45,000 USD</strong> respecto al precio de mercado abierto ($600 × 300 = $180,000). El programa equivale a un precio especial corporativo de $450/persona — <strong>25% de descuento exclusivo</strong> por volumen y alianza estratégica.
+      </div>
+    </div>
+
+    <!-- Condiciones de pago -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:24px;" class="fade-up">
+      <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius); padding:20px; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:8px;">📅</div>
+        <div style="font-weight:700; color:var(--navy); font-size:.9rem; margin-bottom:4px;">Opción A</div>
+        <div style="font-size:.82rem; color:var(--gray-600);">30% al firmar contrato<br/>40% al iniciar Fase 1<br/>30% al finalizar programa</div>
+      </div>
+      <div style="background:var(--navy); border-radius:var(--radius); padding:20px; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:8px;">💎</div>
+        <div style="font-weight:700; color:var(--gold-light); font-size:.9rem; margin-bottom:4px;">Opción B (Recomendada)</div>
+        <div style="font-size:.82rem; color:rgba(255,255,255,.6);">50% al firmar contrato<br/>50% al inicio de Fase 2<br/><span style="color:var(--gold);">+ 2% descuento adicional</span></div>
+      </div>
+      <div style="background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius); padding:20px; text-align:center;">
+        <div style="font-size:1.4rem; margin-bottom:8px;">🚀</div>
+        <div style="font-weight:700; color:var(--navy); font-size:.9rem; margin-bottom:4px;">Opción C</div>
+        <div style="font-size:.82rem; color:var(--gray-600);">100% al firmar contrato<br/>(pago anticipado)<br/><span style="color:var(--gold); font-weight:600;">+ 5% descuento total</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ROI -->
+<section id="roi">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag">07 · ROI Esperado</div>
+      <h2>¿Qué retorno obtiene<br/>Saludsa de esta inversión?</h2>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="roi-grid">
+      <div class="roi-chart fade-left">
+        <h4>📊 Proyección de Impacto (Año 1)</h4>
+
+        <div class="roi-bar-item">
+          <div class="roi-bar-header">
+            <span class="roi-bar-label">Reducción tiempo tareas repetitivas</span>
+            <span class="roi-bar-value">-35%</span>
+          </div>
+          <div class="roi-bar-track">
+            <div class="roi-bar-fill" style="--target-width: 35%;"></div>
+          </div>
+        </div>
+
+        <div class="roi-bar-item">
+          <div class="roi-bar-header">
+            <span class="roi-bar-label">Mejora en velocidad de respuesta al cliente</span>
+            <span class="roi-bar-value">+60%</span>
+          </div>
+          <div class="roi-bar-track">
+            <div class="roi-bar-fill" style="--target-width: 60%;"></div>
+          </div>
+        </div>
+
+        <div class="roi-bar-item">
+          <div class="roi-bar-header">
+            <span class="roi-bar-label">Adopción activa de herramientas IA</span>
+            <span class="roi-bar-value">85%</span>
+          </div>
+          <div class="roi-bar-track">
+            <div class="roi-bar-fill" style="--target-width: 85%;"></div>
+          </div>
+        </div>
+
+        <div class="roi-bar-item">
+          <div class="roi-bar-header">
+            <span class="roi-bar-label">Procesos automatizados post-programa</span>
+            <span class="roi-bar-value">40%</span>
+          </div>
+          <div class="roi-bar-track">
+            <div class="roi-bar-fill" style="--target-width: 40%;"></div>
+          </div>
+        </div>
+
+        <div class="roi-bar-item">
+          <div class="roi-bar-header">
+            <span class="roi-bar-label">Satisfacción del colaborador</span>
+            <span class="roi-bar-value">+45%</span>
+          </div>
+          <div class="roi-bar-track">
+            <div class="roi-bar-fill" style="--target-width: 45%;"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; padding:16px; background:rgba(201,162,39,.12); border-radius:10px; border:1px solid rgba(201,162,39,.2);">
+          <div style="font-size:.7rem; color:var(--gold); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;">ROI estimado primer año</div>
+          <div style="font-size:2rem; font-weight:800; color:var(--white);">3.2x <span style="font-size:1rem; color:rgba(255,255,255,.4);">retorno sobre inversión</span></div>
+          <div style="font-size:.78rem; color:rgba(255,255,255,.5); margin-top:4px;">Basado en ahorro en horas/hombre + productividad ganada</div>
+        </div>
+      </div>
+
+      <div class="fade-right">
+        <ul class="roi-list">
+          <li class="roi-item">
+            <div class="roi-item-icon">⏰</div>
+            <div class="roi-item-text">
+              <h5>Ahorro en tiempo de trabajo</h5>
+              <p>Un colaborador que ahorra 1 hora/día con IA = <strong>250 horas/año</strong>. Con 300 personas y salario promedio de $800/mes → ahorro potencial de <strong>$450,000 USD/año</strong> en productividad.</p>
+            </div>
+          </li>
+          <li class="roi-item">
+            <div class="roi-item-icon">🎯</div>
+            <div class="roi-item-text">
+              <h5>Reducción de errores operativos</h5>
+              <p>La validación y revisión asistida por IA puede reducir errores en pólizas, reportes y gestión hasta en un <strong>40%</strong>, disminuyendo costos de corrección y reproceso.</p>
+            </div>
+          </li>
+          <li class="roi-item">
+            <div class="roi-item-icon">🤝</div>
+            <div class="roi-item-text">
+              <h5>Retención de talento</h5>
+              <p>Las empresas que invierten en desarrollo de habilidades digitales tienen <strong>2.3x más retención</strong> de talento. Para Saludsa, eso significa menores costos de rotación y reclutamiento.</p>
+            </div>
+          </li>
+          <li class="roi-item">
+            <div class="roi-item-icon">🛡️</div>
+            <div class="roi-item-text">
+              <h5>Mitigación de riesgos de seguridad</h5>
+              <p>El Módulo 4 reduce la exposición a incidentes de seguridad potenciados por IA. Un solo incidente de ciberseguridad puede costar entre <strong>$50,000 - $500,000 USD</strong> en el sector salud.</p>
+            </div>
+          </li>
+          <li class="roi-item">
+            <div class="roi-item-icon">🏅</div>
+            <div class="roi-item-text">
+              <h5>Ventaja competitiva sostenible</h5>
+              <p>Saludsa se posiciona como la <strong>aseguradora de salud más digitalmente avanzada</strong> de Ecuador, diferenciándose en talento, procesos y propuesta de valor al afiliado.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRÓXIMOS PASOS -->
+<section id="proximos">
+  <div class="container">
+    <div class="section-header fade-up">
+      <div class="section-tag white">08 · Próximos Pasos</div>
+      <h2 class="light">De la propuesta<br/>a la transformación</h2>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card fade-up delay-1">
+        <div class="step-num">1</div>
+        <h4>Revisión Comité Ejecutivo</h4>
+        <p>Presentación de esta propuesta al Comité Ejecutivo de Saludsa para revisión, preguntas y retroalimentación.</p>
+        <span class="step-date">📅 Miércoles, Abril 23</span>
+      </div>
+      <div class="step-card fade-up delay-2">
+        <div class="step-num">2</div>
+        <h4>Alineación y Ajustes</h4>
+        <p>Sesión de trabajo con Marco Puente y equipo para ajustar alcance, grupos y condiciones comerciales según feedback del comité.</p>
+        <span class="step-date">📅 Semana del 28 de Abril</span>
+      </div>
+      <div class="step-card fade-up delay-3">
+        <div class="step-num">3</div>
+        <h4>Firma del Contrato</h4>
+        <p>Formalización del acuerdo, primer pago y confirmación del inicio de la Fase 0 de diagnóstico.</p>
+        <span class="step-date">📅 Primera semana de Mayo</span>
+      </div>
+      <div class="step-card fade-up delay-4">
+        <div class="step-num">4</div>
+        <h4>Kickoff Oficial</h4>
+        <p>Reunión de inicio con líderes de área, presentación del programa a los colaboradores y agenda de la Fase 0.</p>
+        <span class="step-date">📅 Mayo 12, 2026</span>
+      </div>
+    </div>
+
+    <div style="margin-top:48px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:var(--radius-lg); padding:32px; text-align:center;" class="fade-up">
+      <div style="font-size:1.5rem; margin-bottom:12px;">❓</div>
+      <h4 style="color:var(--white); font-size:1.1rem; margin-bottom:8px;">¿Tienes preguntas antes del comité?</h4>
+      <p style="color:rgba(255,255,255,.55); font-size:.88rem; margin-bottom:20px;">Felipe Salgado está disponible para una llamada de 30 minutos para despejar cualquier duda antes de la presentación al Comité Ejecutivo.</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; font-size:.88rem;">
+        <div style="display:flex; align-items:center; gap:8px; color:var(--gold-light);">
+          <span>📱</span> <span>WhatsApp disponible</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; color:var(--gold-light);">
+          <span>📧</span> <span>hola@vibramente.io</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; color:var(--gold-light);">
+          <span>🌐</span> <span>vibramente.io</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="container">
+    <div class="cta-inner fade-up">
+      <h2>Listos para llevar a Saludsa<br/>a la era de la <em style="color:var(--gold-light);">Inteligencia Artificial</em></h2>
+      <p>El mercado no espera. Las empresas que capaciten a sus equipos hoy tendrán la ventaja estructural del mañana. Empecemos juntos.</p>
+      <div class="cta-buttons">
+        <a href="mailto:hola@vibramente.io?subject=Escuelita de IA - Saludsa - Aceptación de propuesta" class="btn-primary">
+          ✅ Acepto la propuesta
+        </a>
+        <a href="mailto:hola@vibramente.io?subject=Escuelita de IA - Saludsa - Consulta" class="btn-secondary">
+          💬 Tengo preguntas
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-name">Vibramente</div>
+        <div class="footer-brand-tag">Transformación Digital con IA</div>
+        <p class="footer-brand-desc">Consultora especializada en implementación de soluciones de Inteligencia Artificial para empresas latinoamericanas. Capacitación, desarrollo de agentes IA y estrategia digital.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <ul>
+          <li><a href="mailto:hola@vibramente.io">hola@vibramente.io</a></li>
+          <li><a href="#">vibramente.io</a></li>
+          <li><a href="#">LinkedIn: /vibramente</a></li>
+          <li><a href="#">Ecuador · Latinoamérica</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Esta propuesta</h5>
+        <ul>
+          <li><a href="#">N° VBM-2026-SAL-001</a></li>
+          <li><a href="#">Versión 1.0</a></li>
+          <li><a href="#">Emitida: Abril 19, 2026</a></li>
+          <li><a href="#">Válida: 30 días</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>
+        <span class="confidential-badge">🔒 Confidencial</span>
+        <span style="margin-left:12px;">© 2026 Vibramente. Todos los derechos reservados.</span>
+      </div>
+      <div>Propuesta exclusiva para <span style="color:var(--gold);">Saludsa Ecuador</span> · No distribuir</div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+  // IntersectionObserver para animaciones
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Animar barras ROI
+        if (entry.target.classList.contains('roi-bar-fill')) {
+          setTimeout(() => {
+            entry.target.classList.add('animate');
+          }, 300);
+        }
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  // Observar elementos animados
+  document.querySelectorAll('.fade-up, .fade-left, .fade-right').forEach(el => observer.observe(el));
+  document.querySelectorAll('.roi-bar-fill').forEach(el => observer.observe(el));
+
+  // Smooth scroll para anclas
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Contador animado para KPIs del hero
+  function animateCounter(el, target, suffix = '') {
+    let start = 0;
+    const duration = 1800;
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // Activar contadores cuando el hero sea visible
+  const heroObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        heroObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const heroEl = document.querySelector('.hero');
+  if (heroEl) heroObserver.observe(heroEl);
+</script>
+
+</body>
+</html>
