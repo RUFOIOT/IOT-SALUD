@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anexo Técnico · Stack y Seguridad · Proyecto Brasil · Saludsa</title>
+  <style>
+    :root {
+      --azul: #0a1f44;
+      --azul-med: #1a3a6b;
+      --rojo: #c21f30;
+      --verde: #1a7942;
+      --verde-claro: #2ECC71;
+      --dorado: #f7b733;
+      --gris-bg: #f4f6fb;
+      --gris-card: #ffffff;
+      --gris-borde: #e2e8f0;
+      --texto: #1e2535;
+      --texto-suave: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Inter", "Segoe UI", system-ui, sans-serif; background: var(--gris-bg); color: var(--texto); line-height: 1.7; }
+
+    /* ========== HEADER ========== */
+    header {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul-med) 60%, #1f4ba0 100%);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400"><circle cx="700" cy="50" r="300" fill="rgba(255,255,255,0.03)"/><circle cx="100" cy="350" r="200" fill="rgba(255,255,255,0.02)"/></svg>') center/cover;
+    }
+    .header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .badge-header { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(247,183,51,0.2); border: 1px solid rgba(247,183,51,0.5); color: var(--dorado); padding: 0.3rem 1rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.2rem; }
+    header h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; line-height: 1.2; margin-bottom: 0.5rem; }
+    header p.subtitle { font-size: 1.1rem; color: rgba(255,255,255,0.75); max-width: 700px; margin-bottom: 2rem; }
+    .meta-grid { display: flex; flex-wrap: wrap; gap: 2rem; }
+    .meta-item { display: flex; flex-direction: column; }
+    .meta-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); margin-bottom: 0.2rem; }
+    .meta-value { font-size: 0.95rem; font-weight: 600; color: #fff; }
+
+    /* ========== MAIN ========== */
+    main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; display: flex; flex-direction: column; gap: 2.5rem; }
+
+    /* ========== SECCIÓN ========== */
+    .section { background: var(--gris-card); border-radius: 18px; padding: 2.5rem; box-shadow: 0 4px 24px rgba(10,31,68,0.07); border: 1px solid var(--gris-borde); }
+    .section-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.8rem; padding-bottom: 1.2rem; border-bottom: 2px solid var(--gris-borde); }
+    .section-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .icon-azul { background: rgba(10,31,68,0.08); }
+    .icon-rojo { background: rgba(194,31,48,0.08); }
+    .icon-verde { background: rgba(26,121,66,0.08); }
+    .icon-dorado { background: rgba(247,183,51,0.12); }
+    .section-title { font-size: 1.35rem; font-weight: 800; color: var(--azul); line-height: 1.2; }
+    .section-subtitle { font-size: 0.875rem; color: var(--texto-suave); margin-top: 0.2rem; }
+
+    /* ========== INTRO CALLOUT ========== */
+    .callout { border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid; }
+    .callout-blue { background: rgba(10,31,68,0.04); border-color: var(--azul-med); }
+    .callout-red { background: rgba(194,31,48,0.05); border-color: var(--rojo); }
+    .callout-green { background: rgba(26,121,66,0.05); border-color: var(--verde); }
+    .callout p { font-size: 0.9rem; color: var(--texto); }
+    .callout strong { color: var(--azul); }
+
+    /* ========== GRID CARDS ========== */
+    .grid { display: grid; gap: 1.2rem; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .card { border: 1px solid var(--gris-borde); border-radius: 14px; padding: 1.4rem; background: #fafbfd; }
+    .card h4 { font-size: 0.9rem; font-weight: 700; color: var(--azul); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .card p, .card li { font-size: 0.85rem; color: var(--texto-suave); }
+    .card ul { padding-left: 1rem; margin-top: 0.4rem; }
+    .card li { margin: 0.25rem 0; }
+
+    /* ========== CAPAS STACK ========== */
+    .layer-stack { display: flex; flex-direction: column; gap: 0; }
+    .layer { border: 1px solid var(--gris-borde); border-radius: 0; padding: 1.2rem 1.5rem; display: flex; align-items: flex-start; gap: 1.2rem; position: relative; }
+    .layer:first-child { border-radius: 14px 14px 0 0; }
+    .layer:last-child { border-radius: 0 0 14px 14px; }
+    .layer:not(:last-child) { border-bottom: none; }
+    .layer-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; margin-top: 0.1rem; }
+    .layer-content { flex: 1; }
+    .layer-content h4 { font-size: 0.95rem; font-weight: 700; color: var(--azul); margin-bottom: 0.3rem; }
+    .layer-content p { font-size: 0.83rem; color: var(--texto-suave); }
+    .layer-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+    .tag { background: rgba(10,31,68,0.07); border-radius: 6px; padding: 0.15rem 0.6rem; font-size: 0.72rem; font-weight: 600; color: var(--azul); }
+    .tag-red { background: rgba(194,31,48,0.08); color: var(--rojo); }
+    .tag-green { background: rgba(26,121,66,0.08); color: var(--verde); }
+    .tag-gold { background: rgba(247,183,51,0.15); color: #a07000; }
+
+    /* Colores por capa */
+    .l1 { background: rgba(10,31,68,0.03); } .l1 .layer-num { background: var(--azul); color: #fff; }
+    .l2 { background: rgba(28,60,120,0.04); } .l2 .layer-num { background: #1c3c78; color: #fff; }
+    .l3 { background: rgba(194,31,48,0.03); } .l3 .layer-num { background: var(--rojo); color: #fff; }
+    .l4 { background: rgba(26,121,66,0.03); } .l4 .layer-num { background: var(--verde); color: #fff; }
+    .l5 { background: rgba(247,183,51,0.06); } .l5 .layer-num { background: var(--dorado); color: #3a2500; }
+    .l6 { background: rgba(100,116,139,0.04); } .l6 .layer-num { background: #64748b; color: #fff; }
+    .l7 { background: rgba(10,31,68,0.05); } .l7 .layer-num { background: #0a1f44; color: #fff; }
+
+    /* ========== HERRAMIENTAS IA ========== */
+    .tool-card { border: 1px solid var(--gris-borde); border-radius: 14px; padding: 1.4rem; background: #fafbfd; display: flex; flex-direction: column; gap: 0.8rem; }
+    .tool-header { display: flex; align-items: center; gap: 0.8rem; }
+    .tool-logo { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; background: var(--gris-bg); border: 1px solid var(--gris-borde); }
+    .tool-name { font-size: 1rem; font-weight: 700; color: var(--azul); }
+    .tool-role { font-size: 0.78rem; color: var(--texto-suave); font-weight: 500; }
+    .tool-body { font-size: 0.83rem; color: var(--texto-suave); }
+    .tool-policy { border-radius: 8px; padding: 0.6rem 0.9rem; font-size: 0.78rem; margin-top: 0.3rem; }
+    .policy-ok { background: rgba(26,121,66,0.07); color: var(--verde); border: 1px solid rgba(26,121,66,0.2); }
+    .policy-limit { background: rgba(247,183,51,0.1); color: #8a6000; border: 1px solid rgba(247,183,51,0.3); }
+    .policy-no { background: rgba(194,31,48,0.07); color: var(--rojo); border: 1px solid rgba(194,31,48,0.2); }
+
+    /* ========== ORQUESTACIÓN ========== */
+    .flow-step { display: flex; gap: 1.2rem; align-items: flex-start; padding: 1rem 0; border-bottom: 1px dashed var(--gris-borde); }
+    .flow-step:last-child { border-bottom: none; }
+    .flow-num { width: 36px; height: 36px; border-radius: 50%; background: var(--azul); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; }
+    .flow-content h4 { font-size: 0.92rem; font-weight: 700; color: var(--azul); margin-bottom: 0.3rem; }
+    .flow-content p { font-size: 0.83rem; color: var(--texto-suave); }
+    .flow-badges { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+
+    /* ========== TABLA TOKENS ========== */
+    .token-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .token-table th { background: var(--azul); color: #fff; padding: 0.7rem 1rem; text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .token-table th:first-child { border-radius: 10px 0 0 0; }
+    .token-table th:last-child { border-radius: 0 10px 0 0; }
+    .token-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--gris-borde); color: var(--texto); }
+    .token-table tr:last-child td { border-bottom: none; }
+    .token-table tr:nth-child(even) td { background: rgba(10,31,68,0.02); }
+    .cost-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+    .cost-low { background: rgba(26,121,66,0.1); color: var(--verde); }
+    .cost-med { background: rgba(247,183,51,0.15); color: #8a6000; }
+    .cost-high { background: rgba(194,31,48,0.1); color: var(--rojo); }
+
+    /* ========== DIAGRAMA DOCKER ========== */
+    .docker-diagram { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 1.5rem; background: #f8fafc; }
+    .docker-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--texto-suave); margin-bottom: 1rem; }
+    .docker-row { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 0.8rem; }
+    .docker-container { border: 1px solid #94a3b8; border-radius: 10px; padding: 0.7rem 1rem; background: #fff; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 600; color: var(--azul); }
+    .docker-container.highlight { border-color: var(--azul); background: rgba(10,31,68,0.04); }
+    .docker-container.secure { border-color: var(--verde); background: rgba(26,121,66,0.04); color: var(--verde); }
+    .docker-container.external { border-color: var(--rojo); background: rgba(194,31,48,0.04); color: var(--rojo); }
+    .docker-separator { width: 100%; height: 1px; background: #e2e8f0; margin: 0.5rem 0; position: relative; }
+    .docker-separator::after { content: attr(data-label); position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #f8fafc; padding: 0 0.8rem; font-size: 0.7rem; color: var(--texto-suave); white-space: nowrap; }
+
+    /* ========== CHECKLIST ========== */
+    .checklist { display: flex; flex-direction: column; gap: 0.5rem; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.7rem 1rem; border-radius: 10px; background: rgba(26,121,66,0.04); border: 1px solid rgba(26,121,66,0.12); }
+    .check-item .icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .check-item p { font-size: 0.85rem; color: var(--texto); }
+    .check-item strong { color: var(--azul); }
+
+    /* ========== CTA FOOTER ========== */
+    .cta-footer { background: linear-gradient(135deg, var(--azul), #1a3a6b); border-radius: 18px; padding: 2.5rem; color: #fff; text-align: center; }
+    .cta-footer h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .cta-footer p { font-size: 0.9rem; color: rgba(255,255,255,0.75); max-width: 600px; margin: 0 auto 1.5rem; }
+    .cta-btn { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.75rem 2rem; border-radius: 999px; background: var(--dorado); color: #1a1000; font-weight: 800; text-decoration: none; font-size: 0.9rem; }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 640px) {
+      .section { padding: 1.5rem; }
+      .meta-grid { gap: 1.2rem; }
+      .token-table { font-size: 0.78rem; }
+      .token-table th, .token-table td { padding: 0.6rem 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-inner">
+    <div class="badge-header">🔒 Anexo Técnico Confidencial · Comité de Seguridad Digital</div>
+    <h1>Stack Tecnológico y<br>Protocolo de Seguridad</h1>
+    <p class="subtitle">Definición técnica completa del Proyecto Brasil: arquitectura por capas, dockerización, protección de datos, orquestación de agentes IA y políticas de herramientas.</p>
+    <div class="meta-grid">
+      <div class="meta-item"><span class="meta-label">Cliente</span><span class="meta-value">Saludsa Ecuador</span></div>
+      <div class="meta-item"><span class="meta-label">Interlocutor</span><span class="meta-value">Marco Puente · VP Comercial</span></div>
+      <div class="meta-item"><span class="meta-label">Proveedor</span><span class="meta-value">Vibramente · Felipe Salgado</span></div>
+      <div class="meta-item"><span class="meta-label">Documento</span><span class="meta-value">Anexo Técnico v1.0 · Abril 2026</span></div>
+      <div class="meta-item"><span class="meta-label">Audiencia</span><span class="meta-value">Directorio de Seguridad Digital</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== PROPÓSITO ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-azul">🎯</div>
+      <div>
+        <div class="section-title">Propósito de este Documento</div>
+        <div class="section-subtitle">Por qué existe este anexo y a quién está dirigido</div>
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <p>Este anexo complementa la Propuesta Comercial v2 del <strong>Proyecto Brasil</strong>. Su objetivo es dar al <strong>Comité de Seguridad Digital de Saludsa</strong> la visibilidad técnica necesaria para aprobar el proyecto con certeza: qué tecnologías se usan, cómo se protegen los datos, cómo se orquesta la IA y qué reglas gobiernan el uso de herramientas externas como Claude, Perplexity o Copilot.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card">
+        <h4>🏗️ Para el Equipo de TI</h4>
+        <p>Arquitectura detallada, componentes Docker, integraciones API y flujos de datos con sus controles de seguridad.</p>
+      </div>
+      <div class="card">
+        <h4>🛡️ Para Seguridad Digital</h4>
+        <p>Protocolo de seguridad por capas, clasificación de datos, cumplimiento LOPDP/SBS y políticas de uso de IA.</p>
+      </div>
+      <div class="card">
+        <h4>📊 Para el Directorio</h4>
+        <p>Resumen ejecutivo de riesgos controlados, eficiencia de costos de tokens y modelo de gobernanza de agentes.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STACK TECNOLÓGICO ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-azul">⚙️</div>
+      <div>
+        <div class="section-title">Stack Tecnológico del Proyecto Brasil</div>
+        <div class="section-subtitle">Componentes seleccionados y justificación técnica</div>
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <p>El stack fue seleccionado priorizando tres criterios: <strong>madurez comprobada en producción</strong>, <strong>compatibilidad con normativa ecuatoriana</strong> (LOPDP, SBS) y <strong>minimización de superficie de ataque</strong>. No se usa ninguna herramienta en estado experimental.</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h4>💬 Canal de Entrada: WhatsApp Business API</h4>
+        <ul>
+          <li>Meta for Business · API oficial verificada</li>
+          <li>Webhooks sobre HTTPS/TLS 1.3</li>
+          <li>Autenticación: tokens Bearer + firma HMAC-SHA256</li>
+          <li>Sin almacenamiento de mensajes en servidores Meta por más de 30 días</li>
+          <li>Alternativa evaluada: Twilio (descartada por costo y latencia Ecuador)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🎙️ Speech-to-Text: Whisper / Azure Cognitive</h4>
+        <ul>
+          <li>OpenAI Whisper Large v3 (self-hosted en contenedor)</li>
+          <li>Fallback: Azure Cognitive Speech (SLA 99.9%)</li>
+          <li>Fine-tuning con vocabulario de seguros de salud Ecuador</li>
+          <li>Audio <strong>no se envía</strong> a servidores externos en modo self-hosted</li>
+          <li>Precisión &gt;95% en español ecuatoriano</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🧠 LLM Orquestador: Claude 3.5 / GPT-4o</h4>
+        <ul>
+          <li>Proveedor primario: Anthropic (Claude 3.5 Sonnet)</li>
+          <li>Proveedor secundario: OpenAI (GPT-4o) como fallback</li>
+          <li>Modo: API enterprise con DPA (Data Processing Agreement)</li>
+          <li>Datos de afiliados: <strong>enmascarados antes de enviarse</strong> al LLM</li>
+          <li>Zero data retention activado en ambos proveedores</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🔗 CRM: HubSpot Enterprise</h4>
+        <ul>
+          <li>Integración via API v3 (OAuth 2.0)</li>
+          <li>Campos personalizados mapeados al schema de Saludsa</li>
+          <li>Acceso de solo escritura desde los agentes IA</li>
+          <li>Auditoría de todas las operaciones CRUD</li>
+          <li>Datos en servidores certificados ISO 27001</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🔍 Enriquecimiento: Fuentes Públicas</h4>
+        <ul>
+          <li>LinkedIn API (modo lectura pública)</li>
+          <li>Google Custom Search para validación empresarial</li>
+          <li>Sin acceso a bases de datos no públicas</li>
+          <li>Cumplimiento estricto con LOPDP: solo datos públicamente disponibles</li>
+          <li>Log de cada búsqueda ejecutada y su resultado</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>📊 Dashboard: Metabase / Grafana</h4>
+        <ul>
+          <li>Metabase (self-hosted) para KPIs comerciales</li>
+          <li>Grafana para métricas de infraestructura y agentes</li>
+          <li>Autenticación: SSO integrado con directorio de Saludsa</li>
+          <li>RBAC: acceso diferenciado por rol (asesor / gerente / TI)</li>
+          <li>Exportaciones auditadas y con marca de agua</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🐳 Infraestructura: Docker + Cloud</h4>
+        <ul>
+          <li>Todos los servicios en contenedores Docker</li>
+          <li>Orquestación: Docker Compose (piloto) → Kubernetes (escala)</li>
+          <li>Cloud: AWS São Paulo (sa-east-1) · región LATAM más cercana</li>
+          <li>VPC privada, sin puertos expuestos públicamente</li>
+          <li>Backups automáticos cada 6 horas con retención 30 días</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🔐 Identidad y Acceso: Vault + IAM</h4>
+        <ul>
+          <li>HashiCorp Vault para gestión de secretos y API keys</li>
+          <li>AWS IAM con roles de mínimo privilegio</li>
+          <li>MFA obligatorio para todos los accesos administrativos</li>
+          <li>Rotación automática de credenciales cada 90 días</li>
+          <li>Ninguna API key almacenada en código fuente</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ARQUITECTURA POR CAPAS ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-rojo">🛡️</div>
+      <div>
+        <div class="section-title">Protocolo de Seguridad por Capas</div>
+        <div class="section-subtitle">7 capas de protección: desde el perímetro hasta el dato</div>
+      </div>
+    </div>
+    <div class="callout callout-red">
+      <p>El modelo de seguridad sigue el principio <strong>Defense in Depth</strong>: si una capa es comprometida, las capas siguientes mantienen la protección. Ningún componente individual puede comprometer la totalidad del sistema.</p>
+    </div>
+    <div class="layer-stack">
+      <div class="layer l1">
+        <div class="layer-num">1</div>
+        <div class="layer-content">
+          <h4>Capa de Perímetro · Red y Firewall</h4>
+          <p>Todo el tráfico entrante pasa por AWS WAF (Web Application Firewall) y CloudFront. Solo se aceptan conexiones HTTPS/TLS 1.3. IPs de Saludsa y Vibramente en lista blanca para acceso administrativo. Rate limiting por IP: máximo 100 req/min en endpoints de agentes.</p>
+          <div class="layer-tags">
+            <span class="tag">AWS WAF</span><span class="tag">CloudFront CDN</span><span class="tag">TLS 1.3</span><span class="tag">IP Allowlist</span><span class="tag">Rate Limiting</span>
+          </div>
+        </div>
+      </div>
+      <div class="layer l2">
+        <div class="layer-num">2</div>
+        <div class="layer-content">
+          <h4>Capa de Autenticación · Identidad y Acceso</h4>
+          <p>Cada servicio y agente se autentica con tokens de corta duración (JWT, TTL 1 hora). MFA obligatorio para accesos humanos. Los agentes IA usan service accounts con permisos mínimos, auditados en tiempo real. Zero-trust: ningún servicio confía en otro por defecto.</p>
+          <div class="layer-tags">
+            <span class="tag">JWT + OAuth 2.0</span><span class="tag">MFA</span><span class="tag">Zero Trust</span><span class="tag">Service Accounts</span><span class="tag">HashiCorp Vault</span>
+          </div>
+        </div>
+      </div>
+      <div class="layer l3">
+        <div class="layer-num">3</div>
+        <div class="layer-content">
+          <h4>Capa de Aislamiento · Contenedores Docker</h4>
+          <p>Cada agente IA corre en su propio contenedor aislado. Comunicación inter-contenedor solo por red interna Docker (no expuesta al exterior). Imágenes base oficiales y verificadas, escaneadas con Trivy antes de cada despliegue. Read-only filesystem donde sea posible.</p>
+          <div class="layer-tags">
+            <span class="tag">Docker Isolation</span><span class="tag">Network Segmentation</span><span class="tag">Trivy Scanning</span><span class="tag">Read-only FS</span><span class="tag">No Root</span>
+          </div>
+        </div>
+      </div>
+      <div class="layer l4">
+        <div class="layer-num">4</div>
+        <div class="layer-content">
+          <h4>Capa de Datos · Clasificación y Enmascaramiento</h4>
+          <p>Los datos se clasifican en tres niveles: <strong>Público</strong> (nombre, empresa), <strong>Confidencial</strong> (datos de salud, ingresos) y <strong>Restringido</strong> (número de cédula, datos médicos). Los datos Confidenciales y Restringidos se enmascaran (tokenización) antes de enviarse a APIs externas. Los LLMs nunca reciben cédulas ni datos médicos reales.</p>
+          <div class="layer-tags">
+            <span class="tag-red tag">🔴 Restringido</span><span class="tag-gold tag">🟡 Confidencial</span><span class="tag-green tag">🟢 Público</span><span class="tag">Tokenización</span><span class="tag">Data Masking</span>
+          </div>
+        </div>
+      </div>
+      <div class="layer l5">
+        <div class="layer-num">5</div>
+        <div class="layer-content">
+          <h4>Capa de API · Control de Llamadas a Modelos IA</h4>
+          <p>Un API Gateway centralizado (Kong / AWS API Gateway) actúa como intermediario entre los agentes y los LLMs externos. Implementa: control de tokens por sesión, filtrado de PII antes de envíos, logging de todas las llamadas, y circuit breaker automático si se detectan respuestas anómalas o intentos de prompt injection.</p>
+          <div class="layer-tags">
+            <span class="tag">API Gateway</span><span class="tag">PII Filter</span><span class="tag">Token Control</span><span class="tag">Prompt Guard</span><span class="tag">Circuit Breaker</span>
+          </div>
+        </div>
+      </div>
+      <div class="layer l6">
+        <div class="layer-num">6</div>
+        <div class="layer-content">
+          <h4>Capa de Auditoría · Logs y Trazabilidad</h4>
+          <p>Cada acción del sistema genera un log inmutable (append-only) en AWS CloudWatch + S3 con retención de 1 año. Los logs incluyen: qué agente actuó, qué datos procesó (referencia tokenizada), timestamp, resultado y usuario que autorizó. Imposible modificar o borrar sin dejar evidencia.</p>
+          <div class="layer-tags">
+            <span class="tag">Logs Inmutables</span><span class="tag">CloudWatch</span><span class="tag">S3 WORM</span><span class="tag">1 año retención</span><span class="tag">SIEM</span>
+          </div>
+        </div>
+      </div>
+      <div class="layer l7">
+        <div class="layer-num">7</div>
+        <div class="layer-content">
+          <h4>Capa de Cumplimiento · Regulatorio y Gobernanza</h4>
+          <p>Cumplimiento con <strong>LOPDP Ecuador</strong> (Ley Orgánica de Protección de Datos Personales), regulaciones <strong>SBS</strong>, y estándares <strong>ISO 27001</strong>. DPA (Data Processing Agreements) firmados con todos los proveedores cloud. Derecho a eliminación de datos implementado en todos los módulos. Revisión trimestral de políticas.</p>
+          <div class="layer-tags">
+            <span class="tag">LOPDP Ecuador</span><span class="tag">SBS</span><span class="tag">ISO 27001</span><span class="tag">DPA</span><span class="tag">Right to Erasure</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DOCKERIZACIÓN ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-azul">🐳</div>
+      <div>
+        <div class="section-title">Arquitectura de Contenedores (Dockerización)</div>
+        <div class="section-subtitle">Aislamiento, despliegue y escalabilidad</div>
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <p>Docker garantiza que <strong>cada componente opera en su propio entorno aislado</strong>. Si un contenedor falla o es comprometido, no puede afectar a los demás. El sistema se puede desplegar, actualizar o revertir sin downtime.</p>
+    </div>
+
+    <div class="docker-diagram">
+      <div class="docker-title">🌐 Internet / WhatsApp Business API</div>
+      <div class="docker-row">
+        <div class="docker-container external">🔒 AWS WAF + TLS 1.3</div>
+      </div>
+      <div class="docker-separator" data-label="— VPC Privada AWS sa-east-1 —"></div>
+      <div class="docker-row">
+        <div class="docker-container highlight">🚪 API Gateway (Kong)</div>
+        <div class="docker-container">📋 Load Balancer</div>
+      </div>
+      <div class="docker-separator" data-label="— Red Interna Docker —"></div>
+      <div class="docker-row">
+        <div class="docker-container">🎙️ STT Service<br><small style="font-weight:400">Whisper Container</small></div>
+        <div class="docker-container">🤖 Agent-Extract<br><small style="font-weight:400">LLM Connector</small></div>
+        <div class="docker-container">🔍 Agent-Enrich<br><small style="font-weight:400">Data Enrichment</small></div>
+        <div class="docker-container">🎯 Agent-Score<br><small style="font-weight:400">Scoring Engine</small></div>
+        <div class="docker-container">📄 Agent-Quote<br><small style="font-weight:400">Quote Generator</small></div>
+      </div>
+      <div class="docker-separator" data-label="— Capa de Datos —"></div>
+      <div class="docker-row">
+        <div class="docker-container secure">🔐 PostgreSQL<br><small style="font-weight:400">Encrypted at Rest</small></div>
+        <div class="docker-container secure">🔑 HashiCorp Vault<br><small style="font-weight:400">Secrets Manager</small></div>
+        <div class="docker-container secure">📊 Redis Cache<br><small style="font-weight:400">Session Only</small></div>
+        <div class="docker-container secure">📈 Grafana + Metabase<br><small style="font-weight:400">Dashboards</small></div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem;" class="grid grid-3">
+      <div class="card">
+        <h4>🔄 Actualizaciones sin Downtime</h4>
+        <p>Rolling updates: los contenedores se actualizan uno a uno. Si la nueva versión falla, rollback automático en &lt;2 minutos. El sistema nunca se detiene completamente.</p>
+      </div>
+      <div class="card">
+        <h4>📦 Imágenes Verificadas</h4>
+        <p>Solo se usan imágenes Docker oficiales (Docker Hub Verified). Cada imagen es escaneada con <strong>Trivy</strong> antes de ser desplegada. Sin dependencias no auditadas.</p>
+      </div>
+      <div class="card">
+        <h4>⚡ Escalabilidad Horizontal</h4>
+        <p>En picos de uso (ej. campañas de ventas), los agentes IA pueden escalarse automáticamente de 1 a N instancias. Saludsa paga solo por lo que usa (auto-scaling).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HERRAMIENTAS IA Y POLÍTICAS ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-dorado">🤖</div>
+      <div>
+        <div class="section-title">Herramientas IA: Uso y Políticas de Seguridad</div>
+        <div class="section-subtitle">Qué herramienta hace qué, y qué reglas gobiernan su uso</div>
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <p>Cada herramienta de IA tiene un <strong>rol específico y delimitado</strong>. No todas las herramientas tienen acceso a todos los datos. El principio es: <strong>mínimo acceso necesario, máximo control</strong>.</p>
+    </div>
+
+    <div class="grid grid-2">
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-logo">🧠</div>
+          <div><div class="tool-name">Claude (Anthropic)</div><div class="tool-role">Agente Principal de Extracción y Cotización</div></div>
+        </div>
+        <div class="tool-body">Motor central de comprensión del lenguaje. Procesa transcripciones de voz para extraer datos del prospecto y genera cotizaciones personalizadas. Elegido por su capacidad de seguir instrucciones complejas y menor tasa de alucinaciones en tareas estructuradas.</div>
+        <div class="tool-policy policy-ok">✅ <strong>Permitido:</strong> Procesar transcripciones anonimizadas. Generar cotizaciones. Clasificar intención.</div>
+        <div class="tool-policy policy-no">🚫 <strong>Prohibido:</strong> Recibir cédulas, datos médicos reales o información financiera exacta. Solo recibe datos tokenizados.</div>
+        <div class="tool-policy policy-limit">⚙️ <strong>Control de tokens:</strong> Máx. 4,000 tokens por llamada. Rate limit: 50 llamadas/hora por asesor. Zero data retention activado.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-logo">🔍</div>
+          <div><div class="tool-name">Perplexity AI</div><div class="tool-role">Agente de Enriquecimiento de Perfiles</div></div>
+        </div>
+        <div class="tool-body">Herramienta de búsqueda con IA usada por el Agente de Enriquecimiento para buscar información pública del prospecto: empresa donde trabaja, cargo, sector, presencia web. Complementa el perfil del CRM con datos verificables de fuentes abiertas.</div>
+        <div class="tool-policy policy-ok">✅ <strong>Permitido:</strong> Búsquedas de información empresarial pública. Validación de empleadores. Información sectorial.</div>
+        <div class="tool-policy policy-no">🚫 <strong>Prohibido:</strong> Búsquedas que incluyan datos de salud, financieros privados o información familiar sensible.</div>
+        <div class="tool-policy policy-limit">⚙️ <strong>Control:</strong> Máx. 10 búsquedas por prospecto. Log completo de cada query ejecutada. Revisable por compliance.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-logo">💻</div>
+          <div><div class="tool-name">GitHub Copilot</div><div class="tool-role">Asistente de Desarrollo del Equipo Vibramente</div></div>
+        </div>
+        <div class="tool-body">Herramienta de asistencia al desarrollo de software usada <strong>exclusivamente por el equipo técnico de Vibramente</strong> durante la construcción del sistema. No tiene acceso a la infraestructura de producción ni a datos de Saludsa.</div>
+        <div class="tool-policy policy-ok">✅ <strong>Permitido:</strong> Generación de código en entornos de desarrollo. Revisión de lógica. Documentación técnica.</div>
+        <div class="tool-policy policy-no">🚫 <strong>Prohibido:</strong> Acceso a repositorios con datos de producción de Saludsa. No se usa en ambiente de pruebas con datos reales.</div>
+        <div class="tool-policy policy-limit">⚙️ <strong>Política:</strong> Repositorios de Saludsa en instancia privada de GitHub Enterprise. Copilot deshabilitado en repos con datos sensibles.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-logo">📡</div>
+          <div><div class="tool-name">OpenAI (GPT-4o / Whisper)</div><div class="tool-role">STT + Agente de Respaldo</div></div>
+        </div>
+        <div class="tool-body">Whisper (OpenAI) se usa en modo <strong>self-hosted</strong> para transcripción de voz: el modelo corre en los propios servidores del sistema, el audio nunca sale a servidores de OpenAI. GPT-4o actúa como fallback si Claude no está disponible, con las mismas restricciones de datos.</div>
+        <div class="tool-policy policy-ok">✅ <strong>Whisper self-hosted:</strong> Audio procesado localmente. Sin envío externo de archivos de voz.</div>
+        <div class="tool-policy policy-limit">⚙️ <strong>GPT-4o (fallback):</strong> Solo activa si Claude falla. Mismo API Gateway con filtros PII. Zero retention en OpenAI Enterprise.</div>
+        <div class="tool-policy policy-no">🚫 <strong>Prohibido:</strong> Usar la versión gratuita o personal de Whisper/GPT. Solo API Enterprise con DPA firmado.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== ORQUESTACIÓN DE AGENTES ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-verde">🎛️</div>
+      <div>
+        <div class="section-title">Orquestación de Agentes IA</div>
+        <div class="section-subtitle">Cómo trabajan juntos los 4 agentes, con control y supervisión humana</div>
+      </div>
+    </div>
+    <div class="callout callout-green">
+      <p>La orquestación sigue un modelo <strong>pipeline supervisado</strong>: cada agente produce un output que el siguiente consume. En cualquier paso, un humano (asesor o gerente) puede intervenir, corregir o cancelar el flujo. <strong>Ningún agente opera de forma completamente autónoma sobre datos sensibles.</strong></p>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-content">
+        <h4>🎙️ Trigger: Voz del Asesor vía WhatsApp</h4>
+        <p>El asesor envía nota de voz o texto al número de WhatsApp Business. El API Gateway recibe el webhook, valida la firma HMAC, registra el evento y pasa el audio al contenedor STT. El asesor es el único que puede iniciar un flujo.</p>
+        <div class="flow-badges">
+          <span class="tag">Human-triggered</span><span class="tag">HMAC Validation</span><span class="tag-green tag">Punto de control humano</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-content">
+        <h4>📝 Agente STT: Transcripción y Anonimización</h4>
+        <p>Whisper (self-hosted) transcribe el audio. Inmediatamente, un módulo de <strong>PII Detection</strong> identifica y reemplaza datos sensibles (cédulas, fechas de nacimiento exactas) con tokens antes de pasar el texto a los agentes siguientes. El audio original se elimina en 5 minutos.</p>
+        <div class="flow-badges">
+          <span class="tag">Self-hosted</span><span class="tag">PII Auto-detection</span><span class="tag">Tokenización</span><span class="tag">Audio TTL: 5min</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-content">
+        <h4>🤖 Agente de Extracción (Claude): Datos Estructurados</h4>
+        <p>Claude recibe la transcripción tokenizada y extrae: nombre, edad aproximada, composición familiar, cargo, empresa, necesidades de salud mencionadas, presupuesto estimado y señales de compra. El output es un JSON estructurado con confianza por campo. Claude solo ve texto anonimizado.</p>
+        <div class="flow-badges">
+          <span class="tag">Input: texto tokenizado</span><span class="tag">Output: JSON estructurado</span><span class="tag">Confianza por campo</span><span class="tag">Zero retention</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="flow-content">
+        <h4>🔍 Agente de Enriquecimiento (Perplexity): Datos Públicos</h4>
+        <p>Con el nombre y empresa identificados, Perplexity busca información pública adicional. El agente opera con un presupuesto fijo de búsquedas (máx. 10) y solo agrega información verificable. Resultado: perfil enriquecido con datos laborales y sectoriales públicos.</p>
+        <div class="flow-badges">
+          <span class="tag">Solo datos públicos</span><span class="tag">Max 10 queries</span><span class="tag">Log completo</span><span class="tag-gold tag">Revisable por compliance</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div class="flow-content">
+        <h4>🎯 Agente de Scoring: Priorización del Prospecto</h4>
+        <p>Motor de scoring multi-variable que combina los datos extraídos y enriquecidos para generar un score 0-100. Variables: perfil demográfico, señales de urgencia, capacidad adquisitiva estimada, plan más probable. Los pesos del modelo son auditables y ajustables por Saludsa.</p>
+        <div class="flow-badges">
+          <span class="tag">Score 0-100</span><span class="tag">Modelo auditable</span><span class="tag">Ajustable por Saludsa</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">6</div>
+      <div class="flow-content">
+        <h4>📄 Agente de Cotización (Claude): Propuesta Personalizada</h4>
+        <p>Claude genera la cotización con el plan recomendado, personalizada con el nombre y necesidades del prospecto. Antes del envío, el asesor recibe una vista previa en WhatsApp para aprobar o editar. El sistema puede configurarse en modo "aprobación obligatoria" o "automático" según la política de Saludsa.</p>
+        <div class="flow-badges">
+          <span class="tag-green tag">✅ Revisión humana antes de envío</span><span class="tag">Modo manual o auto</span><span class="tag">Templates aprobados por Saludsa</span>
+        </div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">7</div>
+      <div class="flow-content">
+        <h4>💾 HubSpot + Dashboard: Registro y Visibilidad</h4>
+        <p>El contacto se crea/actualiza en HubSpot con todos los datos estructurados, el score, el historial de la conversación (tokenizado) y la cotización enviada. El dashboard gerencial se actualiza en tiempo real. Cada operación queda en el log de auditoría permanente.</p>
+        <div class="flow-badges">
+          <span class="tag">Auto-CRM</span><span class="tag">Dashboard real-time</span><span class="tag">Audit log permanente</span><span class="tag">RBAC</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CONTROL DE TOKENS Y EFICIENCIA ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-dorado">💰</div>
+      <div>
+        <div class="section-title">Eficiencia de Tokens y Control de Costos IA</div>
+        <div class="section-subtitle">Cómo se optimiza el gasto en LLMs sin sacrificar calidad</div>
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <p>El costo de los LLMs es predecible y controlable. Con los límites definidos abajo, el <strong>gasto mensual en APIs de IA es de aprox. USD 180–320/mes</strong> para 30 asesores procesando 40 prospectos cada uno. Este costo está incluido en el fee mensual de USD 1,500.</p>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>Agente / Tarea</th>
+            <th>Modelo</th>
+            <th>Tokens promedio / operación</th>
+            <th>Ops / mes (30 asesores)</th>
+            <th>Costo estimado / mes</th>
+            <th>Nivel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Extracción de datos (transcripción → JSON)</td>
+            <td>Claude 3.5 Sonnet</td>
+            <td>~1,200 tokens</td>
+            <td>~1,200 ops</td>
+            <td>~USD 43</td>
+            <td><span class="cost-badge cost-low">✅ Bajo</span></td>
+          </tr>
+          <tr>
+            <td>Generación de cotización personalizada</td>
+            <td>Claude 3.5 Sonnet</td>
+            <td>~2,500 tokens</td>
+            <td>~800 ops</td>
+            <td>~USD 72</td>
+            <td><span class="cost-badge cost-low">✅ Bajo</span></td>
+          </tr>
+          <tr>
+            <td>Transcripción de voz (Whisper)</td>
+            <td>Whisper v3 (self-hosted)</td>
+            <td>N/A (audio)</td>
+            <td>~1,200 audios</td>
+            <td>~USD 0 (infraestructura)</td>
+            <td><span class="cost-badge cost-low">✅ Incluido</span></td>
+          </tr>
+          <tr>
+            <td>Enriquecimiento de perfil</td>
+            <td>Perplexity API</td>
+            <td>~500 tokens / búsqueda</td>
+            <td>~6,000 búsquedas</td>
+            <td>~USD 60</td>
+            <td><span class="cost-badge cost-low">✅ Bajo</span></td>
+          </tr>
+          <tr>
+            <td>Scoring y clasificación</td>
+            <td>Algoritmo propio (no LLM)</td>
+            <td>N/A</td>
+            <td>~1,200 ops</td>
+            <td>~USD 0</td>
+            <td><span class="cost-badge cost-low">✅ Sin costo API</span></td>
+          </tr>
+          <tr>
+            <td>Fallback GPT-4o (si Claude falla)</td>
+            <td>GPT-4o (respaldo)</td>
+            <td>~2,000 tokens</td>
+            <td>~50 ops (est. 4% fallo)</td>
+            <td>~USD 8</td>
+            <td><span class="cost-badge cost-low">✅ Mínimo</span></td>
+          </tr>
+          <tr style="font-weight:700;">
+            <td colspan="4"><strong>TOTAL MENSUAL ESTIMADO (30 asesores, 40 prospectos c/u)</strong></td>
+            <td><strong>~USD 183/mes</strong></td>
+            <td><span class="cost-badge cost-low">✅ Controlado</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:1.5rem;" class="grid grid-3">
+      <div class="card">
+        <h4>🎚️ Límites Automáticos</h4>
+        <p>Si un agente supera 150% del uso esperado en cualquier hora, se activa una alerta automática y se reduce el rate limit. El sistema no puede generar facturas sorpresa.</p>
+      </div>
+      <div class="card">
+        <h4>📊 Dashboard de Consumo</h4>
+        <p>Saludsa tiene acceso a un panel de consumo de tokens en tiempo real, desglosado por asesor, agente y tipo de operación. Transparencia total.</p>
+      </div>
+      <div class="card">
+        <h4>🔄 Caching Inteligente</h4>
+        <p>Respuestas repetitivas (e.g., cotizaciones para perfiles similares) se cachean en Redis por 24 horas. Reduce llamadas al LLM en ~20% sin impactar calidad.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PROTECCIÓN DE DATOS ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-rojo">🔐</div>
+      <div>
+        <div class="section-title">Protección de Datos de Afiliados</div>
+        <div class="section-subtitle">Cumplimiento LOPDP Ecuador · SBS · Principios de privacidad por diseño</div>
+      </div>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h4>🗂️ Clasificación de Datos del Proyecto Brasil</h4>
+        <ul>
+          <li><strong>🟢 Público:</strong> Nombre, empresa, cargo → puede enviarse a LLMs</li>
+          <li><strong>🟡 Confidencial:</strong> Edad, composición familiar, ingresos estimados → tokenizado antes de LLM</li>
+          <li><strong>🔴 Restringido:</strong> Cédula, datos médicos, historial de salud → <strong>nunca sale del perímetro</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>📜 Derechos del Titular (LOPDP)</h4>
+        <ul>
+          <li>✅ Derecho de acceso: panel de consulta implementado</li>
+          <li>✅ Derecho de rectificación: formulario en HubSpot</li>
+          <li>✅ Derecho de eliminación: borrado en cascada en 72h</li>
+          <li>✅ Derecho de portabilidad: exportación JSON/CSV</li>
+          <li>✅ Consentimiento explícito antes del primer procesamiento</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🔒 Cifrado en Reposo y en Tránsito</h4>
+        <ul>
+          <li>Base de datos PostgreSQL: AES-256 en reposo</li>
+          <li>S3 (logs, backups): SSE-S3 con claves propias</li>
+          <li>Todo tráfico: TLS 1.3 con Perfect Forward Secrecy</li>
+          <li>Claves gestionadas en HashiCorp Vault (no en código)</li>
+          <li>Rotación de claves: cada 90 días automático</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🚨 Plan de Respuesta a Incidentes</h4>
+        <ul>
+          <li>Detección automática: SIEM + alertas en &lt;5 min</li>
+          <li>Contención: aislamiento de contenedor comprometido en &lt;2 min</li>
+          <li>Notificación a Saludsa: en &lt;1 hora hábil</li>
+          <li>Notificación SBS/ARCOTEL: en &lt;72 horas (cumplimiento LOPDP)</li>
+          <li>Forensics y reporte post-incidente: en 5 días hábiles</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem;" class="checklist">
+      <div class="check-item"><span class="icon">✅</span><p><strong>DPA firmado con Anthropic (Claude):</strong> Zero retention, datos no usados para entrenamiento, cumplimiento GDPR/LOPDP.</p></div>
+      <div class="check-item"><span class="icon">✅</span><p><strong>DPA firmado con OpenAI:</strong> Enterprise tier, zero retention, servidores en región compatible.</p></div>
+      <div class="check-item"><span class="icon">✅</span><p><strong>Whisper self-hosted:</strong> El audio de las conversaciones del asesor nunca abandona los servidores del sistema.</p></div>
+      <div class="check-item"><span class="icon">✅</span><p><strong>HubSpot Enterprise:</strong> Certificado ISO 27001, SOC 2 Type II, GDPR compliant. Datos en región US-East con backup en sa-east-1.</p></div>
+      <div class="check-item"><span class="icon">✅</span><p><strong>Consentimiento explícito:</strong> Los prospectos reciben un mensaje automático explicando el uso de sus datos antes de ser procesados. Pueden optar por no participar.</p></div>
+    </div>
+  </div>
+
+  <!-- ===== RESUMEN PARA EL COMITÉ ===== -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-verde">📋</div>
+      <div>
+        <div class="section-title">Resumen para el Directorio de Seguridad Digital</div>
+        <div class="section-subtitle">Los 6 puntos clave para la aprobación del proyecto</div>
+      </div>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h4>1️⃣ Los datos sensibles nunca salen del perímetro</h4>
+        <p>Cédulas, datos médicos e historiales de salud son <strong>restringidos</strong>: no se envían a ningún LLM externo. Solo los datos tokenizados o de categoría pública viajan a APIs de IA.</p>
+      </div>
+      <div class="card">
+        <h4>2️⃣ Arquitectura de defensa en profundidad (7 capas)</h4>
+        <p>Un atacante que supere una capa enfrenta 6 más. Cada componente está aislado en Docker. No hay un único punto de fallo que comprometa todo el sistema.</p>
+      </div>
+      <div class="card">
+        <h4>3️⃣ Cumplimiento regulatorio nativo</h4>
+        <p>LOPDP, SBS, ISO 27001. DPAs firmados con todos los proveedores cloud. Derecho a eliminación implementado. El sistema está diseñado para pasar una auditoría regulatoria.</p>
+      </div>
+      <div class="card">
+        <h4>4️⃣ Control humano en cada paso crítico</h4>
+        <p>Los agentes IA no operan de forma autónoma con datos sensibles. El asesor aprueba la cotización antes del envío. Los gerentes tienen visibilidad total en el dashboard.</p>
+      </div>
+      <div class="card">
+        <h4>5️⃣ Costo de IA predecible y transparente</h4>
+        <p>~USD 180–320/mes para todo el equipo comercial. Con límites automáticos, caching y dashboard de consumo en tiempo real. Sin sorpresas en la factura.</p>
+      </div>
+      <div class="card">
+        <h4>6️⃣ Auditoría completa y trazabilidad</h4>
+        <p>Cada acción queda en logs inmutables por 1 año. Si algo sale mal, sabemos exactamente qué agente hizo qué, con qué datos y en qué momento. Trazabilidad forense completa.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CTA ===== -->
+  <div class="cta-footer">
+    <h2>🛡️ Proyecto Brasil · Listo para el Comité de Seguridad</h2>
+    <p>Este anexo responde a las preguntas técnicas y regulatorias del Directorio de Seguridad Digital de Saludsa. El stack está definido, los controles están documentados y el sistema está diseñado para ser aprobado — no solo implementado.</p>
+    <a href="mailto:felipe@vibramente.io" class="cta-btn">📧 Coordinar sesión técnica con TI de Saludsa →</a>
+  </div>
+
+  <div style="text-align:center; font-size:0.78rem; color:var(--texto-suave); padding: 1rem 0 2rem;">
+    Preparado por <strong>Felipe Salgado · Vibramente</strong> para <strong>Marco Puente · VP Comercial · Saludsa Ecuador</strong><br>
+    Anexo Técnico v1.0 · Abril 2026 · Documento Confidencial — Uso exclusivo Comité de Seguridad Digital Saludsa
+  </div>
+
+</main>
+</body>
+</html>
