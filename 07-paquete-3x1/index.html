@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paquete 3×1 · IA Total · Saludsa × Vibramente</title>
+  <style>
+    :root {
+      --azul: #0a1f44;
+      --azul2: #1a3a6b;
+      --rojo: #c21f30;
+      --verde: #1a7942;
+      --dorado: #f7b733;
+      --gris: #f4f6fb;
+      --borde: #e2e8f0;
+      --texto: #1e2535;
+      --suave: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Inter","Segoe UI",system-ui,sans-serif; background: #fff; color: var(--texto); line-height: 1.65; }
+
+    /* HEADER HERO */
+    header {
+      background: linear-gradient(135deg, var(--azul) 0%, var(--azul2) 55%, #1b4fb5 100%);
+      color: #fff; padding: 4rem 2rem 3.5rem;
+      position: relative; overflow: hidden;
+    }
+    header::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 85% 20%, rgba(247,183,51,0.12) 0%, transparent 60%);
+    }
+    .hi { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+    .badge { display: inline-flex; align-items: center; gap: .4rem; background: rgba(247,183,51,.18); border: 1px solid rgba(247,183,51,.45); color: var(--dorado); font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .18em; padding: .25rem .9rem; border-radius: 999px; margin-bottom: 1.2rem; }
+    header h1 { font-size: clamp(2rem,5vw,3.2rem); font-weight: 900; line-height: 1.15; margin-bottom: .6rem; }
+    header h1 span { color: var(--dorado); }
+    header p.sub { font-size: 1.05rem; color: rgba(255,255,255,.75); max-width: 680px; margin-bottom: 2rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 2.5rem; border-top: 1px solid rgba(255,255,255,.12); padding-top: 1.2rem; }
+    .mi .l { font-size: .62rem; text-transform: uppercase; letter-spacing: .15em; color: rgba(255,255,255,.45); }
+    .mi .v { font-size: .88rem; font-weight: 700; color: #fff; }
+
+    /* MAIN */
+    main { max-width: 960px; margin: 0 auto; padding: 3.5rem 1.5rem 5rem; display: flex; flex-direction: column; gap: 3.5rem; }
+
+    /* SECCIÓN */
+    .s h2 { font-size: 1.3rem; font-weight: 800; color: var(--azul); display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; padding-bottom: .7rem; border-bottom: 2px solid var(--borde); }
+    .s > p { font-size: .9rem; color: var(--suave); margin-bottom: 1.2rem; }
+
+    /* INTRO BOX */
+    .intro { background: var(--gris); border-left: 4px solid var(--azul); border-radius: 0 12px 12px 0; padding: 1.3rem 1.6rem; font-size: .92rem; }
+    .intro strong { color: var(--azul); }
+
+    /* GRIDS */
+    .g2 { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 1.1rem; }
+    .g3 { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1rem; }
+
+    /* CARD BASE */
+    .c { border: 1px solid var(--borde); border-radius: 14px; padding: 1.4rem; background: #fafbfd; }
+    .c h3 { font-size: .9rem; font-weight: 700; color: var(--azul); margin-bottom: .4rem; }
+    .c p,.c li { font-size: .83rem; color: var(--suave); }
+    .c ul { padding-left: 1rem; }
+    .c li { margin: .25rem 0; }
+
+    /* PILARES 3×1 */
+    .pilares { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 1.2rem; }
+    .pilar { border-radius: 16px; padding: 1.8rem 1.6rem; position: relative; overflow: hidden; }
+    .pilar-1 { background: linear-gradient(135deg,#0a1f44,#1a3a6b); color: #fff; }
+    .pilar-2 { background: linear-gradient(135deg,#1a3a6b,#1b5299); color: #fff; }
+    .pilar-3 { background: linear-gradient(135deg,#c21f30,#9b1525); color: #fff; }
+    .pilar .num { font-size: 3.5rem; font-weight: 900; opacity: .12; line-height: 1; position: absolute; top: .8rem; right: 1.2rem; }
+    .pilar .ico { font-size: 2rem; margin-bottom: .8rem; }
+    .pilar h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: .5rem; }
+    .pilar p { font-size: .83rem; opacity: .82; line-height: 1.55; }
+    .pilar ul { padding-left: 1rem; margin-top: .5rem; }
+    .pilar li { font-size: .81rem; opacity: .82; margin: .25rem 0; }
+
+    /* COMPARATIVA */
+    .tabla { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    .tabla thead tr { background: var(--azul); color: #fff; }
+    .tabla th { padding: .7rem 1rem; text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; }
+    .tabla th:first-child { border-radius: 10px 0 0 0; }
+    .tabla th:last-child { border-radius: 0 10px 0 0; }
+    .tabla td { padding: .7rem 1rem; border-bottom: 1px solid var(--borde); vertical-align: top; }
+    .tabla tr:nth-child(even) td { background: #fafbfd; }
+    .tabla tr:last-child td { border-bottom: none; }
+    .tach { text-decoration: line-through; color: #b0bec5; }
+    .verde { color: var(--verde); font-weight: 700; }
+    .rojo { color: var(--rojo); font-weight: 700; }
+
+    /* PRICING */
+    .precio-wrap { display: grid; grid-template-columns: 1fr 1.15fr; gap: 1.2rem; }
+    @media(max-width:600px){ .precio-wrap { grid-template-columns: 1fr; } }
+    .precio-ind { border: 1px solid var(--borde); border-radius: 16px; padding: 1.6rem; background: #fafbfd; }
+    .precio-ind h3 { font-size: .85rem; font-weight: 700; color: var(--suave); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1rem; }
+    .precio-ind .items { display: flex; flex-direction: column; gap: .55rem; }
+    .precio-ind .item { display: flex; justify-content: space-between; align-items: baseline; font-size: .85rem; }
+    .precio-ind .item span:first-child { color: var(--texto); }
+    .precio-ind .item .val { font-weight: 700; color: var(--suave); }
+    .precio-ind .total-row { margin-top: .9rem; padding-top: .9rem; border-top: 2px solid var(--borde); display: flex; justify-content: space-between; align-items: baseline; }
+    .precio-ind .total-row span:first-child { font-size: .88rem; font-weight: 700; color: var(--azul); }
+    .precio-ind .total-row .val { font-size: 1.3rem; font-weight: 900; color: var(--rojo); }
+
+    .precio-pack { border: 2px solid var(--dorado); border-radius: 16px; padding: 1.6rem; background: linear-gradient(160deg,#0a1f44,#1a3a6b); color: #fff; position: relative; overflow: hidden; }
+    .precio-pack::before { content: '🏆 MEJOR VALOR'; position: absolute; top: 1rem; right: -2.2rem; background: var(--dorado); color: #1a1000; font-size: .65rem; font-weight: 800; padding: .3rem 3rem; transform: rotate(38deg); letter-spacing: .1em; }
+    .precio-pack h3 { font-size: .85rem; font-weight: 700; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1rem; }
+    .precio-pack .items { display: flex; flex-direction: column; gap: .55rem; }
+    .precio-pack .item { display: flex; justify-content: space-between; align-items: baseline; font-size: .85rem; }
+    .precio-pack .item span:first-child { color: rgba(255,255,255,.85); }
+    .precio-pack .item .val { font-weight: 700; color: rgba(255,255,255,.55); text-decoration: line-through; }
+    .precio-pack .total-row { margin-top: .9rem; padding-top: .9rem; border-top: 2px solid rgba(247,183,51,.35); display: flex; justify-content: space-between; align-items: baseline; }
+    .precio-pack .total-row span:first-child { font-size: .88rem; font-weight: 700; color: rgba(255,255,255,.9); }
+    .precio-pack .total-row .val { font-size: 1.6rem; font-weight: 900; color: var(--dorado); }
+    .ahorro-badge { display: inline-block; background: rgba(26,121,66,.25); border: 1px solid rgba(46,204,113,.4); color: #6ee7a0; font-size: .75rem; font-weight: 700; padding: .25rem .9rem; border-radius: 999px; margin-top: .8rem; }
+
+    /* INCLUYE */
+    .incluye { display: flex; flex-direction: column; gap: .45rem; }
+    .inc-item { display: flex; align-items: flex-start; gap: .75rem; padding: .65rem 1rem; border-radius: 10px; background: rgba(26,121,66,.04); border: 1px solid rgba(26,121,66,.12); }
+    .inc-item .ico { font-size: .95rem; flex-shrink: 0; margin-top: .05rem; }
+    .inc-item p { font-size: .83rem; color: var(--texto); }
+    .inc-item strong { color: var(--azul); }
+
+    /* MÓDULOS */
+    .modulos { display: flex; flex-direction: column; gap: 0; }
+    .mod { display: flex; gap: 1rem; padding: .9rem 1.1rem; border: 1px solid var(--borde); border-bottom: none; align-items: flex-start; }
+    .mod:first-child { border-radius: 12px 12px 0 0; }
+    .mod:last-child { border-radius: 0 0 12px 12px; border-bottom: 1px solid var(--borde); }
+    .mod:nth-child(odd) { background: #fafbfd; }
+    .mod-num { width: 26px; height: 26px; border-radius: 50%; background: var(--azul); color: #fff; font-size: .72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .15rem; }
+    .mod-body h4 { font-size: .88rem; font-weight: 700; color: var(--azul); }
+    .mod-body p { font-size: .8rem; color: var(--suave); }
+    .mod-hrs { font-size: .72rem; font-weight: 700; color: var(--rojo); background: rgba(194,31,48,.07); padding: .15rem .55rem; border-radius: 6px; margin-top: .25rem; display: inline-block; }
+
+    /* TIMELINE */
+    .tl { display: flex; flex-direction: column; gap: 0; }
+    .fase { display: flex; gap: 1.2rem; padding: 1rem 0; border-bottom: 1px dashed var(--borde); }
+    .fase:last-child { border-bottom: none; }
+    .fase-num { width: 38px; height: 38px; border-radius: 50%; background: var(--azul); color: #fff; font-size: .8rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .fase-body h4 { font-size: .9rem; font-weight: 700; color: var(--azul); margin-bottom: .25rem; }
+    .fase-body p { font-size: .82rem; color: var(--suave); }
+    .semanas { font-size: .72rem; font-weight: 700; color: var(--rojo); background: rgba(194,31,48,.06); padding: .15rem .6rem; border-radius: 6px; display: inline-block; margin-bottom: .3rem; }
+
+    /* PASOS */
+    .pasos { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 1rem; counter-reset: paso; }
+    .paso { border: 1px solid var(--borde); border-radius: 12px; padding: 1.2rem; text-align: center; background: #fafbfd; }
+    .paso .p-num { font-size: 1.8rem; font-weight: 900; color: var(--azul); opacity: .15; line-height: 1; }
+    .paso h4 { font-size: .85rem; font-weight: 700; color: var(--azul); margin: .3rem 0; }
+    .paso p { font-size: .79rem; color: var(--suave); }
+
+    /* CTA */
+    .cta { background: linear-gradient(135deg,var(--azul),var(--azul2)); border-radius: 18px; padding: 2.5rem; color: #fff; text-align: center; border-top: 4px solid var(--dorado); }
+    .cta h2 { font-size: 1.5rem; margin-bottom: .6rem; }
+    .cta p { font-size: .9rem; color: rgba(255,255,255,.72); max-width: 580px; margin: 0 auto 1.5rem; }
+    .cta a { display: inline-flex; align-items: center; gap: .5rem; background: var(--dorado); color: #1a1000; font-weight: 800; font-size: .9rem; padding: .75rem 2rem; border-radius: 999px; text-decoration: none; }
+    .fn { text-align: center; font-size: .72rem; color: var(--suave); padding: 1rem 0 2rem; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hi">
+    <div class="badge">🚀 Propuesta Exclusiva · Proyecto 06 · Paquete 3×1</div>
+    <h1>IA Total para Saludsa:<br><span>Escuela · Agentes · Control</span></h1>
+    <p class="sub">Un paquete diseñado para que Marco Puente y su equipo lideren la transformación digital de Saludsa desde adentro — con autonomía, control y soporte permanente de Vibramente.</p>
+    <div class="meta">
+      <div class="mi"><div class="l">Cliente</div><div class="v">Saludsa Ecuador</div></div>
+      <div class="mi"><div class="l">Para</div><div class="v">Marco Puente · VP Comercial</div></div>
+      <div class="mi"><div class="l">Proveedor</div><div class="v">Vibramente · Felipe Salgado</div></div>
+      <div class="mi"><div class="l">Inversión total</div><div class="v">USD 35,000 · Pago único</div></div>
+      <div class="mi"><div class="l">Fecha</div><div class="v">Abril 2026</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- INTRO -->
+  <div class="intro">
+    Marco, esto no es una propuesta más. Es un <strong>cambio de posición</strong> para Saludsa: pasar de contratar proveedores de IA a tener el control interno para construirla, operarla y escalarla. Con este paquete, <strong>tú y tu equipo se convierten en los orquestadores de IA de toda la compañía</strong>.
+  </div>
+
+  <!-- 3 PILARES -->
+  <div class="s">
+    <h2>🎯 El Paquete 3×1: Qué incluye</h2>
+    <p>Tres beneficios que se potencian entre sí. Cada uno tiene valor independiente; juntos, transforman la operación de Saludsa.</p>
+    <div class="pilares">
+      <div class="pilar pilar-1">
+        <div class="num">1</div>
+        <div class="ico">🏫</div>
+        <h3>Escuelita IA In-House</h3>
+        <p>Programa de formación especializado para hasta 30 personas del equipo de tecnología y ciberseguridad de Saludsa. El objetivo: que Saludsa construya sus propios agentes sin depender de terceros.</p>
+        <ul>
+          <li>Formación de formadores internos</li>
+          <li>Know-how completo end-to-end</li>
+          <li>Protocolos de seguridad + orquestación</li>
+          <li>Con OpenClaw y Claude Code</li>
+        </ul>
+      </div>
+      <div class="pilar pilar-2">
+        <div class="num">2</div>
+        <div class="ico">🤖</div>
+        <h3>Agentes Conversacionales Listos</h3>
+        <p>Mientras el equipo aprende, Vibramente entrega los agentes conversacionales construidos, operativos y en producción — en conjunto con el equipo de Saludsa.</p>
+        <ul>
+          <li>Desarrollo conjunto (aprender haciendo)</li>
+          <li>Agentes listos y en producción</li>
+          <li>Vibramente como Advisor directo</li>
+          <li>Soporte y acompañamiento continuo</li>
+        </ul>
+      </div>
+      <div class="pilar pilar-3">
+        <div class="num">3</div>
+        <div class="ico">🛡️</div>
+        <h3>Interfaz de Control de Seguridad</h3>
+        <p>Panel centralizado listo para conectar departamentos, supervisar agentes y gestionar accesos — exactamente lo que Marco nos indicó que Saludsa necesitaba.</p>
+        <ul>
+          <li>Interfaz de control entregada lista</li>
+          <li>Conexión entre departamentos</li>
+          <li>Visibilidad total sobre agentes IA</li>
+          <li>RBAC y auditoría integrada</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARATIVA COSTOS -->
+  <div class="s">
+    <h2>💰 La matemática que hace que este paquete sea irrechazable</h2>
+    <p>Si Saludsa contratara cada componente por separado, el costo sería más del doble. Aquí está el comparativo honesto.</p>
+    <div class="precio-wrap">
+      <div class="precio-ind">
+        <h3>Si se contratara por separado</h3>
+        <div class="items">
+          <div class="item"><span>Escuelita IA (30 cupos · 150h)</span><span class="val">USD 22,500</span></div>
+          <div class="item"><span>Desarrollo 1 agente conversacional<br><small style="color:#94a3b8">(150h × USD 150/h)</small></span><span class="val">USD 22,500</span></div>
+          <div class="item"><span>Interfaz de Control de Seguridad</span><span class="val">USD 15,000</span></div>
+          <div class="item"><span>Advisory y soporte (6 meses)</span><span class="val">USD 12,000</span></div>
+          <div class="item"><span>Formación de formadores in-house</span><span class="val">USD 8,000</span></div>
+        </div>
+        <div class="total-row"><span>Total individualizado</span><span class="val tach">USD 80,000</span></div>
+      </div>
+      <div class="precio-pack">
+        <h3>Paquete 3×1 · Todo incluido</h3>
+        <div class="items">
+          <div class="item"><span>🏫 Escuelita IA In-House (30 cupos)</span><span class="val">USD 22,500</span></div>
+          <div class="item"><span>🤖 Agentes conversacionales en producción</span><span class="val">USD 22,500</span></div>
+          <div class="item"><span>🛡️ Interfaz de Control de Seguridad</span><span class="val">USD 15,000</span></div>
+          <div class="item"><span>🤝 Advisory permanente Vibramente</span><span class="val">USD 12,000</span></div>
+          <div class="item"><span>🎓 Formación de formadores internos</span><span class="val">USD 8,000</span></div>
+        </div>
+        <div class="total-row"><span>Precio Paquete 3×1</span><span class="val">USD 35,000</span></div>
+        <div style="text-align:center;"><div class="ahorro-badge">💚 Saludsa ahorra USD 45,000 — más del 56%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUÉ INCLUYE DETALLADO -->
+  <div class="s">
+    <h2>📦 Todo lo que recibe Saludsa en este paquete</h2>
+    <div class="incluye">
+      <div class="inc-item"><span class="ico">✅</span><p><strong>150 horas de capacitación especializada</strong> en IA aplicada al sector salud. Diseñada para equipos de tecnología, ciberseguridad y líderes de área.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Hasta 30 cupos</strong> en la Escuelita IA In-House. Formación práctica, no teórica: los participantes construyen agentes reales durante el programa.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Formación de formadores internos:</strong> el equipo élite capacitado puede replicar el conocimiento internamente. Saludsa escala sin depender de Vibramente para cada nueva persona.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Agentes conversacionales desarrollados en conjunto</strong> y entregados operativos en producción. El aprendizaje es real porque se hace sobre proyectos reales de Saludsa.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Interfaz de Control de Seguridad lista</strong> para conectar departamentos, supervisar agentes activos y gestionar accesos con roles diferenciados.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Vibramente como Advisor directo</strong> durante y después del programa. No entregamos y nos vamos — acompañamos el éxito de la implementación.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Protocolos de seguridad completos</strong> adaptados a LOPDP, SBS y las políticas internas de Saludsa, integrados en la formación desde el primer día.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Orquestación con OpenClaw y Claude Code:</strong> las herramientas más avanzadas del mercado, aplicadas a los casos de uso específicos de Saludsa.</p></div>
+      <div class="inc-item"><span class="ico">✅</span><p><strong>Marco Puente como Head of IA:</strong> al finalizar, Marco tiene el conocimiento, las herramientas y el equipo para liderar la estrategia de IA de toda la compañía con autonomía total.</p></div>
+    </div>
+  </div>
+
+  <!-- MÓDULOS ESCUELITA -->
+  <div class="s">
+    <h2>🏫 Módulos de la Escuelita IA: 150 horas estructuradas</h2>
+    <p>No es un curso genérico. Cada módulo está diseñado para la realidad de Saludsa: sus sistemas, sus datos y sus objetivos de negocio.</p>
+    <div class="modulos">
+      <div class="mod">
+        <div class="mod-num">1</div>
+        <div class="mod-body">
+          <h4>Fundamentos de IA aplicada al sector salud</h4>
+          <p>Conceptos clave, herramientas del ecosistema, casos de uso en aseguradoras LATAM. Sin jerga innecesaria.</p>
+          <span class="mod-hrs">⏱ 15 horas</span>
+        </div>
+      </div>
+      <div class="mod">
+        <div class="mod-num">2</div>
+        <div class="mod-body">
+          <h4>Arquitectura de agentes: cómo se construye uno end-to-end</h4>
+          <p>Desde el prompt hasta el despliegue. Componentes, conectores, APIs, orquestación con OpenClaw.</p>
+          <span class="mod-hrs">⏱ 25 horas</span>
+        </div>
+      </div>
+      <div class="mod">
+        <div class="mod-num">3</div>
+        <div class="mod-body">
+          <h4>Seguridad, privacidad y cumplimiento regulatorio en IA</h4>
+          <p>LOPDP Ecuador, SBS, clasificación de datos, protocolos de acceso y gobernanza. Enfoque práctico para equipos de ciberseguridad.</p>
+          <span class="mod-hrs">⏱ 20 horas</span>
+        </div>
+      </div>
+      <div class="mod">
+        <div class="mod-num">4</div>
+        <div class="mod-body">
+          <h4>Taller práctico: construcción del primer agente de Saludsa</h4>
+          <p>El equipo construye un agente real (ventas, SAC o liquidación) desde cero, con supervisión directa de Vibramente.</p>
+          <span class="mod-hrs">⏱ 30 horas</span>
+        </div>
+      </div>
+      <div class="mod">
+        <div class="mod-num">5</div>
+        <div class="mod-body">
+          <h4>Orquestación multi-agente y estrategia de escalabilidad</h4>
+          <p>Cómo conectar múltiples agentes, gestionar flujos complejos y escalar sin perder control. Claude Code + OpenClaw en profundidad.</p>
+          <span class="mod-hrs">⏱ 30 horas</span>
+        </div>
+      </div>
+      <div class="mod">
+        <div class="mod-num">6</div>
+        <div class="mod-body">
+          <h4>Formación de formadores: cómo enseñar esto internamente</h4>
+          <p>El grupo élite aprende a replicar el conocimiento en Saludsa. Materiales, metodología y recursos quedan en propiedad de Saludsa.</p>
+          <span class="mod-hrs">⏱ 20 horas</span>
+        </div>
+      </div>
+      <div class="mod">
+        <div class="mod-num">7</div>
+        <div class="mod-body">
+          <h4>Entrega de agentes en producción + interfaz de control</h4>
+          <p>Sesiones de co-desarrollo donde el equipo trabaja junto a Vibramente para dejar los agentes y la interfaz listos y operativos.</p>
+          <span class="mod-hrs">⏱ 10 horas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="s">
+    <h2>📅 Cronograma de implementación</h2>
+    <p>Un proceso de 12 semanas diseñado para que Saludsa empiece a ver resultados desde la Semana 4, no al final.</p>
+    <div class="tl">
+      <div class="fase">
+        <div class="fase-num">1</div>
+        <div class="fase-body">
+          <span class="semanas">Semanas 1–2</span>
+          <h4>Kickoff + Diagnóstico del equipo</h4>
+          <p>Definición de los 30 participantes, evaluación de base técnica, accesos y configuración de entornos. NDA y acuerdos firmados.</p>
+        </div>
+      </div>
+      <div class="fase">
+        <div class="fase-num">2</div>
+        <div class="fase-body">
+          <span class="semanas">Semanas 3–6</span>
+          <h4>Módulos 1–4 · Fundamentos + Primer agente</h4>
+          <p>El equipo aprende los fundamentos y construye el primer agente real de Saludsa. Al final de esta fase, hay un agente en producción.</p>
+        </div>
+      </div>
+      <div class="fase">
+        <div class="fase-num">3</div>
+        <div class="fase-body">
+          <span class="semanas">Semanas 7–10</span>
+          <h4>Módulos 5–6 · Orquestación + Formadores</h4>
+          <p>El grupo élite domina la orquestación multi-agente y está capacitado para enseñar internamente. Los agentes conversacionales avanzan en co-desarrollo.</p>
+        </div>
+      </div>
+      <div class="fase">
+        <div class="fase-num">4</div>
+        <div class="fase-body">
+          <span class="semanas">Semanas 11–12</span>
+          <h4>Go-Live · Agentes + Interfaz de Control</h4>
+          <p>Entrega de los agentes conversacionales en producción, interfaz de control lista y equipo de Saludsa operando de forma autónoma. Inicio del Advisory permanente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LO QUE SALUDSA GANA A LARGO PLAZO -->
+  <div class="s">
+    <h2>🏆 Lo que Saludsa gana más allá de la inversión</h2>
+    <div class="g2">
+      <div class="c">
+        <h3>🧠 Autonomía permanente</h3>
+        <p>Con el equipo capacitado y los materiales en propiedad, Saludsa puede construir nuevos agentes internamente sin contratar a nadie. El conocimiento queda dentro de la empresa.</p>
+      </div>
+      <div class="c">
+        <h3>💰 Ahorro masivo a largo plazo</h3>
+        <p>Un agente construido externamente cuesta USD 22,500 (150h × USD 150/h). Con el equipo capacitado, el costo de construcción interna cae a casi cero. El ROI de este paquete se mide en el segundo agente que construyen solos.</p>
+      </div>
+      <div class="c">
+        <h3>⚡ Velocidad de adopción 5×</h3>
+        <p>Un equipo interno que entiende los sistemas de Saludsa implementa nuevos agentes 5 veces más rápido que un proveedor externo. Sin curvas de aprendizaje sobre el negocio.</p>
+      </div>
+      <div class="c">
+        <h3>🛡️ Control y seguridad reales</h3>
+        <p>No hay caja negra. El equipo sabe exactamente cómo funciona cada agente, qué datos toca y cómo intervenir si algo falla. Cumplimiento regulatorio integrado desde adentro.</p>
+      </div>
+      <div class="c">
+        <h3>🎯 Marco como Head of IA</h3>
+        <p>Al finalizar el programa, Marco tiene el conocimiento, las herramientas y el equipo para ser el orquestador de la estrategia de IA de toda Saludsa. Una posición de liderazgo único en el sector.</p>
+      </div>
+      <div class="c">
+        <h3>🤝 Vibramente como socio estratégico</h3>
+        <p>No entregamos y desaparecemos. Somos el Advisory permanente que acompaña cada nueva decisión de IA. La relación crece con Saludsa.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASOS -->
+  <div class="s">
+    <h2>▶️ Próximos pasos</h2>
+    <div class="pasos">
+      <div class="paso"><div class="p-num">01</div><h4>Aprobación del Comité</h4><p>Marco presenta el paquete al Comité Ejecutivo esta semana.</p></div>
+      <div class="paso"><div class="p-num">02</div><h4>Firma + NDA</h4><p>Contrato y acuerdo de confidencialidad. Primer pago para activar.</p></div>
+      <div class="paso"><div class="p-num">03</div><h4>Selección del equipo</h4><p>Marco define los 30 participantes del programa + grupo élite de formadores.</p></div>
+      <div class="paso"><div class="p-num">04</div><h4>Kickoff Semana 1</h4><p>Arranca el programa. Desde la primera semana el equipo trabaja con herramientas reales.</p></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Marco, este es el momento.</h2>
+    <p>Mientras la competencia contrata proveedores de IA, Saludsa puede ser la primera aseguradora del Ecuador en construirla desde adentro. Este paquete es ese primer paso.</p>
+    <a href="mailto:felipe@vibramente.io">📩 Confirmar interés y coordinar presentación →</a>
+  </div>
+
+  <div class="fn">
+    Preparado por <strong>Felipe Salgado · Vibramente</strong> para <strong>Marco Puente · VP Comercial · Saludsa Ecuador</strong><br>
+    Propuesta 06 · Paquete 3×1 · Abril 2026 · Confidencial
+  </div>
+
+</main>
+</body>
+</html>
