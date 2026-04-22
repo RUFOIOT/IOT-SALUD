@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguridad Digital · Proyecto Brasil · Saludsa</title>
+  <style>
+    :root {
+      --azul: #0a1f44;
+      --rojo: #c21f30;
+      --verde: #1a7942;
+      --dorado: #f7b733;
+      --gris: #f4f6fb;
+      --borde: #e2e8f0;
+      --texto: #1e2535;
+      --suave: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Inter", "Segoe UI", system-ui, sans-serif; background: #fff; color: var(--texto); line-height: 1.65; }
+
+    /* HEADER */
+    header {
+      background: var(--azul);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      border-bottom: 4px solid var(--rojo);
+    }
+    .header-inner { max-width: 900px; margin: 0 auto; }
+    .tag-top {
+      display: inline-block;
+      background: rgba(247,183,51,0.18);
+      border: 1px solid rgba(247,183,51,0.45);
+      color: var(--dorado);
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      padding: 0.25rem 0.9rem; border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    header h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; line-height: 1.2; margin-bottom: 0.5rem; }
+    header p.sub { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 640px; margin-bottom: 1.8rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 2.5rem; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 1.2rem; }
+    .meta-item .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.45); }
+    .meta-item .val { font-size: 0.88rem; font-weight: 600; color: #fff; }
+
+    /* MAIN */
+    main { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem 5rem; display: flex; flex-direction: column; gap: 3rem; }
+
+    /* BLOQUE INTRO */
+    .intro-box {
+      background: var(--gris);
+      border-left: 4px solid var(--azul);
+      border-radius: 0 12px 12px 0;
+      padding: 1.4rem 1.6rem;
+      font-size: 0.95rem;
+      color: var(--texto);
+    }
+    .intro-box strong { color: var(--azul); }
+
+    /* SECCIÓN */
+    .bloque h2 {
+      font-size: 1.2rem; font-weight: 800; color: var(--azul);
+      display: flex; align-items: center; gap: 0.6rem;
+      margin-bottom: 1rem; padding-bottom: 0.7rem;
+      border-bottom: 2px solid var(--borde);
+    }
+    .bloque p { font-size: 0.9rem; color: var(--suave); margin-bottom: 1rem; }
+
+    /* GRID */
+    .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+
+    /* CARD SIMPLE */
+    .card {
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      background: #fafbfd;
+    }
+    .card h3 { font-size: 0.88rem; font-weight: 700; color: var(--azul); margin-bottom: 0.4rem; }
+    .card p, .card li { font-size: 0.82rem; color: var(--suave); }
+    .card ul { padding-left: 1rem; }
+    .card li { margin: 0.2rem 0; }
+
+    /* CARD DESTACADA (verde/rojo) */
+    .card-green { border-color: rgba(26,121,66,0.25); background: rgba(26,121,66,0.04); }
+    .card-green h3 { color: var(--verde); }
+    .card-red { border-color: rgba(194,31,48,0.2); background: rgba(194,31,48,0.03); }
+    .card-red h3 { color: var(--rojo); }
+
+    /* CAPAS */
+    .capas { display: flex; flex-direction: column; gap: 0; }
+    .capa {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 1.2rem;
+      border: 1px solid var(--borde);
+      border-bottom: none;
+    }
+    .capa:first-child { border-radius: 12px 12px 0 0; }
+    .capa:last-child { border-radius: 0 0 12px 12px; border-bottom: 1px solid var(--borde); }
+    .capa-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--azul); color: #fff;
+      font-size: 0.75rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .capa-body h4 { font-size: 0.88rem; font-weight: 700; color: var(--azul); margin-bottom: 0.2rem; }
+    .capa-body p { font-size: 0.81rem; color: var(--suave); }
+    .capa:nth-child(odd) { background: #fafbfd; }
+
+    /* HERRAMIENTAS */
+    .tool {
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      background: #fafbfd;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.8rem 1rem;
+      align-items: start;
+    }
+    .tool-icon {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: var(--gris); border: 1px solid var(--borde);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .tool-meta { grid-column: 2; }
+    .tool-name { font-size: 0.92rem; font-weight: 700; color: var(--azul); }
+    .tool-role { font-size: 0.75rem; color: var(--suave); margin-top: 0.1rem; }
+    .tool-desc { grid-column: 1 / -1; font-size: 0.82rem; color: var(--suave); }
+    .pill {
+      display: inline-block; padding: 0.15rem 0.65rem;
+      border-radius: 6px; font-size: 0.72rem; font-weight: 600;
+      margin: 0.2rem 0.2rem 0 0;
+    }
+    .pill-green { background: rgba(26,121,66,0.09); color: var(--verde); }
+    .pill-red   { background: rgba(194,31,48,0.08); color: var(--rojo); }
+    .pill-gold  { background: rgba(247,183,51,0.15); color: #8a6000; }
+
+    /* TABLA TOKENS */
+    .tabla { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .tabla th { background: var(--azul); color: #fff; padding: 0.6rem 0.9rem; text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; }
+    .tabla th:first-child { border-radius: 8px 0 0 0; }
+    .tabla th:last-child { border-radius: 0 8px 0 0; }
+    .tabla td { padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--borde); }
+    .tabla tr:last-child td { border-bottom: none; font-weight: 700; background: var(--gris); }
+    .tabla tr:nth-child(even) td { background: #fafbfd; }
+
+    /* 6 RAZONES */
+    .razones { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .razon {
+      border: 1px solid var(--borde); border-radius: 12px;
+      padding: 1.2rem 1.4rem; background: #fafbfd;
+      border-top: 3px solid var(--azul);
+    }
+    .razon .num { font-size: 1.5rem; font-weight: 900; color: var(--azul); opacity: 0.18; line-height: 1; margin-bottom: 0.3rem; }
+    .razon h3 { font-size: 0.88rem; font-weight: 700; color: var(--azul); margin-bottom: 0.4rem; }
+    .razon p { font-size: 0.81rem; color: var(--suave); }
+
+    /* CTA */
+    .cta {
+      background: var(--azul);
+      border-radius: 16px; padding: 2.2rem;
+      color: #fff; text-align: center;
+      border-top: 4px solid var(--rojo);
+    }
+    .cta h2 { font-size: 1.3rem; margin-bottom: 0.6rem; }
+    .cta p { font-size: 0.88rem; color: rgba(255,255,255,0.72); max-width: 560px; margin: 0 auto 1.4rem; }
+    .cta a {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--dorado); color: #1a1000;
+      font-weight: 800; font-size: 0.88rem;
+      padding: 0.7rem 1.8rem; border-radius: 999px;
+      text-decoration: none;
+    }
+
+    .footer-note { text-align: center; font-size: 0.75rem; color: var(--suave); padding: 1rem 0 2rem; }
+
+    @media (max-width: 600px) {
+      main { padding: 2rem 1rem 4rem; }
+      .tool { grid-template-columns: 1fr; }
+      .tool-icon { display: none; }
+      .tool-desc { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="tag-top">🛡️ Comité de Seguridad Digital · Saludsa</div>
+    <h1>Proyecto Brasil<br>Seguridad, Stack y Gobernanza IA</h1>
+    <p class="sub">Resumen ejecutivo para aprobación. Cómo protegemos los datos de los afiliados mientras habilitamos la automatización de ventas.</p>
+    <div class="meta">
+      <div class="meta-item"><div class="label">Cliente</div><div class="val">Saludsa Ecuador</div></div>
+      <div class="meta-item"><div class="label">Interlocutor</div><div class="val">Marco Puente · VP Comercial</div></div>
+      <div class="meta-item"><div class="label">Proveedor</div><div class="val">Vibramente · Felipe Salgado</div></div>
+      <div class="meta-item"><div class="label">Versión</div><div class="val">v2 · Resumen Ejecutivo · Abril 2026</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- INTRO -->
+  <div class="intro-box">
+    Este documento responde a una sola pregunta: <strong>¿Es seguro implementar el Proyecto Brasil en Saludsa?</strong><br>
+    La respuesta es sí — y aquí están las razones, sin jerga técnica innecesaria.
+  </div>
+
+  <!-- EL PRINCIPIO -->
+  <div class="bloque">
+    <h2>🔑 El principio que gobierna todo</h2>
+    <p>Antes de cualquier detalle técnico, hay una regla que define la arquitectura entera del sistema:</p>
+    <div class="grid2">
+      <div class="card card-red">
+        <h3>🚫 Lo que NUNCA sale del perímetro de Saludsa</h3>
+        <ul>
+          <li>Números de cédula</li>
+          <li>Historiales médicos</li>
+          <li>Datos financieros exactos</li>
+          <li>Información familiar sensible</li>
+          <li>Archivos de voz del asesor</li>
+        </ul>
+      </div>
+      <div class="card card-green">
+        <h3>✅ Lo que SÍ puede procesarse externamente</h3>
+        <ul>
+          <li>Nombre y empresa (dato público)</li>
+          <li>Cargo y sector profesional</li>
+          <li>Estimaciones de perfil anónimas</li>
+          <li>Texto de conversación tokenizado</li>
+          <li>Preguntas sobre planes de Saludsa</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEGURIDAD POR CAPAS -->
+  <div class="bloque">
+    <h2>🛡️ Seguridad por capas: 7 barreras</h2>
+    <p>El sistema está construido como una cebolla: si alguien supera una capa, enfrenta seis más. No hay un único punto de fallo que comprometa todo.</p>
+    <div class="capas">
+      <div class="capa">
+        <div class="capa-num">1</div>
+        <div class="capa-body">
+          <h4>Firewall y Perímetro de Red</h4>
+          <p>Todo el tráfico pasa por un filtro de seguridad (AWS WAF). Solo conexiones cifradas (HTTPS). Solo IPs autorizadas pueden hacer gestión administrativa.</p>
+        </div>
+      </div>
+      <div class="capa">
+        <div class="capa-num">2</div>
+        <div class="capa-body">
+          <h4>Autenticación de Identidad</h4>
+          <p>Doble factor (MFA) obligatorio para todos los accesos humanos. Los agentes IA tienen cuentas de servicio con permisos mínimos — cada uno solo puede hacer lo que le corresponde, nada más.</p>
+        </div>
+      </div>
+      <div class="capa">
+        <div class="capa-num">3</div>
+        <div class="capa-body">
+          <h4>Aislamiento de Contenedores (Docker)</h4>
+          <p>Cada agente IA vive en su propio contenedor aislado. Si uno falla o es comprometido, no puede afectar a los demás. Como compartimentos estancos en un barco.</p>
+        </div>
+      </div>
+      <div class="capa">
+        <div class="capa-num">4</div>
+        <div class="capa-body">
+          <h4>Clasificación y Enmascaramiento de Datos</h4>
+          <p>Los datos se clasifican automáticamente en 3 niveles: Público, Confidencial y Restringido. Los datos Confidenciales y Restringidos se convierten en tokens anónimos antes de cualquier procesamiento externo.</p>
+        </div>
+      </div>
+      <div class="capa">
+        <div class="capa-num">5</div>
+        <div class="capa-body">
+          <h4>Control de Llamadas a IA</h4>
+          <p>Un intermediario (API Gateway) revisa cada llamada a los modelos de IA antes de enviarla. Si detecta datos personales reales, los bloquea automáticamente. Nada sale sin pasar ese filtro.</p>
+        </div>
+      </div>
+      <div class="capa">
+        <div class="capa-num">6</div>
+        <div class="capa-body">
+          <h4>Auditoría Permanente</h4>
+          <p>Cada acción del sistema queda registrada en un log que no puede borrarse ni modificarse. Si algo ocurre, podemos ver exactamente qué pasó, cuándo y quién lo desencadenó. Retención: 1 año.</p>
+        </div>
+      </div>
+      <div class="capa">
+        <div class="capa-num">7</div>
+        <div class="capa-body">
+          <h4>Cumplimiento Regulatorio</h4>
+          <p>Diseñado para cumplir LOPDP Ecuador, regulaciones SBS e ISO 27001. Contratos de protección de datos (DPA) firmados con todos los proveedores. Derecho a eliminación de datos implementado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERRAMIENTAS IA -->
+  <div class="bloque">
+    <h2>🤖 Herramientas IA: rol y límites claros</h2>
+    <p>Cada herramienta tiene una función específica y reglas explícitas sobre qué puede y qué no puede hacer con los datos de Saludsa.</p>
+
+    <div style="display:flex;flex-direction:column;gap:0.8rem;">
+
+      <div class="tool">
+        <div class="tool-icon">🧠</div>
+        <div class="tool-meta">
+          <div class="tool-name">Claude (Anthropic) — Agente principal</div>
+          <div class="tool-role">Extrae datos de conversaciones y genera cotizaciones personalizadas</div>
+        </div>
+        <div class="tool-desc">
+          Solo recibe texto anonimizado (sin cédulas ni datos médicos). Contrato Enterprise con Anthropic: los datos no se usan para entrenar modelos. Retención cero activada.
+          <br>
+          <span class="pill pill-green">✅ Datos tokenizados únicamente</span>
+          <span class="pill pill-red">🚫 Sin cédulas ni datos médicos</span>
+          <span class="pill pill-gold">⚙️ Max 4,000 tokens/llamada</span>
+        </div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon">🔍</div>
+        <div class="tool-meta">
+          <div class="tool-name">Perplexity AI — Agente de enriquecimiento</div>
+          <div class="tool-role">Busca información pública del prospecto (empresa, cargo, sector)</div>
+        </div>
+        <div class="tool-desc">
+          Solo busca información públicamente disponible. No puede acceder a datos de salud, financieros privados ni información familiar. Cada búsqueda queda registrada y es auditable.
+          <br>
+          <span class="pill pill-green">✅ Solo fuentes públicas</span>
+          <span class="pill pill-gold">⚙️ Max 10 búsquedas por prospecto</span>
+          <span class="pill pill-red">🚫 Sin datos privados ni sensibles</span>
+        </div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon">🎙️</div>
+        <div class="tool-meta">
+          <div class="tool-name">Whisper (OpenAI) — Transcripción de voz</div>
+          <div class="tool-role">Convierte las notas de voz del asesor en texto</div>
+        </div>
+        <div class="tool-desc">
+          Corre en servidores propios del sistema (<strong>self-hosted</strong>): el audio del asesor <strong>nunca sale</strong> hacia servidores externos. El archivo de voz se elimina automáticamente a los 5 minutos de procesado.
+          <br>
+          <span class="pill pill-green">✅ Self-hosted · sin envío externo</span>
+          <span class="pill pill-gold">⚙️ Audio eliminado en 5 min</span>
+        </div>
+      </div>
+
+      <div class="tool">
+        <div class="tool-icon">💻</div>
+        <div class="tool-meta">
+          <div class="tool-name">GitHub Copilot — Desarrollo de software</div>
+          <div class="tool-role">Asistente para el equipo técnico de Vibramente durante la construcción</div>
+        </div>
+        <div class="tool-desc">
+          Usado <strong>exclusivamente por el equipo de Vibramente</strong> para escribir código. No tiene acceso a la infraestructura de producción ni a datos de Saludsa en ningún momento.
+          <br>
+          <span class="pill pill-green">✅ Solo entorno de desarrollo Vibramente</span>
+          <span class="pill pill-red">🚫 Sin acceso a datos ni producción de Saludsa</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONTROL HUMANO -->
+  <div class="bloque">
+    <h2>👤 Control humano en cada paso crítico</h2>
+    <p>Los agentes IA <strong>no operan solos</strong>. Hay puntos de control humano en los momentos más importantes del flujo.</p>
+    <div class="grid3">
+      <div class="card">
+        <h3>🎙️ Inicio manual</h3>
+        <p>Solo el asesor puede iniciar un flujo. El sistema no procesa nada que no haya sido activado por una persona autorizada.</p>
+      </div>
+      <div class="card">
+        <h3>📄 Aprobación de cotización</h3>
+        <p>Antes de enviar la cotización al prospecto, el asesor la recibe, la revisa y aprueba. El sistema no envía nada sin esa confirmación (configurable).</p>
+      </div>
+      <div class="card">
+        <h3>📊 Visibilidad gerencial</h3>
+        <p>Los gerentes tienen acceso a un dashboard en tiempo real: qué prospectos se procesaron, qué cotizaciones se enviaron, qué asesor activó qué.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COSTOS IA -->
+  <div class="bloque">
+    <h2>💰 Costo operativo de las herramientas IA</h2>
+    <p>El costo mensual de las APIs de IA varía según el volumen de uso, la complejidad de los flujos y la configuración de la orquestación agéntica definida para el proyecto. No es un valor fijo — escala con la actividad real del equipo comercial.</p>
+    <div class="grid2">
+      <div class="card card-green">
+        <h3>📊 Referencia para el Agente Brasil</h3>
+        <p>Con la configuración de orquestación actual (4 agentes en pipeline, 30 asesores activos), el costo estimado de operación se sitúa en el rango de <strong>USD 500 – 600 / mes</strong>. Este valor se ajusta según el volumen real de prospectos procesados cada mes.</p>
+      </div>
+      <div class="card">
+        <h3>⚙️ Factores que determinan el costo</h3>
+        <ul>
+          <li>Número de asesores activos y frecuencia de uso</li>
+          <li>Complejidad de los flujos de extracción y cotización</li>
+          <li>Configuración de la orquestación agéntica</li>
+          <li>Volumen de enriquecimiento de perfiles por mes</li>
+          <li>Nivel de supervisión humana vs. automatización completa</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:0.9rem;" class="grid3">
+      <div class="card">
+        <h3>🎚️ Límites automáticos</h3>
+        <p>Si el consumo supera el umbral definido en cualquier hora, el sistema frena y alerta. Sin facturas sorpresa.</p>
+      </div>
+      <div class="card">
+        <h3>📊 Panel de consumo</h3>
+        <p>Saludsa tiene acceso a un dashboard de consumo por asesor, por agente y por tipo de tarea, en tiempo real.</p>
+      </div>
+      <div class="card">
+        <h3>📦 Incluido en el fee mensual</h3>
+        <p>El costo operativo de las APIs está incluido dentro del fee mensual de mantenimiento del proyecto. Sin cobros adicionales variables.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 RAZONES -->
+  <div class="bloque">
+    <h2>✅ 6 razones para aprobar el proyecto</h2>
+    <div class="razones">
+      <div class="razon">
+        <div class="num">01</div>
+        <h3>Los datos sensibles nunca salen</h3>
+        <p>Cédulas, datos médicos e historiales permanecen dentro del perímetro de Saludsa. Los modelos de IA solo ven datos anonimizados.</p>
+      </div>
+      <div class="razon">
+        <div class="num">02</div>
+        <h3>7 capas de seguridad independientes</h3>
+        <p>Ningún punto de fallo único puede comprometer el sistema completo. Defense in depth aplicado desde el diseño.</p>
+      </div>
+      <div class="razon">
+        <div class="num">03</div>
+        <h3>Cumplimiento regulatorio nativo</h3>
+        <p>LOPDP, SBS, ISO 27001. El sistema está diseñado para pasar una auditoría regulatoria sin modificaciones.</p>
+      </div>
+      <div class="razon">
+        <div class="num">04</div>
+        <h3>El asesor siempre tiene el control</h3>
+        <p>Los agentes no actúan solos. Cada flujo lo inicia y aprueba una persona. El humano está siempre en el circuito.</p>
+      </div>
+      <div class="razon">
+        <div class="num">05</div>
+        <h3>Costo de IA transparente y controlado</h3>
+        <p>Estimado en USD 500–600/mes para el Agente Brasil, según volumen y orquestación. Con límites automáticos y dashboard en tiempo real. Sin cobros sorpresa.</p>
+      </div>
+      <div class="razon">
+        <div class="num">06</div>
+        <h3>Auditoría completa, 1 año de retención</h3>
+        <p>Todo queda registrado en logs inmutables. Trazabilidad forense total si se necesita investigar cualquier evento.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>🛡️ Proyecto Brasil — Listo para aprobación</h2>
+    <p>La arquitectura de seguridad está definida. Los controles están documentados. El sistema cumple con la regulación ecuatoriana. El siguiente paso es la aprobación del Comité.</p>
+    <a href="mailto:felipe@vibramente.io">📧 Coordinar sesión de validación técnica →</a>
+  </div>
+
+  <div class="footer-note">
+    Preparado por <strong>Felipe Salgado · Vibramente</strong> para <strong>Marco Puente · VP Comercial · Saludsa Ecuador</strong><br>
+    Resumen Ejecutivo v2 · Abril 2026 · Confidencial — Comité de Seguridad Digital
+  </div>
+
+</main>
+</body>
+</html>
